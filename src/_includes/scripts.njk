@@ -1,0 +1,35 @@
+<script>
+const toggle   = document.getElementById('mobileToggle');
+const menu     = document.getElementById('mobileMenu');
+const iconPlus = document.getElementById('iconOpen');
+const iconMinus= document.getElementById('iconClose');
+let isOpen = false;
+
+function openMobileMenu() {
+  isOpen = true;
+  menu.classList.add('open');
+  toggle.setAttribute('aria-expanded', 'true');
+  toggle.setAttribute('aria-label', 'Close menu');
+  iconPlus.style.opacity   = '0';
+  iconPlus.style.transform = 'rotate(90deg) scale(0.8)';
+  iconMinus.style.opacity  = '1';
+  iconMinus.style.transform= 'rotate(0deg) scale(1)';
+}
+
+function closeMobileMenu() {
+  isOpen = false;
+  menu.classList.remove('open');
+  toggle.setAttribute('aria-expanded', 'false');
+  toggle.setAttribute('aria-label', 'Open menu');
+  iconPlus.style.opacity   = '1';
+  iconPlus.style.transform = 'rotate(0deg) scale(1)';
+  iconMinus.style.opacity  = '0';
+  iconMinus.style.transform= 'rotate(-90deg) scale(0.8)';
+}
+
+toggle.addEventListener('click', () => { isOpen ? closeMobileMenu() : openMobileMenu(); });
+document.addEventListener('click', (e) => {
+  if (isOpen && !menu.contains(e.target) && !toggle.contains(e.target)) closeMobileMenu();
+});
+window.addEventListener('resize', () => { if (window.innerWidth > 1024 && isOpen) closeMobileMenu(); });
+</script>
