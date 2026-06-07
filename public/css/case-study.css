@@ -1,7 +1,7 @@
 /* ── Case Study Specific Styles ── */
 .h1 {
   font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: clamp(52px, 10vw, 149px); word-break:normal; overflow-wrap:break-word;;
+  font-size: clamp(52px, 10vw, 149px); word-break:break-word; white-space:normal; overflow-wrap:anywhere;;
   font-weight: 700;
   line-height: 0.85;
   letter-spacing: -2.5px;
