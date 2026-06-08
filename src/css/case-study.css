@@ -131,11 +131,14 @@
   /* 1. Hero — single column, full width */
   .cs-hero-grid {
     grid-template-columns: 1fr !important;
-    gap: 24px !important;
+    gap: 16px !important;
+    align-items: start !important;
   }
   .cs-hero-intro {
     width: 100% !important;
     padding-top: 0 !important;
+    font-size: 18px !important;
+    line-height: 1.6 !important;
   }
 
   /* 2. Images — maintain aspect ratio, scale to full width */
@@ -177,3 +180,14 @@
     gap: 12px !important;
   }
 }
+
+  /* Hero grid gap fix on mobile */
+  .cs-hero-grid {
+    gap: 16px !important;
+    align-items: start !important;
+  }
+  .cs-hero-intro {
+    font-size: 18px !important;
+    line-height: 1.6 !important;
+    margin-top: 0 !important;
+  }
