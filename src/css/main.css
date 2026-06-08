@@ -470,7 +470,7 @@
     grid-template-columns: 80px 1fr 1fr 1fr;
     align-items: start;
   }
-  .bg-white { background: #f7f7f7; }
+  .svc-bg-light { background: #f7f7f7; }
   .bg-tint { background: rgba(90,104,87,0.05); }
   .service-header { display: contents; }
   .service-num {
