@@ -1,7 +1,7 @@
 /* ── Case Study Specific Styles ── */
 .h1 {
   font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: clamp(52px, 10vw, 149px); word-break:break-word; white-space:normal; overflow-wrap:anywhere;;
+  font-size: clamp(52px, 8vw, 149px);
   font-weight: 700;
   line-height: 0.85;
   letter-spacing: -2.5px;
@@ -123,4 +123,57 @@
   .container { padding: 0 24px; }
   .h1 { font-size: 52px; }
   .h2 { font-size: 36px; }
+}
+
+/* ── Mobile (tablet portrait and below) ── */
+@media (max-width: 768px) {
+
+  /* 1. Hero — single column, full width */
+  .cs-hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+  .cs-hero-intro {
+    width: 100% !important;
+    padding-top: 0 !important;
+  }
+
+  /* 2. Images — maintain aspect ratio, scale to full width */
+  .cs-img-grid > div,
+  .cs-full-img {
+    height: auto !important;
+    aspect-ratio: 16/10;
+  }
+  .cs-full-img-tall {
+    height: auto !important;
+    aspect-ratio: 4/3;
+  }
+
+  /* 3. Section spacing — 48px between sections */
+  .cs-section-gap {
+    margin-bottom: 48px !important;
+  }
+
+  /* 4. Next project — stacked single column */
+  .cs-next-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .cs-next-title {
+    font-size: 56px !important;
+    line-height: 1.0 !important;
+  }
+
+  /* Grid images — maintain aspect ratio */
+  .cs-grid-img {
+    height: auto !important;
+    aspect-ratio: 4/3;
+  }
+
+  /* 5. Footer — logo and copyright stacked */
+  .footer-bottom {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
 }
