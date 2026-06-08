@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "Cathal Mac an Bheatha — Product Designer & Creative Director",
   "scripts": {
-    "build": "eleventy",
-    "dev": "eleventy --serve --watch",
-    "build:css": "tailwindcss -i ./src/css/input.css -o ./src/css/output.css --minify",
-    "dev:css": "tailwindcss -i ./src/css/input.css -o ./src/css/output.css --watch",
-    "start": "npm run dev:css & npm run dev"
+    "build:css": "tailwindcss -i ./src/css/main.css -o ./src/css/output.css --minify",
+    "dev:css": "tailwindcss -i ./src/css/main.css -o ./src/css/output.css --watch",
+    "build:11ty": "eleventy",
+    "build": "npm run build:css && npm run build:11ty",
+    "dev": "npm run dev:css & eleventy --serve --watch"
   },
   "devDependencies": {
     "@11ty/eleventy": "^2.0.1",
