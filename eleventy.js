@@ -1,7 +1,8 @@
 module.exports = function(eleventyConfig) {
-  // Only pass through compiled CSS — never source files
   eleventyConfig.addPassthroughCopy({ "src/css/output.css": "css/output.css" });
   eleventyConfig.addPassthroughCopy("images");
+  eleventyConfig.addPassthroughCopy("favicon.ico");
+  eleventyConfig.addPassthroughCopy("favicon.png");
 
   return {
     dir: {
