@@ -62,8 +62,8 @@
   <div class="card" style="margin-top:120px;overflow:hidden;">
     <div style="max-width:1440px;margin:0 auto;padding:80px 40px 0;">
 
-      <!-- HERO -->
-      <div style="display:grid;grid-template-columns:6fr 5fr;gap:40px;align-items:center;margin-bottom:48px;">
+      <!-- HERO — title + meta left, intro text right starting at ~1/3 down -->
+      <div class="cs-hero-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:48px;">
         <div>
           <h1 class="h1" style="margin-bottom:40px;">Bia Energy</h1>
           <div style="display:flex;gap:0;align-items:baseline;flex-wrap:wrap;column-gap:24px;row-gap:8px;">
@@ -74,11 +74,14 @@
             <span style="font-family:'Inter',sans-serif;font-size:16px;font-weight:500;color:#121212;">Bia Energy</span>
           </div>
         </div>
-        <p class="body-lg">Building a brand from nothing for Ireland&#39;s largest anaerobic digestion plant — strategy, identity, digital, and launch.</p>
+        <!-- Intro text — sits at roughly 1/3 down the left column height, matching Figma top:365px -->
+        <div style="padding-top:149px;">
+          <p class="body-lg cs-hero-intro">Building a brand from nothing for Ireland&#39;s largest anaerobic digestion plant — strategy, identity, digital, and launch.</p>
+        </div>
       </div>
 
       <!-- Hero image -->
-      <div style="height:765px;border-radius:24px;overflow:hidden;margin-bottom:96px;">
+      <div class="cs-full-img-tall" style="height:765px;border-radius:24px;overflow:hidden;margin-bottom:96px;">
         
           <img src="/images/work/bia-energy/hero.webp" alt="Bia Energy" style="width:100%;height:100%;object-fit:cover;display:block;">
         
@@ -92,17 +95,17 @@
 <p class="body-lg" style="max-width:896px;margin-bottom:96px;">Bia Energy came to us with no brand, no identity, and no public presence. Entering a competitive clean energy market, they had a powerful story, but no visual language to tell it. The challenge was precise: craft an identity that balanced trust and innovation without tipping into corporate blankness or greenwashing. The brand had to work in a hi-vis jacket, on a conference stage, and in a B2B sales conversation, simultaneously.</p>
 
 <!-- Challenge images — 2x2 grid -->
-<div class="cs-img-grid" style="margin-bottom:96px;">
-  <div style="height:521px;border-radius:16px;overflow:hidden;">
+<div class="cs-img-grid cs-section-gap" style="margin-bottom:96px;">
+  <div class="cs-grid-img" style="height:521px;border-radius:16px;overflow:hidden;">
     <img src="/images/work/bia-energy/brand-01.webp" alt="Bia Energy brand" style="width:100%;height:100%;object-fit:cover;display:block;">
   </div>
-  <div style="height:521px;border-radius:16px;overflow:hidden;">
+  <div class="cs-grid-img" style="height:521px;border-radius:16px;overflow:hidden;">
     <img src="/images/work/bia-energy/brand-02.webp" alt="Bia Energy brand" style="width:100%;height:100%;object-fit:cover;display:block;">
   </div>
-  <div style="height:521px;border-radius:16px;overflow:hidden;">
+  <div class="cs-grid-img" style="height:521px;border-radius:16px;overflow:hidden;">
     <img src="/images/work/bia-energy/brand-03.webp" alt="Bia Energy" style="width:100%;height:100%;object-fit:cover;display:block;">
   </div>
-  <div style="height:521px;border-radius:16px;overflow:hidden;">
+  <div class="cs-grid-img" style="height:521px;border-radius:16px;overflow:hidden;">
     <img src="/images/work/bia-energy/brand-04.webp" alt="Bia Energy" style="width:100%;height:100%;object-fit:cover;display:block;">
   </div>
 </div>
@@ -113,7 +116,7 @@
 <p class="body-lg" style="max-width:896px;margin-bottom:96px;">We opened with user persona research and a semi-fictional archetype model to map Bia Energy's B2B audience; demographics, psychographics, behaviours. This fed a full client discovery workshop covering voice, values, and positioning. Identity work began only once the strategic foundation was set.</p>
 
 <!-- Principle cards — 3 col -->
-<div class="cs-grid-3" style="margin-bottom:96px;">
+<div class="cs-grid-3 cs-section-gap" style="margin-bottom:96px;">
   <div class="cs-card">
     <span class="cs-card-num">001</span>
     <span class="cs-card-title">Simplicity &amp; clarity</span>
@@ -132,7 +135,7 @@
 </div>
 
 <!-- Full width image -->
-<div style="height:765px;border-radius:24px;overflow:hidden;margin-bottom:96px;">
+<div class="cs-full-img-tall cs-section-gap" style="height:765px;border-radius:24px;overflow:hidden;margin-bottom:96px;">
   <img src="/images/work/bia-energy/full-width-01.webp" alt="Bia Energy" style="width:100%;height:100%;object-fit:cover;display:block;">
 </div>
 
@@ -153,11 +156,11 @@
 <p class="body-base" style="max-width:664px;margin-bottom:96px;">The website required a bespoke WordPress theme — purpose-built, not templated — alongside a custom carbon offset calculator allowing B2B clients to model their own savings. The launch event brought the brand to market with a fully coordinated keynote, mailing campaign, and AV production.</p>
 
 <!-- Deliverables images -->
-<div class="cs-img-grid" style="margin-bottom:96px;">
-  <div style="height:521px;border-radius:16px;overflow:hidden;">
+<div class="cs-img-grid cs-section-gap" style="margin-bottom:96px;">
+  <div class="cs-grid-img" style="height:521px;border-radius:16px;overflow:hidden;">
     <img src="/images/work/bia-energy/deliverable-01.webp" alt="Bia Energy deliverable" style="width:100%;height:100%;object-fit:cover;display:block;">
   </div>
-  <div style="height:521px;border-radius:16px;overflow:hidden;">
+  <div class="cs-grid-img" style="height:521px;border-radius:16px;overflow:hidden;">
     <img src="/images/work/bia-energy/deliverable-02.webp" alt="Bia Energy deliverable" style="width:100%;height:100%;object-fit:cover;display:block;">
   </div>
 </div>
@@ -167,7 +170,7 @@
 <h2 class="h2" style="max-width:664px;margin-bottom:96px;">A brand built to lead,<br>not follow.</h2>
 
 <!-- Outcome cards — 2x2 -->
-<div class="cs-grid-2" style="margin-bottom:96px;">
+<div class="cs-grid-2 cs-section-gap" style="margin-bottom:96px;">
   <div class="cs-card">
     <span class="cs-card-num">001</span>
     <span class="cs-card-title">Market-ready from day one</span>
@@ -191,7 +194,7 @@
 </div>
 
 <!-- Closing image -->
-<div style="height:765px;border-radius:24px;overflow:hidden;">
+<div class="cs-full-img-tall" style="height:765px;border-radius:24px;overflow:hidden;">
   <img src="/images/work/bia-energy/closing.webp" alt="Bia Energy" style="width:100%;height:100%;object-fit:cover;display:block;">
 </div>
 
@@ -205,9 +208,9 @@
   <div style="background:#fff;margin:16px 16px 0;border-radius:32px;overflow:hidden;">
     <div style="max-width:1440px;margin:0 auto;padding:64px 40px 0;">
       <p style="font-family:'Bricolage Grotesque',sans-serif;font-size:25px;font-weight:700;color:#121212;letter-spacing:-1px;margin-bottom:40px;">/ Next Project</p>
-      <div style="display:grid;grid-template-columns:7fr 5fr;gap:40px;align-items:flex-end;padding-bottom:64px;">
+      <div class="cs-next-grid" style="display:grid;grid-template-columns:7fr 5fr;gap:40px;align-items:end;padding-bottom:64px;">
         <a href="/work/panda/" style="text-decoration:none;display:block;">
-          <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-size:95px;font-weight:700;color:#121212;letter-spacing:-2.5px;line-height:0.95;transition:color 0.2s;"
+          <h2 class="cs-next-title" style="font-family:'Bricolage Grotesque',sans-serif;font-size:95px;font-weight:700;color:#121212;letter-spacing:-2.5px;line-height:0.95;transition:color 0.2s;"
             onmouseover="this.style.color='#5a6857'"
             onmouseout="this.style.color='#121212'">Panda</h2>
         </a>
