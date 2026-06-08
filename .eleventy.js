@@ -1,19 +1,16 @@
 module.exports = function(eleventyConfig) {
-
-  // Pass through static assets
-  eleventyConfig.addPassthroughCopy("src/css");
+  eleventyConfig.addPassthroughCopy({ "src/css/output.css": "css/output.css" });
   eleventyConfig.addPassthroughCopy("images");
+  eleventyConfig.addPassthroughCopy({ "favicon.ico": "favicon.ico" });
+  eleventyConfig.addPassthroughCopy({ "favicon.png": "favicon.png" });
 
   return {
     dir: {
       input: "src",
       output: "public",
-      includes: "_includes",
-      layouts: "_includes/layouts",
-      data: "_data"
+      includes: "_includes"
     },
     templateFormats: ["njk", "html", "md"],
-    htmlTemplateEngine: "njk",
-    markdownTemplateEngine: "njk"
+    htmlTemplateEngine: "njk"
   };
 };
