@@ -439,6 +439,9 @@
     line-height: 24px;
   }
 
+  .item-coming-soon { pointer-events: none; cursor: default; }
+  .item-coming-soon .work-card-img-wrap { opacity: 0.75; }
+
   /* ── SERVICES ── */
   .services-inner {
     max-width: 1440px;
