@@ -439,9 +439,6 @@
     line-height: 24px;
   }
 
-  .item-coming-soon { pointer-events: none; cursor: default; }
-  .item-coming-soon .work-card-img-wrap { opacity: 0.75; }
-
   /* ── SERVICES ── */
   .services-inner {
     max-width: 1440px;
@@ -661,6 +658,38 @@
   .cs-next-img { height: 434px; border-radius: 24px 24px 0 0; overflow: hidden; }
   .cs-next-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .cs-next-img-placeholder { width: 100%; height: 100%; background: rgba(90,104,87,0.1); }
+  /* ── Photography gallery grid ── */
+  .cs-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+  .cs-gallery-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .cs-gallery-img {
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .cs-gallery-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .cs-gallery-img--sm {
+    height: 237px;
+  }
+  .cs-gallery-img--lg {
+    height: 421px;
+  }
+  /* Portrait images — taller ratio */
+  .cs-portrait {
+    height: 885px;
+  }
 }
 
 /* ============================================
@@ -732,6 +761,11 @@
   .body-base { font-size: 16px !important; }
   .section-label { font-size: 16px; }
   .cs-card-body { font-size: 16px !important; }
+  /* Photography gallery — mobile */
+  .cs-gallery { grid-template-columns: 1fr 1fr; }
+  .cs-gallery-img--sm { height: 160px; }
+  .cs-gallery-img--lg { height: 280px; }
+  .cs-portrait { height: auto; aspect-ratio: 3/4; }
   /* Footer */
   .footer-bottom { flex-direction: column; align-items: flex-start; gap: 12px; }
   /* Work card images */
