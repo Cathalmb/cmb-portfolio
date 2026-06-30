@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }} — Case Study · Cathal Mac an Bheatha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/output.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JXNZD09HPE"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-JXNZD09HPE');
+    </script>
+</head>
+<body>
+
+  {% include "nav.njk" %}
+
+  <!-- CASE STUDY CARD -->
+  <div class="card cs-card">
+    <div class="cs-card-inner">
+
+      <!-- HERO -->
+      <div class="cs-hero-grid">
+        <div>
+          <h1 class="h1 cs-mb-24">{{ title }}</h1>
+          <div class="cs-meta-row">
+            <span class="cs-meta-label">Scope</span>
+            <span class="cs-meta-value">{{ scope }}</span>
+            <span class="cs-meta-slash">/</span>
+            <span class="cs-meta-label">Client</span>
+            <span class="cs-meta-value">{{ client }}</span>
+          </div>
+        </div>
+        <p class="body-lg cs-hero-intro">{{ intro }}</p>
+      </div>
+
+      <!-- Hero image -->
+      <div class="cs-hero-img cs-section-gap">
+        {% if heroImage %}
+          <img src="{{ heroImage }}" alt="{{ title }}">
+        {% else %}
+          <div class="cs-hero-img-placeholder"><span>Hero image</span></div>
+        {% endif %}
+      </div>
+
+      <!-- Page content -->
+      {{ content | safe }}
+
+    </div>
+    <div class="cs-card-bottom"></div>
+  </div>
+
+  <!-- NEXT PROJECT -->
+  {% if nextProject %}
+  <div class="cs-next-card">
+    <div class="cs-next-inner">
+      <p class="cs-next-label">/ Next Project</p>
+      <div class="cs-next-grid">
+        <a href="{{ nextProject.url }}" class="cs-next-title">{{ nextProject.title }}</a>
+        <p class="cs-next-desc">{{ nextProject.description }}</p>
+      </div>
+    </div>
+    <div class="cs-next-img-wrap">
+      <div class="cs-next-img">
+        {% if nextProject.previewImage %}
+          <img src="{{ nextProject.previewImage }}" alt="{{ nextProject.title }}">
+        {% else %}
+          <div class="cs-next-img-placeholder"></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% include "footer.njk" %}
+  {% include "scripts.njk" %}
+
+</body>
+</html>
