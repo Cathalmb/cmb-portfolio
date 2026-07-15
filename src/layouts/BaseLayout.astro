@@ -34,6 +34,14 @@ const dark = theme === "dark";
 // Canonical URL for this exact page — also used for og:url, which was
 // previously hardcoded to Astro.site (i.e. the same URL on every page).
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+// Google Analytics 4 — ported from the legacy 11ty site (_legacy/src/_includes
+// /layouts/base.njk + case-study.njk), which had this on every page but it
+// never got carried over during the Astro rebuild, so the live site had zero
+// analytics until this was re-added (July 15 2026). Same property/ID as
+// before, just centralised here in BaseLayout instead of duplicated per
+// layout, since every page already routes through this one file.
+const GA_MEASUREMENT_ID = "G-JXNZD09HPE";
 ---
 
 <!doctype html>
@@ -43,6 +51,17 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+    <script define:vars={{ GA_MEASUREMENT_ID }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", GA_MEASUREMENT_ID);
+    </script>
 
     <title>{title}</title>
     <meta name="description" content={description} />
