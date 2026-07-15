@@ -31,9 +31,15 @@
  *      which stops them shrinking below their own content size even when
  *      the parent track is narrower — same underlying quirk noted on the
  *      /creative-partner tier CTA pills. Added `min-w-0 overflow-hidden` to
- *      the `<li>` so the grid track's width is actually enforced, and
- *      swapped the image's `max-w-[180px]` for `max-w-full` so it fills
- *      whatever the cell actually has rather than a fixed desktop-ish cap.
+ *      the `<li>` so the grid track's width is actually enforced.
+ *   CORRECTION (same day): first pass swapped the image's fixed
+ *   `max-w-[180px]` for `max-w-full`, which fixed mobile but let wide-aspect
+ *   logos balloon to fill the full ~300px desktop cell — a real regression,
+ *   flagged by Cathal ("logos are much bigger than they originally were").
+ *   Now `max-w-[85%] lg:max-w-[180px]`: restores the exact original 180px
+ *   desktop cap (same generous-whitespace look as before) from `lg:` (1024px)
+ *   up, and uses a cell-proportional 85% cap below that so it never overflows
+ *   regardless of how narrow an individual breakpoint's grid track gets.
  *   LESSON: any custom breakpoint renaming (this project's sm/md/lg/xl are
  *   NOT stock Tailwind values) needs re-checking against every existing
  *   `sm:`/`md:`/etc. usage when it's introduced — a component built before
@@ -75,7 +81,7 @@ const cells = [
                 src={c.src}
                 alt={c.name}
                 loading="lazy"
-                class="max-h-[64px] w-auto max-w-full object-contain lg:max-h-[80px]"
+                class="max-h-[64px] w-auto max-w-[85%] object-contain lg:max-h-[80px] lg:max-w-[180px]"
               />
             </li>
           ))
