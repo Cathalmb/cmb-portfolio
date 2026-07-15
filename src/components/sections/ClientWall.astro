@@ -17,6 +17,27 @@
  * transparent), so both were swapped for "-white" exports. Abbey Theatre, Bia
  * Energy, Talent Garden, Tirlán, 212 Yachts, Panda and Cotone use SVG source
  * files (sharper at the 2x/retina sizes this wall renders at than PNG exports).
+ *
+ * MOBILE OVERFLOW BUG FIXED (July 15 2026) — logos were blowing out past both
+ * screen edges on real phones. Two compounding causes:
+ *   1. This project redefines Tailwind's `sm:` breakpoint to 390px (global.css
+ *      --breakpoint-sm), i.e. "basically any phone." The grid was built
+ *      `grid-cols-2 sm:grid-cols-4` assuming stock Tailwind sm=640px (tablet),
+ *      so the 4-col layout was firing on phones instead of the intended
+ *      2-col fallback. Bumped the breakpoint to `md:` (768px) so phones stay
+ *      2-col and only tablet+ gets 4.
+ *   2. Even at 4 columns this would've overflowed: the `<li>` grid cell is a
+ *      flex container, and flex children default to `min-width: auto`,
+ *      which stops them shrinking below their own content size even when
+ *      the parent track is narrower — same underlying quirk noted on the
+ *      /creative-partner tier CTA pills. Added `min-w-0 overflow-hidden` to
+ *      the `<li>` so the grid track's width is actually enforced, and
+ *      swapped the image's `max-w-[180px]` for `max-w-full` so it fills
+ *      whatever the cell actually has rather than a fixed desktop-ish cap.
+ *   LESSON: any custom breakpoint renaming (this project's sm/md/lg/xl are
+ *   NOT stock Tailwind values) needs re-checking against every existing
+ *   `sm:`/`md:`/etc. usage when it's introduced — a component built before
+ *   the rename can silently break without any code change of its own.
  */
 import Container from "../primitives/Container.astro";
 
@@ -45,16 +66,16 @@ const cells = [
     <div class="pb-24 lg:pb-[192px]">
       <ul
         data-reveal
-        class="grid grid-cols-2 gap-6 sm:grid-cols-4"
+        class="grid grid-cols-2 gap-6 md:grid-cols-4"
       >
         {
           cells.map((c) => (
-            <li class="flex min-h-[140px] items-center justify-center lg:min-h-[211px]">
+            <li class="flex min-w-0 min-h-[140px] items-center justify-center overflow-hidden lg:min-h-[211px]">
               <img
                 src={c.src}
                 alt={c.name}
                 loading="lazy"
-                class="max-h-[64px] w-auto max-w-[180px] object-contain lg:max-h-[80px]"
+                class="max-h-[64px] w-auto max-w-full object-contain lg:max-h-[80px]"
               />
             </li>
           ))
