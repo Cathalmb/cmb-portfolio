@@ -1,6 +1,6 @@
 ---
 import fs from "node:fs";
-import { fileURLToPath } from "node:url";
+import path from "node:path";
 
 /**
  * About — Gallery. Figma nodes 68:323 / 73:90 / 73:91 + the reference recording.
@@ -34,7 +34,15 @@ const altText: Record<string, string> = {
     "A group selfie composited with a silhouetted photo of an adult and child walking along the shoreline at sunset",
 };
 
-const sliderDir = fileURLToPath(new URL("../../../public/images/slider", import.meta.url));
+// Resolved from process.cwd() (the project root during `astro build`/`astro
+// dev`), NOT import.meta.url. An import.meta.url-relative path broke the
+// Vercel build (July 14 2026): Astro bundles this component into a chunk
+// under dist/chunks/astro/ during a production build, which sits at a
+// different depth from the repo root than the original source file did, so
+// a fixed "../../../" no longer lands on public/. process.cwd() is stable
+// across dev and build because it's set by whatever process invokes Astro,
+// not by where the bundler puts the compiled file.
+const sliderDir = path.join(process.cwd(), "public/images/slider");
 const IMAGE_EXT = /\.(jpe?g|png|webp|avif)$/i;
 const naturalSort = (a: string, b: string) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
 
