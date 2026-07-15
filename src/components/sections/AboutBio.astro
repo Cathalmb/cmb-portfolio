@@ -1,0 +1,39 @@
+---
+/**
+ * About — Bio. Figma nodes 68:115 (label) + 70:77 (copy) + 68:117 (divider).
+ * EXACT values: top hairline (n700, full 1344 width). Label "About me" body-md
+ * (16/24) n500 at the left gutter, top-aligned with the copy. Copy is heading-sm
+ * (25/32) n100, width 648, starting at grid column 6 (Figma left calc(41.67%+28)).
+ * Paragraph spacing 0 in the frame (leading 32 throughout). Copy verbatim.
+ */
+import Container from "../primitives/Container.astro";
+
+const paragraphs = [
+  "I'm a creative director and brand strategist working with Irish organisations and growing brands.",
+  "My background is in end-to-end creative: strategy, identity, design, photography, and content. Eleven years at agency level, working across brand, digital, and campaign work for clients from Bia Energy to Panda, Three Ireland to Gael Linn.",
+  "I work as a single lead across the full creative output. The person who thinks through the brand strategy is the same person who shoots the launch photography. Nothing gets lost between disciplines.",
+  "I'm also one of the few senior creatives in Ireland who can lead bilingual projects from brief to launch, in English and Irish, without outsourcing the language.",
+  "I believe execution and consistency matter more than novelty. The best creative work holds up. It works in a hi-vis jacket and on a conference stage. It still represents the brand two years after launch.",
+  "If you're building something and want it done properly, let's talk.",
+];
+---
+
+<section class="bg-n900">
+  <Container size="large">
+    <div class="border-t border-n700 pt-2 pb-16 lg:pb-[160px]">
+      <div class="grid gap-6 lg:grid-cols-12 lg:gap-x-6">
+        <!-- Label -->
+        <p data-reveal class="pb-[1em] text-body-md text-n500 lg:col-span-5">About me</p>
+
+        <!-- Copy: grid column 6 onward, capped at 648 -->
+        <div
+          data-reveal
+          style="--reveal-delay: 80ms"
+          class="max-w-[648px] text-heading-sm text-n100 lg:col-span-7 lg:col-start-6"
+        >
+          {paragraphs.map((p) => <p class="pb-[1em] leading-[32px] last:pb-0">{p}</p>)}
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

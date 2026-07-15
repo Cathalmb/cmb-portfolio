@@ -1,0 +1,18 @@
+---
+/**
+ * Grid — the 12-column base grid.
+ * Gap follows the gutter scale: 24px mobile, 48px desktop.
+ * Place children with Tailwind col-span utilities, e.g.:
+ *   <div class="col-span-12 md:col-span-6 lg:col-span-4"> … </div>
+ */
+interface Props {
+  as?: keyof HTMLElementTagNameMap;
+  class?: string;
+}
+
+const { as: Tag = "div", class: className = "" } = Astro.props;
+---
+
+<Tag class:list={["grid grid-cols-12 gap-x-3 gap-y-8 md:gap-x-6", className]}>
+  <slot />
+</Tag>

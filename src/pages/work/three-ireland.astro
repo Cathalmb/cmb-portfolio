@@ -1,0 +1,188 @@
+---
+/**
+ * Three Ireland — the photography/video case-study template. Per Cathal
+ * (July 13 2026): "photography and video will vary as there will be no
+ * brand strategy problems," so this skips "The Solution" entirely —
+ * there's no strategy problem to solve on a pure photography brief. Shape
+ * is: Hero → The Brief → What I Delivered → On The Ground (signature
+ * section, masonry gallery) → Outcomes. Content ported from
+ * _legacy/src/work/three-ireland.njk verbatim.
+ *
+ * The masonry gallery here (CaseStudyMasonry) is deliberately NOT the
+ * About page's carousel (Gallery.astro) — see that component's own
+ * comment for why. Same "no Figma frame yet" flag as bia-energy.astro.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Container from "../../components/primitives/Container.astro";
+import CaseStudyHero from "../../components/sections/CaseStudyHero.astro";
+import CaseStudySectionIntro from "../../components/sections/CaseStudySectionIntro.astro";
+import CaseStudyImageGrid from "../../components/sections/CaseStudyImageGrid.astro";
+import CaseStudyDeliverables from "../../components/sections/CaseStudyDeliverables.astro";
+import CaseStudyMasonry from "../../components/sections/CaseStudyMasonry.astro";
+import CaseStudyPillarGrid from "../../components/sections/CaseStudyPillarGrid.astro";
+import CaseStudyFullImage from "../../components/sections/CaseStudyFullImage.astro";
+import CaseStudyNextProject from "../../components/sections/CaseStudyNextProject.astro";
+
+const title = "Three Ireland | Case Study | Cathal Mac an Bheatha";
+const description =
+  "From Camden Recording Studios to the All For Music Stage — sole campaign photographer for Three Ireland's City Stages at Electric Picnic 2023.";
+---
+
+<BaseLayout title={title} description={description}>
+  <CaseStudyHero
+    title="Three Ireland — City Stages at Electric Picnic"
+    client="Three Ireland"
+    scope="Campaign Photography, Festival Documentation"
+    intro="From Camden Recording Studios to the All For Music Stage, sole campaign photographer for Three Ireland's City Stages at Electric Picnic 2023."
+    heroImage="/images/work/three-ireland/hero.webp"
+  />
+
+  <section class="bg-n100">
+    <Container size="large">
+      <!-- The Brief -->
+      <div class="pt-8 pb-12 lg:pt-12 lg:pb-16">
+        <CaseStudySectionIntro
+          label="The Brief"
+          heading="Eight emerging artists. Two environments."
+          paragraphs={[
+            "Three Ireland's City Stages initiative had spent 2023 touring Ireland, giving emerging buskers a platform outside Three stores in Dublin, Limerick, Waterford, Kilkenny and Galway. The culmination was an ensemble performance at Electric Picnic; eight artists, a full backing band, and a surprise guest set from Cian Ducrot.",
+            "Big Dog was brought in as sole photography partner across the full campaign. That meant two distinct bodies of work: directed artist portraits at Camden Recording Studios in Dublin to announce the City Stages Collective, and full on-site documentation at Stradbally across the festival weekend, performances, crowd, atmosphere, and the Three Charge & Chill activation.",
+          ]}
+        />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyImageGrid
+            aspect="portrait"
+            images={[
+              { src: "/images/work/three-ireland/portrait-01.webp", alt: "City Stages artist portrait" },
+              { src: "/images/work/three-ireland/portrait-02.webp", alt: "City Stages artist portrait" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <!-- What I Delivered (no lead paragraph — straight into the list, matches the legacy copy) -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro label="What I Delivered" heading="Two shoot days. Zero second takes." />
+        <div class="mt-6">
+          <CaseStudyDeliverables
+            items={[
+              "Pre-Campaign Artist Portrait Photography",
+              "Three All For Music Stage Coverage",
+              "Three Charge & Chill Activation Documentation",
+              "Performance & Crowd Photography",
+              "Backstage & Candid Artist Portraits",
+              "100s images delivered across two shoot days",
+            ]}
+          />
+        </div>
+      </div>
+
+      <!-- On The Ground (signature section) -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro
+          label="On The Ground"
+          heading="A live festival is a different discipline to a controlled shoot."
+          paragraphs={[
+            "The Camden studio portraits were directed, composition, lighting, and artist presentation all considered and controlled. Electric Picnic demanded something different. The Charge & Chill area ran continuously, with artists performing informally alongside the main activation. The All For Music Stage brought the full ensemble performance, a live crowd, and Cian Ducrot joining the collective for a surprise appearance.",
+            "The brief across both environments was the same: capture the energy clearly enough to serve the campaign, without losing the atmosphere that made the moment worth documenting. No second takes, no controlled light, no reshoots.",
+          ]}
+        />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyMasonry
+            columns={[
+              [
+                { src: "/images/work/three-ireland/festival-01.webp", alt: "Electric Picnic", size: "sm" },
+                { src: "/images/work/three-ireland/festival-05.webp", alt: "Electric Picnic", size: "lg" },
+              ],
+              [
+                { src: "/images/work/three-ireland/festival-02.webp", alt: "Electric Picnic", size: "lg" },
+                { src: "/images/work/three-ireland/festival-06.webp", alt: "Electric Picnic", size: "sm" },
+              ],
+              [
+                { src: "/images/work/three-ireland/festival-03.webp", alt: "Electric Picnic", size: "lg" },
+                { src: "/images/work/three-ireland/festival-07.webp", alt: "Electric Picnic", size: "sm" },
+              ],
+              [
+                { src: "/images/work/three-ireland/festival-04.webp", alt: "Electric Picnic", size: "sm" },
+                { src: "/images/work/three-ireland/festival-08.webp", alt: "Electric Picnic", size: "lg" },
+              ],
+            ]}
+          />
+        </div>
+      </div>
+
+      <!-- Outcomes -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro label="Outcomes" heading="The complete visual record of the campaign's centrepiece moment." />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyPillarGrid
+            cols={2}
+            items={[
+              {
+                num: "001",
+                title: "Sole visual record of the campaign",
+                body: "Every image used to document the City Stages Collective's Electric Picnic debut, on stage, backstage, and across the activation, came from this shoot. The work ran entirely through Three Ireland's own channels, as is standard for brand-owned campaign photography.",
+              },
+              {
+                num: "002",
+                title: "A brief that extended into 2024",
+                body: "The relationship with Three Ireland and Sweartaker continued the following year, brought back to direct and shoot a behind-the-scenes video at the rehearsals for the 2024 City Stages collective ahead of that year's Electric Picnic.",
+              },
+            ]}
+          />
+        </div>
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyFullImage src="/images/work/three-ireland/festival-01.webp" alt="Three Ireland City Stages" />
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <CaseStudyNextProject
+    title="Panda"
+    href="/work/panda"
+    description="Merging a growing utility business into one coherent brand and building the digital platform to match."
+    previewImage="/images/work/panda/preview.webp"
+  />
+</BaseLayout>
+
+<script>
+  // Scroll reveal: fade + rise each [data-reveal] element as it enters view.
+  // Hidden state is scoped to `.reveal-ready` (added to <html>) so no-JS shows all.
+  const root = document.documentElement;
+  const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (els.length) {
+    root.classList.add("reveal-ready");
+    if (reduce || !("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-revealed"));
+    } else {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-revealed");
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -10% 0px", threshold: 0.1 }
+      );
+      els.forEach((el) => {
+        // Reveal immediately if the element is already on-screen when this
+        // runs (fixes inner-page heroes staying at opacity:0 until the user
+        // scrolls — IO's initial callback wasn't landing reliably before
+        // any scroll event; fixed July 14 2026 across all pages using this
+        // script). Only observe elements that still need to come into view.
+        const rect = el.getBoundingClientRect();
+        const alreadyInView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (alreadyInView) {
+          el.classList.add("is-revealed");
+        } else {
+          io.observe(el);
+        }
+      });
+    }
+  }
+</script>

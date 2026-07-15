@@ -1,0 +1,22 @@
+---
+/**
+ * Container — centres content and applies the responsive gutter
+ * (24px mobile / 48px desktop).
+ *   size="site"  → max 1280px (default, most sections)
+ *   size="large" → max 1440px (wide sections / full-bleed feature areas)
+ */
+interface Props {
+  as?: keyof HTMLElementTagNameMap;
+  size?: "site" | "large";
+  class?: string;
+}
+
+const { as: Tag = "div", size = "site", class: className = "" } = Astro.props;
+
+// Full class names written out so Tailwind v4 detects them.
+const maxWidth = size === "large" ? "max-w-large" : "max-w-site";
+---
+
+<Tag class:list={["mx-auto w-full px-3 md:px-6", maxWidth, className]}>
+  <slot />
+</Tag>

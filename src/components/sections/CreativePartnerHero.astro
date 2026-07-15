@@ -1,0 +1,74 @@
+---
+/**
+ * Creative Partner Retainer — Hero. Figma node 106:135, groups 106:147 /
+ * 107:282 (both named "hero" in Figma — treated as one section here).
+ * Dark page (bg-n900). Title + subhead, then a hairline "The retainer"
+ * label, then the two-column offer: big statement (ochre-accented) on the
+ * left, supporting paragraphs + terms fine print on the right.
+ *
+ * Copy is verbatim from website-copy.md §CREATIVE PARTNER RETAINER, sections
+ * 1 (Hero) and 2 (The offer) — kept in sync with the proposal PDF.
+ */
+import Container from "../primitives/Container.astro";
+---
+
+<section class="bg-n900">
+  <Container size="large">
+    <div class="pt-12 pb-16 lg:pb-24">
+      <h1
+        data-reveal
+        class="max-w-[880px] text-heading-xl text-n100 lg:text-display-xl"
+      >
+        The Creative Partner Retainer<span class="text-ochre">.</span>
+      </h1>
+      <p
+        data-reveal
+        style="--reveal-delay: 80ms"
+        class="mt-3 text-heading-sm text-n100 lg:text-heading-xl"
+      >
+        I work best with clients who stick around.
+      </p>
+    </div>
+
+    <div class="border-t border-n700 pt-2">
+      <p class="text-body-md text-n500">The retainer</p>
+    </div>
+
+    <div class="mt-8 grid gap-6 lg:grid-cols-12 lg:gap-x-6">
+      <p
+        data-reveal
+        class="text-heading-lg text-n100 lg:col-span-9 lg:text-display-sm"
+      >
+        This is not a project.<br />
+        This is not a hire.<br />
+        It is a monthly <span class="text-ochre">creative relationship</span>,
+        directed by your priorities.
+      </p>
+
+      <div
+        data-reveal
+        style="--reveal-delay: 80ms"
+        class="flex flex-col gap-4 lg:col-span-6 lg:col-start-6"
+      >
+        <p class="text-body-lg text-n100">
+          The Creative Partner Retainer gives you monthly capacity across all
+          four disciplines. Each month starts with a short alignment call
+          where you set the priorities. Brand one month, website the next, a
+          campaign after that. The work follows what your business needs, not
+          a fixed deliverable list.
+        </p>
+        <p class="text-body-lg text-n100">
+          Retainers start at €1,800/month for around two days of senior
+          creative time. Larger tiers roughly double and triple that
+          capacity, and the top tier is held for one or two clients at a
+          time.
+        </p>
+        <p class="text-body-sm text-n100">
+          Three-month minimum, then rolling monthly with 30 days notice.
+          Capacity doesn't roll over, which is exactly why the monthly call
+          exists. Cancel any time. But you won't want to!
+        </p>
+      </div>
+    </div>
+  </Container>
+</section>

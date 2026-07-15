@@ -1,0 +1,48 @@
+---
+/**
+ * Case study — numbered card grid. Used for "The Solution" pillars
+ * (3-up, e.g. Bia Energy's "Clarity at a glance / Distinctive without
+ * noise / Built to grow") and for "Outcomes" (2-up, 2–6 cards). One card
+ * can be a `quote` instead of a numbered pillar — GOAL's outcomes include
+ * a direct client testimonial and this lets that sit in the same grid
+ * without inventing a separate component.
+ *
+ * Card chrome reused verbatim from the existing "info card" pattern
+ * already on the homepage bento (Work.astro: border-n200 bg-n100
+ * rounded-[24px] p-4) rather than a new one-off style.
+ */
+interface Item {
+  num?: string;
+  title?: string;
+  body: string;
+  quote?: boolean;
+}
+
+interface Props {
+  items: Item[];
+  cols?: 2 | 3;
+}
+
+const { items, cols = 3 } = Astro.props;
+const colsClass = cols === 2 ? "lg:grid-cols-2" : "lg:grid-cols-3";
+---
+
+<div data-reveal class={`grid grid-cols-1 gap-2 ${colsClass}`}>
+  {
+    items.map((item) =>
+      item.quote ? (
+        <div class="flex flex-col justify-between rounded-[24px] border border-n200 bg-n100 p-4">
+          <p aria-hidden="true" class="text-heading-lg text-ochre">&ldquo;</p>
+          <p class="mt-1 text-body-lg text-n900 italic">{item.body}</p>
+          {item.title && <p class="mt-4 text-body-sm text-n500">{item.title}</p>}
+        </div>
+      ) : (
+        <div class="flex flex-col rounded-[24px] border border-n200 bg-n100 p-4">
+          {item.num && <span class="text-body-lg text-n500">{item.num}</span>}
+          {item.title && <span class="mt-2 text-heading-sm text-n900">{item.title}</span>}
+          <span class="mt-2 text-body-md text-n500">{item.body}</span>
+        </div>
+      )
+    )
+  }
+</div>

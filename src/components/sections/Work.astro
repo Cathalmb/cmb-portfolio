@@ -1,0 +1,151 @@
+---
+/**
+ * Work — homepage case-study bento. Figma 33:91 (desktop) + 33:101 (mobile).
+ *
+ * Desktop: named-grid bento. Mobile: single-column stack (case cards 342×499;
+ * statement/info cards hug their content — changed July 2026 design review,
+ * along with dropping the uppercase treatment in favour of body-md sentence case).
+ *
+ * Behaviour:
+ *  - Case-study descriptor is hidden on desktop and REVEALS on hover/focus:
+ *    the title slides up as the descriptor opens beneath it (descriptor
+ *    baseline stays fixed). Uses the grid-rows 0fr→1fr technique on a
+ *    bottom-anchored overlay so the title rises. Always shown on mobile.
+ *  - Whole card is clickable. "View all work" → /work.
+ *
+ * SPACING — remember --spacing is 8px:
+ *   p-3 = 24 (mobile card padding) · p-4 = 32 (desktop card padding)
+ *   pt-12 = 96 (section top / matches the hero gap in the frame)
+ *   mt-3 = 24 · mt-6 = 48 · mt-4 = 32 · mt-1 = 8
+ *
+ * Grid areas (desktop, 3 cols × 4 rows, rows 240/474/240/474, gap 16):
+ *   bia bia info1 / bia bia cotone / info2 three three / panda three three
+ *
+ * July 13 2026: swapped the "gael" slot from Gael Linn to Cotone — Gael
+ * Linn's case study isn't written yet (same reasoning as pulling it from
+ * the /work grid), Cotone is now a real, built page. Renamed the area
+ * from "gael" to "cotone" throughout (grid-template-areas + data-area)
+ * so the code doesn't lie about what's actually in that slot.
+ */
+import Container from "../primitives/Container.astro";
+
+type Card =
+  | { type: "case"; name: string; descriptor: string; href: string; img: string | null; bg?: string; area: string }
+  | { type: "info"; text: string; area: string };
+
+// DOM order = mobile reading order.
+const cards: Card[] = [
+  { type: "case", name: "Bia Energy", descriptor: "Energy sector", href: "/work/bia-energy", img: "/images/work/bia-energy/bia-energy.webp", area: "bia" },
+  { type: "info", area: "info1", text: "I think before I make. Everything starts with discovery: understanding the brief, the audience, the market, and the problem before anything gets designed, shot or built. The work looks better because the thinking happened first." },
+  { type: "case", name: "Cotone", descriptor: "Fashion & lifestyle", href: "/work/cotone", img: "/images/work/cotone/hero.jpg", area: "cotone" },
+  { type: "info", area: "info2", text: "Built on eleven years in the Irish market. Native Irish speaker. One of the few senior creatives who can lead a bilingual project end-to-end, from strategy through to photography, without outsourcing the language." },
+  { type: "case", name: "Panda", descriptor: "Green Utilities", href: "/work/panda", img: "/images/work/panda/preview.webp", area: "panda" },
+  { type: "case", name: "Three Ireland", descriptor: "Telecoms", href: "/work/three-ireland", img: "/images/work/three-ireland/hero.webp", area: "three" },
+];
+---
+
+<section id="work" class="py-12">
+  <Container size="large">
+    <!-- Heading -->
+    <p class="text-caption text-n500 lg:text-body-md lg:tracking-normal">Work</p>
+    <h2 class="mt-1 text-heading-lg text-n900 lg:text-display-sm">The Work<span class="text-ochre">.</span></h2>
+
+    <!-- Bento grid -->
+    <div class="work-grid mt-3 lg:mt-6">
+      {
+        cards.map((c) =>
+          c.type === "case" ? (
+            <a href={c.href} data-area={c.area} id={c.area === "panda" ? "work-panda" : undefined} class="cs-card group relative block aspect-[342/499] overflow-hidden rounded-[24px] lg:aspect-auto lg:h-full">
+              {c.img ? (
+                <img src={c.img} alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover" />
+              ) : (
+                <div class="absolute inset-0" style={`background:${c.bg}`} />
+              )}
+              <div class="absolute inset-0 bg-gradient-to-b from-transparent from-50% to-[rgba(17,17,17,0.7)]" />
+              <div class="absolute inset-x-0 bottom-0 p-3 lg:p-4">
+                <h3 class="text-heading-md text-white lg:text-heading-lg">{c.name}</h3>
+                <div class="cs-reveal">
+                  <p class="cs-descriptor pt-1 text-body-md text-n150 lg:text-body-lg">{c.descriptor}</p>
+                </div>
+              </div>
+            </a>
+          ) : (
+            <div data-area={c.area} class="flex items-center rounded-[24px] border border-n200 bg-n100 p-3 lg:h-full lg:justify-center lg:p-4">
+              <p class="text-body-md text-n500">{c.text}</p>
+            </div>
+          )
+        )
+      }
+    </div>
+
+    <!-- View all work -->
+    <a
+      href="/work"
+      class="mt-4 flex h-[52px] w-full items-center justify-center gap-1 rounded-full border border-n100 bg-n900 text-body-md font-medium text-n100 transition-colors hover:bg-n800 lg:h-[68px]"
+    >
+      View all work
+      <svg width="14" height="8" viewBox="0 0 14 8" fill="none" aria-hidden="true" class="shrink-0">
+        <path d="M0 4h12M9.5 1 13 4l-3.5 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </a>
+  </Container>
+</section>
+
+<style>
+  /* Mobile: single-column stack. Desktop: named bento grid. */
+  .work-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  @media (min-width: 1024px) {
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 240px 474px 240px 474px;
+      grid-template-areas:
+        "bia bia info1"
+        "bia bia cotone"
+        "info2 three three"
+        "panda three three";
+      gap: 16px;
+    }
+    .work-grid > [data-area="bia"] { grid-area: bia; }
+    .work-grid > [data-area="cotone"] { grid-area: cotone; }
+    .work-grid > [data-area="three"] { grid-area: three; }
+    .work-grid > [data-area="panda"] { grid-area: panda; }
+    .work-grid > [data-area="info1"] { grid-area: info1; }
+    .work-grid > [data-area="info2"] { grid-area: info2; }
+
+    /* Descriptor reveal: title slides up (overlay is bottom-anchored), the
+       descriptor row opens 0fr→1fr and fades in. Baseline stays fixed. */
+    .cs-reveal {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.35s ease;
+    }
+    .cs-descriptor {
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .cs-card:hover .cs-reveal,
+    .cs-card:focus-visible .cs-reveal {
+      grid-template-rows: 1fr;
+    }
+    .cs-card:hover .cs-descriptor,
+    .cs-card:focus-visible .cs-descriptor {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cs-reveal {
+      transition: none;
+    }
+    .cs-descriptor {
+      transition: opacity 0.2s ease;
+    }
+  }
+</style>

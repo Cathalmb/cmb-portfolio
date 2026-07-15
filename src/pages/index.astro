@@ -1,0 +1,43 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/sections/Hero.astro";
+import Work from "../components/sections/Work.astro";
+import WhatIDo from "../components/sections/WhatIDo.astro";
+import Gaeilge from "../components/sections/Gaeilge.astro";
+import Process from "../components/sections/Process.astro";
+
+const title = "Cathal Mac an Bheatha | Creative Director, Dublin";
+const description =
+  "I help Irish brands get their creative right — brand strategy, UX/UI design, and photography, led end-to-end by one creative director. Gaeilge agus fáilte.";
+
+// Person structured data — helps Google surface a knowledge-panel-style
+// result for name searches ("Cathal Mac an Bheatha").
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Cathal Mac an Bheatha",
+  url: "https://www.cathalmb.com",
+  image: "https://www.cathalmb.com/images/cathal-portrait.jpg",
+  jobTitle: "Creative Director & Brand Strategist",
+  description:
+    "Brand strategist, designer, and photographer working with Irish brands — strategy, UX/UI design, and photography, led end-to-end in English and Irish.",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Dublin",
+    addressCountry: "IE",
+  },
+  knowsLanguage: ["en", "ga"],
+  sameAs: [
+    "https://www.instagram.com/cathalmacan/",
+    "https://www.linkedin.com/in/cathalmacan/",
+  ],
+};
+---
+
+<BaseLayout title={title} description={description} jsonLd={personJsonLd}>
+  <Hero />
+  <Work />
+  <WhatIDo />
+  <Gaeilge />
+  <Process />
+</BaseLayout>

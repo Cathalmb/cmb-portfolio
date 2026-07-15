@@ -1,0 +1,23 @@
+---
+/**
+ * Case study — full-width image break. Used mid-page (after "The
+ * Solution") and at the very end of every case study (the closing image).
+ * aspect-[16/9] reuses the same clean full-width ratio Cathal set for the
+ * /work grid's lead card, rather than the raw (and slightly-off) Figma
+ * decimal — same reasoning applies here.
+ * No hover-zoom (removed July 13 2026 — see CaseStudyImageGrid for why).
+ */
+interface Props {
+  src: string;
+  alt?: string;
+  /** "contain" for images with transparent/flat backgrounds (brand marks, UI screens) that shouldn't be cropped. Default "cover". */
+  fit?: "cover" | "contain";
+}
+
+const { src, alt = "", fit = "cover" } = Astro.props;
+const fitClass = fit === "contain" ? "object-contain bg-n150" : "object-cover";
+---
+
+<div data-reveal class="relative aspect-[4/5] overflow-hidden rounded-[24px] lg:aspect-[16/9]">
+  <img src={src} alt={alt} loading="lazy" class={`h-full w-full ${fitClass}`} />
+</div>

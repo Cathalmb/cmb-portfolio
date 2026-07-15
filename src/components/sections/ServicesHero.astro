@@ -1,0 +1,23 @@
+---
+/**
+ * Services — Hero. Figma node 74:97 (light page). display-lg (95/96, -0.02em)
+ * dark headline with an ochre full stop, at the left gutter, width 1344, top ~176
+ * (96 below the nav region). Wraps to two lines naturally after "photography.".
+ */
+import Container from "../primitives/Container.astro";
+---
+
+<section class="bg-n100">
+  <Container size="large">
+    <div class="pt-12 pb-16 lg:pb-[128px]">
+      <h1
+        data-reveal
+        class="max-w-[1344px] text-heading-xl text-n900 lg:text-display-lg"
+      >
+        Strategy, design, photography.<br class="hidden lg:block" /> Under one lead<span
+          class="text-ochre">.</span
+        >
+      </h1>
+    </div>
+  </Container>
+</section>

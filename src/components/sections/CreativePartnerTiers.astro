@@ -1,0 +1,201 @@
+---
+/**
+ * Creative Partner Retainer — the three tiers. Figma node group
+ * "what-i-believe" (106:190) — heading "Let's talk about a retainer",
+ * hairline, three cards (Studio / Partner / Embedded), sub-note below.
+ *
+ * Tier names locked July 13 2026 (Cathal's own naming, matched Claude's
+ * independent suggestion). Full pricing shown openly per tier — deliberate
+ * reversal of the earlier "from €1,800" anchor-only plan (see memory:
+ * project-retainer-model.md). Card copy is the same text used in the
+ * Creative Partner Retainer proposal PDF and website-copy.md.
+ *
+ * CTA interaction (per Cathal's Figma annotations, July 13 2026, node
+ * 115:585 "Default state" + Studio's 107:300 hover reference):
+ * dark (bg-n900/text-n100) 56px circle at rest on desktop, expands to a
+ * labelled pill on hover/focus. Same EXPAND MECHANISM as ServicesStartProject's
+ * .cta-pill (grid-template-columns 0fr→1fr on the label span), but NOT the
+ * same colour skin — this button stays dark/filled throughout, it does not
+ * switch to ServicesStartProject's white/bordered look. (First correction
+ * attempt wrongly copied that white skin too — reverted July 13 2026 after
+ * Cathal linked node 114:553 directly to show the actual dark treatment.)
+ * Below `lg` there's no hover, so the label is expanded by default there
+ * ("Also default for mobile accessibility to ensure label is visible").
+ * All three cards share one CTA behaviour; Figma's Studio card was simply
+ * showing the hover-state reference, not a permanently different treatment.
+ *
+ * Sizing (per Cathal, July 13 2026, demoed against the /services #retainer
+ * card's own button): rest state on desktop must be a true 1:1 circle
+ * (56×56 = `w-7 h-7` on the 8px scale, arrow only) — sized explicitly, not
+ * left to emerge from padding math, so it can't drift off-square. Expands
+ * to a fixed `w-[210px]` pill on hover/focus, `width/gap/padding` all
+ * transition together so the icon stays centred throughout.
+ *
+ * CORRECTION (July 13 2026): briefly removed the inner `grid-template-
+ * columns` 0fr→1fr span, wrongly reasoning it was a redundant second
+ * collapse mechanism alongside the outer width transition. It is NOT
+ * redundant — flex items refuse to shrink below their content's natural
+ * (min-content) width by default, `overflow-hidden` alone doesn't change
+ * that, so without the inner grid track forcing a genuine 0-width collapse,
+ * the label's full text rendered inside the 56px circle and spilled out
+ * both sides, clipped into an ugly crescent by the circular radius. That's
+ * a real CSS gotcha, not a shape/sizing issue — grid tracks sized with an
+ * explicit `fr` unit CAN collapse below their content's min-content size,
+ * which is exactly why this technique (also used by ServicesStartProject's
+ * `.cta-pill`) exists instead of a plain width/opacity fade. Reverted to
+ * keep both: the inner grid collapse (so the label can actually reach zero
+ * width) and the outer width/gap/padding transition (so the button's own
+ * footprint animates from a 56px circle to a 210px pill). Lesson: don't
+ * "simplify" a working cross-verified pattern under time pressure without
+ * re-deriving why each part exists.
+ *
+ * The three buttons render from identical markup via one `.map()`, so a
+ * visible per-tier difference isn't a per-tier styling bug — it means the
+ * shared markup behaves differently depending on THAT card's content.
+ * Case in point (found via screenshot, same day): Partner and Embedded's
+ * buttons rendered as squashed ovals, not circles, while Studio's was fine.
+ * Cause: the card wrapper was `lg:h-[730px]` (a hard cap, not a minimum)
+ * with two flex children (info block, button) and neither had `shrink-0`.
+ * Partner/Embedded's copy is longer than Studio's, so their content
+ * overflowed 730px; flexbox's default is to shrink ALL children to fit,
+ * which compressed the button's HEIGHT (the flex-col main axis) while its
+ * WIDTH stayed fixed — a 56×56 circle became a wide, short oval. Studio's
+ * shorter copy never exceeded 730px, so its button was never shrunk, which
+ * is why only two of the three looked wrong. Fixed by adding `shrink-0` to
+ * both the info block and the button (so neither ever compresses) and
+ * switching the card from `h-[730px]` to `min-h-[730px]` (grows to fit
+ * real content instead of clipping/squeezing it if copy runs long).
+ *
+ * Card bg: plain white across all three (Partner's earlier ochre-tint
+ * highlight was removed — "Note colour change" annotation).
+ */
+import Container from "../primitives/Container.astro";
+
+// Shared Google Calendar appointment schedule (one link across all three
+// tiers — Cathal opted for the shared-link path over three separate
+// schedules, July 13 2026). If he adds a "which tier?" question to the
+// booking form itself, that recovers the per-tier signal a shared link
+// otherwise loses.
+const bookingUrl =
+  "https://calendar.google.com/calendar/u/0/appointments/AcZssZ0qnZQBLdulg1JZDw9v5e_5ROxTX4fzUi4SbAs=";
+
+const tiers = [
+  {
+    name: "Studio",
+    price: "€1,800",
+    desc: "Perfect for one ongoing priority. Refreshing a brand system, keeping a website moving, or having senior creative time on tap without a hire.",
+    includes: [
+      "Around 2 days of senior creative time each month",
+      "One alignment call to set the month's priorities",
+      "Brand, UX/UI, web, or print, whatever the month needs",
+      "No rollover, capacity resets each month",
+    ],
+  },
+  {
+    name: "Partner",
+    price: "€3,200",
+    desc: "Perfect for businesses running more than one thing at once. Brand, web, and campaign work moving in parallel, without three different freelancers.",
+    includes: [
+      "Around 4 days of senior creative time each month",
+      "Monthly alignment call, plus check-ins as work progresses",
+      "Full range: brand, UX/UI, web, graphic design, print, strategy",
+      "Priority scheduling ahead of Studio-tier work",
+    ],
+  },
+  {
+    name: "Embedded",
+    price: "€5,500",
+    desc: "Perfect for founders who want a creative partner inside the business, not a vendor. Held to one or two clients at a time so the attention stays real.",
+    includes: [
+      "6-7 days of senior creative time each month",
+      "Monthly alignment call, plus direct access between calls",
+      "Full range across brand, UX/UI, web, print, and strategy",
+      "Capacity held exclusively, never more than two Embedded clients",
+    ],
+  },
+];
+---
+
+<section class="bg-n900">
+  <Container size="large">
+    <div class="pt-16 pb-16 lg:pb-24">
+      <h2
+        data-reveal
+        class="max-w-[996px] text-heading-lg text-n100 lg:text-display-sm"
+      >
+        Let's talk about a retainer
+      </h2>
+
+      <div class="mt-8 border-t border-n700"></div>
+
+      <div class="mt-8 grid gap-6 lg:grid-cols-3">
+        {
+          tiers.map((tier, i) => (
+            <div
+              data-reveal
+              style={`--reveal-delay: ${i * 80}ms`}
+              class="flex flex-col rounded-[24px] border border-n200 bg-white p-4 lg:min-h-[730px] lg:justify-between"
+            >
+              <div class="shrink-0">
+                <h3 class="text-heading-xl text-n900">{tier.name}</h3>
+
+                <span class="mt-4 inline-flex h-[32px] items-center rounded-full border border-n200 bg-white px-3">
+                  <span class="text-body-md text-n900">{tier.price}</span>
+                  <span class="text-body-sm text-n900"> / month</span>
+                </span>
+
+                <p class="mt-5 text-body-lg text-n500">{tier.desc}</p>
+
+                <div class="mt-6">
+                  <p class="text-body-md text-n500">Includes</p>
+                  <ul class="mt-2 list-disc ps-[24px] text-body-md text-n500">
+                    {tier.includes.map((item) => (
+                      <li class="mb-1 last:mb-0">{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <a
+                href={bookingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Select the ${tier.name} plan — book a discovery call`}
+                class="tier-cta group mt-8 flex h-7 w-[210px] shrink-0 items-center justify-center gap-2 overflow-hidden rounded-full bg-n900 px-4 text-n100 transition-[width,gap,padding] duration-300 lg:w-7 lg:gap-0 lg:px-0 lg:hover:w-[210px] lg:hover:gap-2 lg:hover:px-4 lg:focus-visible:w-[210px] lg:focus-visible:gap-2 lg:focus-visible:px-4"
+              >
+                <span class="tier-cta-label grid grid-cols-[1fr] overflow-hidden transition-[grid-template-columns] duration-300 lg:grid-cols-[0fr] lg:group-hover:grid-cols-[1fr] lg:group-focus-visible:grid-cols-[1fr]">
+                  <span class="overflow-hidden whitespace-nowrap text-body-md text-n100">
+                    Select this plan
+                  </span>
+                </span>
+                <svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true" class="shrink-0 text-n100">
+                  <path
+                    d="M0 5h13M10.5 1 15 5l-4.5 4"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="mt-6 text-center text-body-md text-n100">
+        Final scope confirmed on a discovery call. Photography and video are
+        a separate add-on at any tier, from €550 for a half-day shoot.
+      </p>
+    </div>
+  </Container>
+</section>
+
+<style>
+  @media (prefers-reduced-motion: reduce) {
+    .tier-cta,
+    .tier-cta-label {
+      transition: none !important;
+    }
+  }
+</style>

@@ -1,0 +1,86 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AboutHero from "../components/sections/AboutHero.astro";
+import AboutBio from "../components/sections/AboutBio.astro";
+import Gallery from "../components/sections/Gallery.astro";
+import AboutStatement from "../components/sections/AboutStatement.astro";
+import AboutStats from "../components/sections/AboutStats.astro";
+import ClientWall from "../components/sections/ClientWall.astro";
+
+const title = "About Cathal Mac an Bheatha | Creative Director, Dublin";
+const description =
+  "Creative director and brand strategist with 11+ years in the Irish market. One of the few senior creatives in Ireland working natively in English and Irish.";
+
+// Person structured data — richest bio content on the site, so this is
+// the strongest candidate page for a Google knowledge-panel-style result.
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Cathal Mac an Bheatha",
+  url: "https://www.cathalmb.com/about",
+  image: "https://www.cathalmb.com/images/cathal-portrait.jpg",
+  jobTitle: "Creative Director & Brand Strategist",
+  description,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Dublin",
+    addressCountry: "IE",
+  },
+  knowsLanguage: ["en", "ga"],
+  sameAs: [
+    "https://www.instagram.com/cathalmacan/",
+    "https://www.linkedin.com/in/cathalmacan/",
+  ],
+};
+---
+
+<BaseLayout title={title} description={description} theme="dark" jsonLd={personJsonLd}>
+  <AboutHero />
+  <AboutBio />
+  <Gallery />
+  <AboutStatement />
+  <AboutStats />
+  <ClientWall />
+</BaseLayout>
+
+<script>
+  // Scroll reveal: fade + rise each [data-reveal] element as it enters view.
+  // Scoped hidden state (via `.reveal-ready` on <html>) means no-JS shows all.
+  const root = document.documentElement;
+  const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (els.length) {
+    root.classList.add("reveal-ready");
+
+    if (reduce || !("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-revealed"));
+    } else {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-revealed");
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -10% 0px", threshold: 0.1 }
+      );
+      els.forEach((el) => {
+        // Reveal immediately if the element is already on-screen when this
+        // runs (fixes inner-page heroes staying at opacity:0 until the user
+        // scrolls — IO's initial callback wasn't landing reliably before
+        // any scroll event; fixed July 14 2026 across all pages using this
+        // script). Only observe elements that still need to come into view.
+        const rect = el.getBoundingClientRect();
+        const alreadyInView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (alreadyInView) {
+          el.classList.add("is-revealed");
+        } else {
+          io.observe(el);
+        }
+      });
+    }
+  }
+</script>

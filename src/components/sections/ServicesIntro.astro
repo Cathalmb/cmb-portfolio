@@ -1,0 +1,29 @@
+---
+/**
+ * Services — Intro. Figma group 82:105. Top hairline (n200, 1344 wide), a
+ * "Services" label (body-md 16/24, n500) 16px below it, then the big intro
+ * statement (display-sm 61/64, n900) 64px below the label. Two paragraphs,
+ * no gap between them (leading 64 throughout), verbatim from the frame.
+ *
+ * Spacing: hero→divider 128 (hero pb), divider→label 16 (pt-2), label→intro 64
+ * (mt-8), intro→CTA 96 (pb-12).
+ */
+import Container from "../primitives/Container.astro";
+---
+
+<section class="bg-n100">
+  <Container size="large">
+    <div class="border-t border-n200 pt-2 pb-12 lg:pb-12">
+      <p data-reveal class="text-body-md text-n500">Services</p>
+      <p
+        data-reveal
+        style="--reveal-delay: 80ms"
+        class="mt-6 max-w-[1344px] text-heading-lg text-n900 lg:mt-8 lg:text-display-sm"
+      >
+        Four disciplines, one creative director. From the first conversation to
+        the last deliverable, nothing gets lost between the thinking and the
+        making. In both languages when the work requires it.
+      </p>
+    </div>
+  </Container>
+</section>

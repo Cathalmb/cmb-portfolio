@@ -1,0 +1,42 @@
+---
+/**
+ * Case study — simple image grid. Used after "The Challenge" (brand
+ * template, 4 images) and "The Brief" (photography template, 2 portraits)
+ * and after "What I Delivered" (2 deliverable shots).
+ *
+ * ALWAYS 2 columns (July 13 2026 correction) — checked the live legacy
+ * site (cathalmb.com/work/bia-energy) at Cathal's request and its 4-image
+ * Challenge grid is a 2×2, not 4-across, at any width. The `cols` prop is
+ * really "how many images", not "how many columns": 4 images → 2×2, 2
+ * images → 1×2. Rounded corners are KEPT (Cathal: the legacy site's sharp
+ * corners are the old brand — rounded-24 is the new design language and
+ * stays); only the column count/layout was the actual bug.
+ *
+ * 16px gap throughout, matching the gap convention set on the /work grid.
+ * No hover-zoom here (removed July 13 2026, Cathal: "remove image hover
+ * zoom state on case study images") — zoom stays on the /work grid and
+ * services slider, which are entry points into the work, not on images
+ * inside a case study itself.
+ */
+interface Props {
+  images: { src: string; alt?: string }[];
+  /** "portrait" gives taller crops (used for Three Ireland's studio portraits). */
+  aspect?: "landscape" | "portrait";
+  /** "contain" for UI screenshots/mockups that shouldn't be cropped (Panda's deliverable/portal shots). Default "cover". */
+  fit?: "cover" | "contain";
+}
+
+const { images, aspect = "landscape", fit = "cover" } = Astro.props;
+const aspectClass = aspect === "portrait" ? "aspect-[3/4]" : "aspect-[4/3]";
+const fitClass = fit === "contain" ? "object-contain bg-n150" : "object-cover";
+---
+
+<div data-reveal class="grid grid-cols-2 gap-2">
+  {
+    images.map((img) => (
+      <div class={`relative overflow-hidden rounded-[24px] ${aspectClass}`}>
+        <img src={img.src} alt={img.alt ?? ""} loading="lazy" class={`h-full w-full ${fitClass}`} />
+      </div>
+    ))
+  }
+</div>

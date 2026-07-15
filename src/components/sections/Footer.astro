@@ -1,0 +1,148 @@
+---
+/**
+ * Footer — global. Built from Figma nodes 18:31 (desktop 1440×621) and
+ * 22:201 (mobile 390×1121). Spacing matched to the frames, all on the 8px grid.
+ *
+ * Vertical rhythm (desktop / mobile), all multiples of 8:
+ *   pad-top 96 · wordmark · 48 · "Let's talk!" · 24 · paragraph · 48 · buttons
+ *   nav column offset +88 (desktop) so "Company" aligns to the paragraph
+ *   meta: +96/+64 to divider, 16 above the meta text, pad-bottom 16
+ *   nav column sits in grid cols 10–12 (desktop), width 300.
+ *
+ * footer-nav hover: ochre 4px dot fades in 12px left of the label + label
+ * slides right 12px. Active page holds it. Slide is disabled under
+ * prefers-reduced-motion (dot still appears).
+ *
+ * Reminder: --spacing is 8px → pt-12 = 96, mt-6 = 48, mt-3 = 24, mt-11 = 88,
+ * gap-1 = 8, h-[28px]/[40px] = nav row heights.
+ */
+import Container from "../primitives/Container.astro";
+
+const email = "hello@cathalmb.com";
+
+const footerNav = [
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/services" },
+  { label: "Work", href: "/work" },
+  { label: "About", href: "/about" },
+  // Gaeilge temporarily removed from nav — page not live yet.
+  { label: "Contact", href: "/contact" },
+];
+
+const socials = [
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/cathalmacan/" },
+  { label: "Instagram", href: "https://www.instagram.com/cathalmacan/" },
+];
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) =>
+  !href.includes("#") &&
+  (pathname === href || (href !== "/" && pathname.startsWith(href + "/")));
+
+// Footer nav link: dot (12px left) fades in + label slides right 12px.
+// Row height 40 (mobile) / 28 (desktop) matches the frames.
+const navLink =
+  "group relative inline-flex w-fit items-center h-[40px] lg:h-[28px] text-body-lg text-n100 " +
+  "transition-transform duration-200 ease-out will-change-transform " +
+  "hover:translate-x-[12px] focus-visible:translate-x-[12px] " +
+  "before:absolute before:left-[-12px] before:top-1/2 before:h-[4px] before:w-[4px] " +
+  "before:-translate-y-1/2 before:rounded-full before:bg-ochre before:opacity-0 " +
+  "before:transition-opacity before:duration-200 " +
+  "hover:before:opacity-100 focus-visible:before:opacity-100";
+---
+
+<footer class="bg-n900 text-n100">
+  <Container size="large">
+    <div class="pt-12 pb-2">
+      <!-- Wordmark (light variant for dark bg) -->
+      <a href="/" aria-label="Cathal Mac an Bheatha — home" class="inline-flex">
+        <img
+          src="/images/cmb-wordmark-light.svg"
+          alt=""
+          class="h-auto w-[220px] max-w-full lg:w-[416px]"
+        />
+      </a>
+
+      <!-- Single column on mobile; the 12-col grid (with its 48px gutters) only
+           at lg, where there's room for it. A 12-col grid on mobile would force
+           11×48px of fixed gutters and overflow the screen. -->
+      <div class="mt-6 flex flex-col lg:grid lg:grid-cols-12 lg:gap-x-6">
+        <!-- CTA block -->
+        <div class="col-span-12 lg:col-span-6">
+          <h2 class="text-heading-xl text-n100 lg:text-display-sm">Let's talk!</h2>
+          <p class="mt-3 max-w-[616px] text-heading-sm text-n100">
+            Open to new projects, retainer relationships, and Irish language
+            briefs. The first conversation is always a call, no brief required,
+            no commitment.
+          </p>
+
+          <div class="mt-6 flex flex-col gap-1 lg:flex-row lg:flex-wrap">
+            <a
+              href={`mailto:${email}`}
+              class="inline-flex w-full items-center justify-center rounded-full bg-ochre px-3 py-2 text-body-md font-medium text-n900 transition-colors hover:bg-ochre-hover lg:w-auto"
+            >
+              {email}
+            </a>
+            {
+              socials.map((s) => (
+                <a
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex w-full items-center justify-center rounded-full border border-n500 px-3 py-2 text-body-md font-medium text-n100 transition-colors hover:border-n100 lg:w-auto"
+                >
+                  {s.label}
+                </a>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- Nav column: cols 10–12, offset down 88 to align "Company" to the paragraph -->
+        <nav
+          aria-label="Footer"
+          class="col-span-12 mt-8 lg:col-span-3 lg:col-start-10 lg:mt-11"
+        >
+          <p class="text-body-sm text-n400">Company</p>
+          <ul data-footer-nav class="mt-3 flex flex-col">
+            {
+              footerNav.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    aria-current={isActive(item.href) ? "page" : undefined}
+                    class:list={[
+                      navLink,
+                      isActive(item.href) && "translate-x-[12px] before:opacity-100",
+                    ]}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Meta row -->
+      <div class="mt-8 flex flex-col border-t border-n700 pt-2 md:flex-row md:items-center md:justify-between lg:mt-12">
+        <p class="text-caption text-n400">Creative Director &amp; Brand Strategist</p>
+        <p class="text-caption text-n400">
+          Déanta le <span class="text-[#ff3737]" aria-hidden="true">♥</span> i mBaile
+          Átha Cliath | ©2026
+        </p>
+      </div>
+    </div>
+  </Container>
+</footer>
+
+<style>
+  /* Respect reduced motion: keep the dot, drop the slide. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-footer-nav] a {
+      transform: none !important;
+      transition: opacity 0.2s ease !important;
+    }
+  }
+</style>

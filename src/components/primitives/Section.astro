@@ -1,0 +1,48 @@
+---
+/**
+ * Section — a full-width page section with vertical rhythm on the 8px grid
+ * (80px mobile / 160px desktop by default) and an optional background tone.
+ * Inner content is automatically wrapped in a Container.
+ */
+import Container from "./Container.astro";
+
+type Tone = "page" | "section" | "inverse" | "accent-wash" | "none";
+
+interface Props {
+  as?: keyof HTMLElementTagNameMap;
+  tone?: Tone;
+  id?: string;
+  class?: string;
+  contained?: boolean;
+  size?: "site" | "large";
+}
+
+const {
+  as: Tag = "section",
+  tone = "page",
+  id,
+  class: className = "",
+  contained = true,
+  size = "site",
+} = Astro.props;
+
+const toneClass: Record<Tone, string> = {
+  page: "bg-n100 text-n500",
+  section: "bg-n150 text-n600", // N600 body on N150 for AA contrast
+  inverse: "bg-n900 text-n100",
+  "accent-wash": "bg-ochre-tint text-n900",
+  none: "",
+};
+---
+
+<Tag id={id} class:list={["py-10 md:py-20", toneClass[tone], className]}>
+  {
+    contained ? (
+      <Container size={size}>
+        <slot />
+      </Container>
+    ) : (
+      <slot />
+    )
+  }
+</Tag>

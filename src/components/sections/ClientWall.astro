@@ -1,0 +1,65 @@
+---
+/**
+ * About — Client wall. Figma node 73:219. STATIC 4-column grid, 4 rows (16
+ * cells). EXACT values: cells 300×211 with 48px gaps (4×300 + 3×48 = 1344),
+ * logos width-normalised and centred with generous whitespace. No heading in
+ * the frame. 16 distinct logos, row-major, matching the frame cell-for-cell:
+ *
+ *   Row 1: Three | Conradh na Gaeilge | Abbey Theatre | Gael Linn
+ *   Row 2: Foras na Gaeilge | Rí-Rá | RTÉ | TG4
+ *   Row 3: Cotone | Tirlán | GOAL | Panda
+ *   Row 4: Skingredients | 212 Yachts | Talent Garden | Bia Energy
+ *
+ * Five marks already existed in the repo and check out against the Figma
+ * frame (Conradh, Rí-Rá, Foras na Gaeilge, RTÉ, Skingredients) — reused as-is.
+ * The old gael-linn.svg was the full-colour brand mark (not the plain-white
+ * wordmark in this frame) and the old tg4.png was black-on-white (not
+ * transparent), so both were swapped for "-white" exports. Abbey Theatre, Bia
+ * Energy, Talent Garden, Tirlán, 212 Yachts, Panda and Cotone use SVG source
+ * files (sharper at the 2x/retina sizes this wall renders at than PNG exports).
+ */
+import Container from "../primitives/Container.astro";
+
+const cells = [
+  { src: "/images/clients/three-ireland.png", name: "Three" },
+  { src: "/images/clients/conradh-na-gaeilge.png", name: "Conradh na Gaeilge" },
+  { src: "/images/clients/abbey-theatre-logo.svg", name: "Abbey Theatre" },
+  { src: "/images/clients/gael-linn-white.png", name: "Gael Linn" },
+  { src: "/images/clients/foras-na-gaeilge.png", name: "Foras na Gaeilge" },
+  { src: "/images/clients/ri-ra.png", name: "Rí-Rá" },
+  { src: "/images/clients/rte.png", name: "RTÉ" },
+  { src: "/images/clients/tg4-white.png", name: "TG4" },
+  { src: "/images/clients/cotone-logo.svg", name: "Cotone" },
+  { src: "/images/clients/tirlan-logo.svg", name: "Tirlán" },
+  { src: "/images/clients/goal.png", name: "GOAL" },
+  { src: "/images/clients/panda-logo.svg", name: "Panda" },
+  { src: "/images/clients/skingredients-logo.svg", name: "Skingredients" },
+  { src: "/images/clients/212-yachts.svg", name: "212 Yachts" },
+  { src: "/images/clients/talent-garden-logo.svg", name: "Talent Garden" },
+  { src: "/images/clients/bia-energy-logo.svg", name: "Bia Energy" },
+];
+---
+
+<section class="bg-n900">
+  <Container size="large">
+    <div class="pb-24 lg:pb-[192px]">
+      <ul
+        data-reveal
+        class="grid grid-cols-2 gap-6 sm:grid-cols-4"
+      >
+        {
+          cells.map((c) => (
+            <li class="flex min-h-[140px] items-center justify-center lg:min-h-[211px]">
+              <img
+                src={c.src}
+                alt={c.name}
+                loading="lazy"
+                class="max-h-[64px] w-auto max-w-[180px] object-contain lg:max-h-[80px]"
+              />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Container>
+</section>

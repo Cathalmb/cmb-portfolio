@@ -1,0 +1,26 @@
+---
+/**
+ * Work — Intro. Figma node 109:519. Hairline (n200, 1344 wide) → "Case
+ * Studies" label (body-md 16, n500) 16px below → intro statement
+ * (display-sm 61/64, n900) 64px below the label. Same rhythm as
+ * ServicesIntro.astro (hairline→label 16, label→statement 64,
+ * statement→next-section 96).
+ */
+import Container from "../primitives/Container.astro";
+---
+
+<section class="bg-n100">
+  <Container size="large">
+    <div class="border-t border-n200 pt-2 pb-12 lg:pb-12">
+      <p data-reveal class="text-body-md text-n500">Case Studies</p>
+      <p
+        data-reveal
+        style="--reveal-delay: 80ms"
+        class="mt-6 max-w-[1344px] text-heading-lg text-n900 lg:mt-8 lg:text-display-sm"
+      >
+        I work with Irish brands, organisations and businesses with something
+        real to communicate.
+      </p>
+    </div>
+  </Container>
+</section>

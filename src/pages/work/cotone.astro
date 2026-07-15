@@ -1,0 +1,233 @@
+---
+/**
+ * Cotone — brand/design template. Content ported from
+ * _legacy/src/work/cotone.njk verbatim. One signature section ("The
+ * Website") between "What I Delivered" and "Outcomes".
+ *
+ * FLAG: legacy frontmatter's nextProject.previewImage pointed to
+ * /images/work/three-ireland/hero.jpg — that file doesn't exist (the real
+ * asset is hero.webp, confirmed when Three Ireland's own page was built).
+ * Corrected to hero.webp here rather than porting a broken link.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Container from "../../components/primitives/Container.astro";
+import CaseStudyHero from "../../components/sections/CaseStudyHero.astro";
+import CaseStudySectionIntro from "../../components/sections/CaseStudySectionIntro.astro";
+import CaseStudyImageGrid from "../../components/sections/CaseStudyImageGrid.astro";
+import CaseStudyPillarGrid from "../../components/sections/CaseStudyPillarGrid.astro";
+import CaseStudyFullImage from "../../components/sections/CaseStudyFullImage.astro";
+import CaseStudyDeliverables from "../../components/sections/CaseStudyDeliverables.astro";
+import CaseStudyNextProject from "../../components/sections/CaseStudyNextProject.astro";
+
+const title = "Cotone | Case Study | Cathal Mac an Bheatha";
+const description =
+  "Launching an Irish luxury sleepwear brand from scratch — photography, brand alignment, and a bespoke e-commerce platform built to sell.";
+---
+
+<BaseLayout title={title} description={description}>
+  <CaseStudyHero
+    title="Cotone Collection"
+    client="Cotone"
+    scope="Creative Direction, Photography, UX/UI, E-Commerce Design"
+    intro="Launching an Irish luxury sleepwear brand from scratch — photography, brand alignment, and a bespoke e-commerce platform built to sell."
+    heroImage="/images/work/cotone/hero.jpg"
+  />
+
+  <section class="bg-n100">
+    <Container size="large">
+      <!-- The Challenge -->
+      <div class="pt-8 pb-12 lg:pt-12 lg:pb-16">
+        <CaseStudySectionIntro
+          label="The Challenge"
+          heading="A luxury brand with no visual identity and no digital presence."
+          paragraphs={[
+            "Cotone was founded by Hollianne Phelan on a clear and considered premise: slow fashion, made to last, designed in Ireland, manufactured in Portugal from 100% European cotton. The brand ethos was already formed — but it had no visual language, no imagery, and no platform to sell from.",
+            "The challenge was to translate that ethos into something a customer could feel before they ever touched the product. Luxury sleepwear lives or dies on atmosphere — the quality of the light, the texture of the fabric, the sense of considered comfort. If the photography and the website didn't communicate that immediately, no amount of copy would compensate.",
+            "Everything had to be right on day one. There was no existing audience to soft-launch to, no existing visual library to draw from. The photoshoot, the brand alignment, and the website all had to land together.",
+          ]}
+        />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyImageGrid
+            images={[
+              { src: "/images/work/cotone/cotone-001.jpg", alt: "Cotone Collection" },
+              { src: "/images/work/cotone/cotone-002.jpg", alt: "Cotone Collection" },
+              { src: "/images/work/cotone/cotone-003.jpg", alt: "Cotone Collection" },
+              { src: "/images/work/cotone/cotone-004.jpg", alt: "Cotone Collection" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <!-- The Solution -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro
+          label="The Solution"
+          heading="Photography first. Everything else followed."
+          paragraphs={[
+            "The project began with the photoshoot — because without the imagery, there was no website worth building. We location scouted and secured a private country estate in Kilkenny as the setting for Cotone's debut product lifestyle shoot. It was the right call: the architecture, the light, and the setting gave the brand an immediate sense of heritage and quality that no studio could have manufactured.",
+            "This was a full production shoot. I directed the entire session — model direction, styling coordination, composition, and lighting — across three product colourways and five product variations. Over 100 final images were delivered per colourway, giving Cotone a deep visual library to draw from across launch, social, and ongoing campaigns.",
+            "In parallel, I worked with Hollianne through a discovery process to shape the visual branding and align it tightly to her brand strategy. The brand identity existed in broad strokes — the discovery work sharpened it into something that could be applied consistently across every touchpoint. The navigation architecture, the editorial tone, the product presentation — all of it emerged from that process.",
+          ]}
+        />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyPillarGrid
+            cols={3}
+            items={[
+              { num: "001", title: "Atmosphere before product", body: "Imagery and design that communicated the quality of the product before a customer read a single word." },
+              { num: "002", title: "Clean without cold", body: "A visual language that felt luxurious and considered, without the distance that often comes with minimalist fashion brands." },
+              { num: "003", title: "Built to sell", body: "A bespoke WooCommerce platform designed for conversion from the ground up, not adapted from a template." },
+            ]}
+          />
+        </div>
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyFullImage src="/images/work/cotone/cotone-full-width-01.jpg" alt="Cotone Collection" />
+        </div>
+      </div>
+
+      <!-- What I Delivered -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro
+          label="What I Delivered"
+          heading="Creative across every stage."
+          proseWidth={664}
+          paragraphs={[
+            "I held full creative ownership from pre-production through to launch — photography, brand alignment, UX, and build. There was no handoff point in this project. The same creative eye that directed the photoshoot shaped the website that housed it.",
+          ]}
+        />
+        <div class="mt-6">
+          <CaseStudyDeliverables
+            items={[
+              "Creative Direction & Production Planning",
+              "Full Product Lifestyle Photography",
+              "Brand Alignment & Visual Strategy",
+              "Website UX/UI Design",
+              "Bespoke WooCommerce E-Commerce Build",
+            ]}
+          />
+        </div>
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyImageGrid
+            images={[
+              { src: "/images/work/cotone/deliverable-01.jpg", alt: "Cotone Collection" },
+              { src: "/images/work/cotone/deliverable-03.png", alt: "Cotone Collection" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <!-- The Website (signature section) -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro
+          label="The Website"
+          heading="A shopfront worthy of the product."
+          paragraphs={[
+            "WooCommerce was the right choice — not because it was familiar, but because the brief required a bespoke build that a template platform couldn't deliver. The site needed to feel like the brand: unhurried, considered, and visually led.",
+            "The navigation was kept deliberately minimal — Shop, Our Mission, Dream In Comfort — a structure that emerged from the discovery process and mapped directly to how Cotone's customers actually moved through the brand. Product pages were designed to let the photography lead, with clean typography and a frictionless path to purchase.",
+            "The checkout flow was designed with the same restraint as the rest of the site — no unnecessary steps, no visual noise, nothing to interrupt a customer at the moment they'd decided to buy.",
+          ]}
+        />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyImageGrid
+            images={[
+              { src: "/images/work/cotone/deliverable-02.png", alt: "Cotone Collection" },
+              { src: "/images/work/cotone/deliverable-05.png", alt: "Cotone Collection" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <!-- Outcomes -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro label="Outcomes" heading="A launch that sold out. A brand that got noticed." />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyPillarGrid
+            cols={2}
+            items={[
+              {
+                num: "001",
+                title: "First collection sold out within months of launch",
+                body: "Cotone's debut product run sold through within the first few months of going live. Every sale was made directly through the website — no third-party platform, no marketplace. The site was the entire sales infrastructure.",
+              },
+              {
+                num: "002",
+                title: "Photography drove the entire launch campaign",
+                body: "The images from the Kilkenny shoot were used across every channel — website, social, press, and campaign. The visual identity of the brand at launch was built entirely from that single production.",
+              },
+              {
+                num: "003",
+                title: "Brown Thomas came calling at the one-year mark",
+                body: "The success of the launch caught the attention of Brown Thomas. By Cotone's first anniversary, the brand had secured a stockist relationship with Ireland's most prestigious department store — a validation that's difficult to manufacture and harder still to accelerate.",
+              },
+              {
+                num: "004",
+                title: "A second collection followed",
+                body: "The ongoing relationship led to a follow-on shoot for the Natural Elegance Set in 2025, additional website updates, and the continued expansion of Cotone's visual library.",
+              },
+              {
+                num: "005",
+                title: "Featured across Irish media",
+                body: "Cotone has been covered by Irish Tatler, RTÉ Guide, IMAGE, Business Post, and Business Plus — press built on the back of a brand and visual identity launched from day one with the right creative foundation.",
+              },
+              {
+                num: "006",
+                title: "Full creative ownership, one lead",
+                body: "Photography, creative direction, brand alignment, UX, and e-commerce build — conceived and delivered by a single creative director from first brief to launch day.",
+              },
+            ]}
+          />
+        </div>
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyFullImage src="/images/work/cotone/closing.jpg" alt="Cotone Collection" />
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <CaseStudyNextProject
+    title="Three Ireland"
+    href="/work/three-ireland"
+    description="Sole campaign photographer for Three Ireland's City Stages — artist portraits to the All For Music Stage at EP 2023."
+    previewImage="/images/work/three-ireland/hero.webp"
+  />
+</BaseLayout>
+
+<script>
+  // Scroll reveal: fade + rise each [data-reveal] element as it enters view.
+  // Hidden state is scoped to `.reveal-ready` (added to <html>) so no-JS shows all.
+  const root = document.documentElement;
+  const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (els.length) {
+    root.classList.add("reveal-ready");
+    if (reduce || !("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-revealed"));
+    } else {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-revealed");
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -10% 0px", threshold: 0.1 }
+      );
+      els.forEach((el) => {
+        // Reveal immediately if the element is already on-screen when this
+        // runs (fixes inner-page heroes staying at opacity:0 until the user
+        // scrolls — IO's initial callback wasn't landing reliably before
+        // any scroll event; fixed July 14 2026 across all pages using this
+        // script). Only observe elements that still need to come into view.
+        const rect = el.getBoundingClientRect();
+        const alreadyInView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (alreadyInView) {
+          el.classList.add("is-revealed");
+        } else {
+          io.observe(el);
+        }
+      });
+    }
+  }
+</script>

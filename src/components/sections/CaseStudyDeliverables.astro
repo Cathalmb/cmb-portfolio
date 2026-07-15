@@ -1,0 +1,24 @@
+---
+/**
+ * Case study — deliverables list. Narrow column, one line per item, each
+ * prefixed with the small ochre square already used as a leading marker
+ * elsewhere on the site (Hero.astro's mobile subhead) rather than a new
+ * bullet style.
+ */
+interface Props {
+  items: string[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul data-reveal class="max-w-[352px]">
+  {
+    items.map((item) => (
+      <li class="flex items-start gap-2 border-b border-n200 py-2 text-body-md text-n900 first:pt-0 last:border-none">
+        <span aria-hidden="true" class="mt-[10px] h-1.5 w-1.5 shrink-0 bg-ochre" />
+        {item}
+      </li>
+    ))
+  }
+</ul>

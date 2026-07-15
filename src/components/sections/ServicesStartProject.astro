@@ -1,0 +1,130 @@
+---
+/**
+ * Services — "Start a project" collaboration CTA. Figma node 90:171.
+ * Top hairline + "Services" label (body-md 16 n500) → statement "Choose the way
+ * you want to collaborate..." (display-sm 61/64, n900, full width) → two cards.
+ * Each card: 648×688, radius 24, n200 border, bg-page. Title (heading-xl 49) +
+ * scope pill at the top; description (heading-sm 25, width 552) + a circular
+ * arrow button at the bottom (justify-between).
+ *
+ * Hover state (added July 2026 — Services page review): on hover the card
+ * inverts. A full-bleed placeholder image fades in behind a dark overlay, the
+ * title / description / scope pill flip to white, and the circular arrow grows
+ * into a labelled pill. `img` values are placeholders to be swapped later.
+ * The CTA pill has its own ghost hover: solid white by default, hollowing out
+ * to a transparent white outline when pointed at directly (its `hover:` wins
+ * over the card `group-hover:`, so the old group-hover border reset was dropped).
+ * Reduced-motion users get the colour flip without the fades/expansion.
+ *
+ * Spacing: divider→label 16 (pt-2); label→statement 64 (mt-8); statement→cards
+ * 88 (lg mt-11); cards→footer 192 (pb).
+ *
+ * "Start a project" CTA (July 14 2026, pre-go-live checklist): now opens the
+ * same Google Calendar appointment link used on /creative-partner
+ * (CreativePartnerTiers.astro's `bookingUrl`) in a new tab, instead of
+ * routing to /contact — books a discovery call directly. "The Creative
+ * Partner" card is unchanged (still links to /creative-partner).
+ */
+import Container from "../primitives/Container.astro";
+
+// Shared Google Calendar appointment schedule — same link used on the
+// /creative-partner page's tier CTAs (CreativePartnerTiers.astro). Wired in
+// here July 14 2026 (pre-go-live checklist) so "Start a project" books a
+// discovery call directly instead of routing through /contact.
+const bookingUrl =
+  "https://calendar.google.com/calendar/u/0/appointments/AcZssZ0qnZQBLdulg1JZDw9v5e_5ROxTX4fzUi4SbAs=";
+
+const cards = [
+  {
+    title: "Start a project",
+    pill: "Fixed scope",
+    desc: "One brief. One outcome. A fixed scope, an agreed timeline, and a defined end. For when you know exactly what needs making.",
+    href: bookingUrl,
+    external: true,
+    cta: "Start a project",
+    img: "/images/work/bia-energy/hero.webp", // placeholder — swap later
+  },
+  {
+    title: "The Creative Partner",
+    pill: "Flexible subscription",
+    desc: "Not a project. Not a hire. Monthly creative capacity across every discipline, directed by what your business needs that month.",
+    href: "/creative-partner",
+    external: false,
+    cta: "Learn how we work",
+    img: "/images/work/three-ireland/hero.webp", // placeholder — swap later
+  },
+];
+---
+
+<section id="retainer" class="bg-n100">
+  <Container size="large">
+    <div class="border-t border-n200 pt-2 pb-16 lg:pb-[192px]">
+      <p data-reveal class="text-body-md text-n500">Let's talk</p>
+      <h2
+        data-reveal
+        style="--reveal-delay: 80ms"
+        class="mt-6 max-w-[1344px] text-heading-lg text-n900 lg:mt-8 lg:text-display-sm"
+      >
+        Choose the way you want to collaborate, then tell me all about your
+        project. Let the good times roll.
+      </h2>
+
+      <div class="mt-8 grid gap-6 lg:mt-11 lg:grid-cols-2">
+        {
+          cards.map((c) => (
+            <div
+              data-reveal
+              class="retainer-card group relative flex flex-col gap-6 overflow-hidden rounded-[24px] border border-n200 bg-n100 px-4 pt-12 pb-8 transition-colors duration-300 hover:border-transparent lg:h-[688px] lg:justify-between lg:gap-0"
+            >
+              {/* Hover image + dark overlay (fades in) */}
+              <div class="card-media pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                <img src={c.img} alt="" loading="lazy" draggable="false" class="h-full w-full object-cover" />
+                <div class="absolute inset-0 bg-[rgba(17,17,17,0.55)]" />
+              </div>
+
+              <div class="relative z-10">
+                <h3 class="text-heading-lg text-n900 transition-colors duration-300 group-hover:text-white lg:text-heading-xl">{c.title}</h3>
+                <span class="mt-4 inline-flex h-[32px] items-center rounded-full border border-n200 bg-white px-3 text-body-md text-n900 transition-colors duration-300 group-hover:border-white/40 group-hover:bg-transparent group-hover:text-white">
+                  {c.pill}
+                </span>
+              </div>
+              <div class="relative z-10">
+                <p class="max-w-[552px] text-heading-sm text-n900 transition-colors duration-300 group-hover:text-white">{c.desc}</p>
+                <a
+                  href={c.href}
+                  aria-label={`Get started: ${c.title}`}
+                  {...c.external ? { target: "_blank", rel: "noopener noreferrer" } : {}}
+                  class="cta-pill mt-6 inline-flex h-[42px] items-center rounded-full border border-n200 bg-white px-[14px] text-n900 transition-[padding,color,background-color,border-color] duration-300 group-hover:px-4 hover:border-white hover:bg-transparent hover:text-white"
+                >
+                  <span class="cta-label grid grid-cols-[0fr] transition-[grid-template-columns] duration-300 group-hover:grid-cols-[1fr]">
+                    <span class="overflow-hidden whitespace-nowrap text-body-md font-medium opacity-0 transition-opacity duration-300 group-hover:pr-1 group-hover:opacity-100">
+                      {c.cta}
+                    </span>
+                  </span>
+                  <svg width="14" height="8" viewBox="0 0 14 8" fill="none" aria-hidden="true" class="shrink-0">
+                    <path d="M0 4h12M9.5 1 13 4l-3.5 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  /* Reduced motion: keep the colour/image flip on hover, drop the animation. */
+  @media (prefers-reduced-motion: reduce) {
+    .retainer-card,
+    .retainer-card .card-media,
+    .retainer-card .cta-pill,
+    .retainer-card .cta-label,
+    .retainer-card h3,
+    .retainer-card span,
+    .retainer-card p {
+      transition: none !important;
+    }
+  }
+</style>

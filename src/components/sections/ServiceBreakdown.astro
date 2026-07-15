@@ -1,0 +1,83 @@
+---
+/**
+ * Services — the four pillars, expanded. Figma node 82:106.
+ * Opens with the statement "The goal is never a piece..." (heading-xl 49/56,
+ * n900, width 648), then four service groups. Each group: number (body-lg 20,
+ * n500) → hairline → a 12-col row with title (heading-md 31) + description
+ * (body-lg 20, n500) on the left (cols 1-6) and deliverable pills wrapping in
+ * the right half (cols 7-12). Groups pitch 380px number-to-number on desktop.
+ *
+ * Pill copy is the real per-pillar set (the frame showed placeholder repeats).
+ * Pills: white, n200 border, body-sm (13), h-52, px-24 — matches the frame.
+ */
+import Container from "../primitives/Container.astro";
+
+const groups = [
+  {
+    num: "01",
+    title: "Brand Strategy & Identity",
+    desc: "Understanding the market before defining the brand. From discovery and positioning through to visual identity, guidelines, and launch, with commercial outcomes in mind from day one.",
+    pills: ["Discovery & research", "Positioning & messaging", "Visual identity & wordmarks", "Brand guidelines", "Launch assets", "Print & collateral"],
+  },
+  {
+    num: "02",
+    title: "UX & Interface Design",
+    desc: "Interface design, UX, and design systems. I design for how things actually get built. Understanding the development side means the handoff works, and what gets designed is what gets made.",
+    pills: ["UX & user flows", "Interface design", "Design systems", "Marketing websites", "Prototyping", "Developer handoff"],
+  },
+  {
+    num: "03",
+    title: "Photography & Content",
+    desc: "Brand photography, events, editorial, and video. Shot and directed by the same person who built the brand, so the images always match the identity they represent.",
+    pills: ["Brand photography", "Event coverage", "Editorial & lifestyle", "Video & reels", "Post-production", "Content direction"],
+  },
+  {
+    num: "04",
+    title: "Irish Language Consulting",
+    desc: "Language strategy, bilingual creative production, and translation for organisations operating in Irish. From event integration using the 4-Tier Language Framework through to fully bilingual brand and digital projects.",
+    pills: ["Language strategy", "Bilingual campaigns", "Translation with brand voice", "Event integration (4-Tier Framework)", "Bilingual web & digital", "Official Languages Act compliance"],
+  },
+];
+---
+
+<section class="bg-n100">
+  <Container size="large">
+    <div class="pb-16 lg:pb-[128px]">
+      <!-- Section statement -->
+      <h2
+        data-reveal
+        class="max-w-[648px] text-heading-lg text-n900 lg:text-display-sm"
+      >
+        The goal is never a piece that looks impressive for a week.
+      </h2>
+
+      <!-- Pillars -->
+      <div class="mt-6 lg:mt-8">
+        {
+          groups.map((g, i) => (
+            <div
+              data-reveal
+              class:list={[i > 0 && "mt-12 lg:mt-0", i < 3 && "lg:min-h-[380px]"]}
+            >
+              <p class="text-body-lg text-n500">{g.num}</p>
+              <div class="mt-3 border-t border-n200" />
+              <div class="mt-4 grid gap-6 lg:grid-cols-12 lg:gap-x-6">
+                <div class="lg:col-span-6">
+                  <h3 class="text-heading-md text-n900">{g.title}</h3>
+                  <p class="mt-2 max-w-[532px] text-body-lg text-n500">{g.desc}</p>
+                </div>
+                <ul class="flex flex-wrap content-start gap-1 lg:col-span-6 lg:col-start-7">
+                  {g.pills.map((p) => (
+                    <li class="inline-flex h-[52px] items-center justify-center rounded-full border border-n200 bg-white px-3 text-body-md text-n900">
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </Container>
+</section>

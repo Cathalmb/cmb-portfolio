@@ -1,0 +1,47 @@
+---
+/**
+ * Case study — next-project teaser. Closes every case study page (before
+ * the footer). Reuses the same full-width card language as the /work
+ * grid's lead card (rounded-24, bottom gradient, white heading) so a case
+ * study page and the /work index feel like one family — MINUS the hover
+ * zoom (removed July 13 2026, Cathal: "remove image hover zoom state on
+ * case study images"). This card sits on a case-study page, so it lost
+ * the zoom along with the rest of them, even though the /work grid it's
+ * styled after keeps it. Flag if you'd rather this one matched the /work
+ * grid's hover behaviour instead — easy to re-add.
+ *
+ * FLAG: the legacy nextProject chain (Bia→Panda→GOAL→Cotone→Three
+ * Ireland→Panda) is a closed loop that never included Gael Linn. Leave as
+ * inherited for now; rewire once Gael Linn's case study exists — see
+ * case-study-structure.md.
+ */
+import Container from "../primitives/Container.astro";
+
+interface Props {
+  title: string;
+  href: string;
+  description: string;
+  previewImage: string;
+}
+
+const { title, href, description, previewImage } = Astro.props;
+---
+
+<section class="bg-n100 pb-16 lg:pb-[192px]">
+  <Container size="large">
+    <p data-reveal class="mb-3 text-body-md text-n500 lg:mb-4">Next project</p>
+    <a
+      href={href}
+      data-reveal
+      style="--reveal-delay: 80ms"
+      class="cs-card group relative block aspect-[342/499] overflow-hidden rounded-[24px] lg:aspect-[16/9]"
+    >
+      <img src={previewImage} alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent from-50% to-[rgba(17,17,17,0.7)]" />
+      <div class="absolute inset-x-0 bottom-0 p-3 lg:p-4">
+        <h2 class="text-heading-md text-white lg:text-heading-lg">{title}</h2>
+        <p class="max-w-[560px] pt-1 text-body-md text-n150 lg:text-body-lg">{description}</p>
+      </div>
+    </a>
+  </Container>
+</section>

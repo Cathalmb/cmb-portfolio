@@ -1,0 +1,139 @@
+---
+/**
+ * Contact — the /contact page body. Built from Figma node 104:105
+ * (desktop-contact, 1440-wide). No mobile frame was provided, so the mobile
+ * layout is designed here in the same visual language as the rest of the site
+ * (single column, reduced type sizes), the way the Header's mobile menu was.
+ *
+ * Structure (top to bottom):
+ *   Hero headline (display-lg, ochre full-stops)
+ *   — 128px —
+ *   Hairline divider + two-column row:
+ *     left col 1–2:  "Let's talk" label (body-md, n500)
+ *     right col 6–12: paragraph (heading-lg) → email (display-md, mailto)
+ *                     → LinkedIn → Instagram (display-md, n500)
+ *
+ * Grid note: the Figma right column sat at x=631 (calc(41.67% + 31px)), a
+ * hand-nudged value ~3px off the 12-col grid. Here it snaps cleanly to
+ * col-start-6, so the padding is grid-true.
+ *
+ * Copy note: the hero here is deliberately DIFFERENT from the global footer's
+ * "Let's talk!" block (which already owns "the first conversation is always a
+ * call, no brief required, no commitment"), so the page doesn't repeat itself.
+ *
+ * Interaction (not in the static mock): the email shifts to ochre on hover; the
+ * two socials lift from n500 to n900 on hover. Global :focus-visible gives the
+ * ochre ring. Reduced-motion users lose the reveal, not the colour states.
+ *
+ * Reminder: --spacing is 8px → pt-6 = 48, pt-12 = 96, mt-16 = 128, mt-12 = 96,
+ * mt-10 = 80, mt-6 = 48, pt-2 = 16.
+ */
+import Container from "../primitives/Container.astro";
+
+const email = "hello@cathalmb.com";
+const mailto = `mailto:${email}?subject=${encodeURIComponent("Project enquiry")}`;
+
+const socials = [
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/cathalmacan/" },
+  { label: "Instagram", href: "https://www.instagram.com/cathalmacan/" },
+];
+
+// The three large links are display-md (76px) in Figma (nodes 104:322–324).
+// That is honoured from md (768) up, where "hello@cathalmb.com" fits. At the
+// ~390px base it would overflow ~2x, so the base drops to heading-lg (39px) —
+// the largest step that fits without wrapping. This base size is a mobile-only
+// call (no mobile frame exists) and is open for Cathal to change.
+const linkType = "text-heading-lg md:text-display-md";
+
+// Hover / focus: a simple smooth colour shift only, matching the rest of the
+// site's links (transition-colors). The earlier bullet-dot + slide reveal was
+// dropped — it didn't match the main-section links. Colour classes live on each
+// link (email → ochre, socials → n900).
+const linkInteraction = "inline-flex w-fit items-center transition-colors";
+---
+
+<section aria-labelledby="contact-heading">
+  <Container size="large">
+    <div class="pt-6 pb-16 lg:pt-12 lg:pb-24">
+      <!-- Hero headline. Ochre full-stops are the brand device (see Hero). -->
+      <h1
+        id="contact-heading"
+        data-reveal
+        class="max-w-[1112px] text-heading-xl text-n900 lg:text-display-lg"
+      >
+        Tell me what you're making<span class="text-ochre">.</span> I'll tell you
+        how I'd help<span class="text-ochre">.</span>
+      </h1>
+
+      <!-- Two-column contact block -->
+      <div
+        data-reveal
+        style="--reveal-delay: 80ms"
+        class="mt-12 border-t border-n200 pt-2 lg:mt-16"
+      >
+        <div class="flex flex-col lg:grid lg:grid-cols-12 lg:gap-x-6">
+          <!-- Left: label -->
+          <p class="text-body-md text-n500 lg:col-span-2">Let's talk</p>
+
+          <!-- Right: paragraph + links -->
+          <div class="mt-8 lg:col-span-7 lg:col-start-6 lg:mt-0">
+            <p class="max-w-[647px] text-heading-sm text-n900 lg:text-heading-lg">
+              Brand, web, and photography work for Irish businesses, from single
+              projects to ongoing creative support. Start with an email and
+              we'll find a time to talk. Fáilte roimh ríomhphoist i nGaeilge.
+            </p>
+
+            <!-- Email (primary — n900, mailto with prefilled subject) -->
+            <a
+              href={mailto}
+              data-contact-link
+              class:list={[
+                linkType,
+                linkInteraction,
+                "mt-10 text-n900 hover:text-ochre focus-visible:text-ochre lg:mt-12",
+              ]}
+            >
+              {email}
+            </a>
+
+            <!-- Socials (secondary — n500, lift to n900 on hover).
+                 Spacing is on the <li> so `first:mt-0` targets the first row
+                 only (the <a> is always its li's first child, so it can't). -->
+            <ul class="mt-6 flex flex-col">
+              {
+                socials.map((s) => (
+                  <li class="mt-6 first:mt-0">
+                    <a
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-contact-link
+                      class:list={[
+                        linkType,
+                        linkInteraction,
+                        "text-n500 hover:text-n900 focus-visible:text-n900",
+                      ]}
+                    >
+                      {s.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  /* Respect reduced motion: keep the ochre dot + colour shift, drop the slide.
+     Mirrors the footer nav treatment. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-contact-link] {
+      transform: none !important;
+      transition: color 0.2s ease !important;
+    }
+  }
+</style>

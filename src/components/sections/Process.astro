@@ -1,0 +1,55 @@
+---
+/**
+ * How I work / Process. Figma 64:63. LIGHT section (back to page colour).
+ * Desktop: two columns — left heading/intro, right stack of four step cards.
+ * Mobile: stacked. id="process" + bg-n100 so the scroll-bg controller (in
+ * WhatIDo) can fade the page background back to light as this section enters.
+ *
+ * SPACING (8px): section py-12 (96). eyebrow→heading mt-1, heading→intro mt-2,
+ * cards gap-2 (16). Card padding p-4 (32).
+ */
+import Container from "../primitives/Container.astro";
+
+const steps = [
+  { num: "01", title: "Discovery", desc: "Every project starts with a conversation. I need to understand the brief, the business, the audience, and what good looks like, before I touch anything creative." },
+  { num: "02", title: "Direction", desc: "A moodboard, a questionnaire, a storyboard, or a competitor analysis. We find the creative territory and agree on it before the work begins. No surprises later." },
+  { num: "03", title: "Making", desc: "Design, photography, content, or all three. I work to a defined brief, on a defined timeline, with regular check-ins so nothing drifts." },
+  { num: "04", title: "Delivery", desc: "Launch-ready assets, handoff documentation, and a brand that works from day one. For retainer clients, this is where the ongoing relationship begins." },
+];
+---
+
+<section id="process" class="bg-n100">
+  <Container size="large">
+    <div class="pt-12 pb-24">
+      <div class="grid gap-8 lg:grid-cols-2 lg:gap-6">
+        <!-- Left: heading + intro -->
+        <div>
+          <p class="text-body-md text-n500">How I work</p>
+          <h2 class="mt-1 max-w-[532px] text-heading-lg text-n900 lg:text-display-sm">
+            Four steps.<br />No surprises<span class="text-ochre">.</span>
+          </h2>
+          <p class="mt-2 max-w-[541px] text-body-lg text-n900">
+            Eleven years of projects taught me one thing: clarity at the start
+            saves everyone time at the end. Every project follows the same
+            structure, so you always know where we are and what comes next.
+          </p>
+        </div>
+
+        <!-- Right: step cards (offset 32px on desktop to line up with the heading) -->
+        <div class="flex flex-col gap-2 lg:mt-4">
+          {
+            steps.map((s) => (
+              <div class="rounded-[24px] border border-n200 bg-white p-4">
+                <div class="flex items-start justify-between gap-4">
+                  <h3 class="text-heading-sm text-n900">{s.title}</h3>
+                  <span class="text-body-lg text-n900">{s.num}</span>
+                </div>
+                <p class="mt-1 max-w-[500px] text-body-md text-n900">{s.desc}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

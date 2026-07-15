@@ -1,0 +1,142 @@
+---
+/**
+ * Gaeilge agus Fáilte — Irish-language services. Figma 61:108. Dark section,
+ * below the retainer CTA (which provides the 192px gap above via WhatIDo pb).
+ * Bilingual heading, two-column Irish/English body, auto-scroll client logo
+ * marquee, then a bottom row: legal note (left) + "Labhair liom" CTA (right).
+ */
+import Container from "../primitives/Container.astro";
+
+// White logos in /public/images/clients (copied from work/client-logos).
+// Each sits in a fixed box so sizes read consistently across the strip.
+const clients = [
+  { name: "Foras na Gaeilge", src: "/images/clients/foras-na-gaeilge.png" },
+  { name: "Conradh na Gaeilge", src: "/images/clients/conradh-na-gaeilge.png" },
+  { name: "Gael Linn", src: "/images/clients/gael-linn.svg" },
+  { name: "TG4", src: "/images/clients/tg4.png" },
+  { name: "Rí-Rá", src: "/images/clients/ri-ra.png" },
+  { name: "RTÉ", src: "/images/clients/rte.png" },
+  { name: "Gaeloideachas", src: "/images/clients/gaeloideachas.png" },
+  { name: "An tOireachtas", src: "/images/clients/oireachtas.png" },
+];
+const marquee = [...clients, ...clients];
+---
+
+<section id="gaeilge" class="bg-n900">
+  <Container size="large">
+    <div class="pt-0 pb-12">
+      <!-- Heading -->
+      <p class="text-body-md text-n200">Seirbhísí trí Ghaeilge</p>
+      <h2 class="mt-1 max-w-[996px] text-heading-lg text-n100 lg:text-display-sm">
+        Is Gaeilgeoir agus stiúrthóir cruthaitheach mé.{" "}
+        <span class="text-ochre">Gaeilge agus Fáilte.</span>
+      </h2>
+
+      <!-- Bilingual body -->
+      <div class="mt-6 flex flex-col gap-6 lg:grid lg:grid-cols-2">
+        <div class="max-w-[648px] space-y-3 text-body-md text-n100">
+          <p>
+            Duine de na beagán gairmithe cruthaitheacha in Éirinn a thugann
+            seirbhísí iomlána trí Ghaeilge: ó straitéis brandála agus dearadh go
+            grianghrafadóireacht agus ábhar digiteach.
+          </p>
+          <p>
+            Oibrím le heagraíochtaí poiblí, le comhlachtaí Gaeilge, agus le
+            gnólachtaí príobháideacha a bhfuil meas acu ar an teanga agus ar
+            chaighdeán na hoibre.
+          </p>
+        </div>
+        <div class="max-w-[648px] space-y-3 text-body-md text-n300">
+          <p>
+            One of the few senior creative practices in Ireland that can lead
+            bilingual projects end-to-end, in Irish and English, across strategy,
+            design, photography, and content.
+          </p>
+          <p>
+            From Irish language event integration using the 4-Tier Language
+            Framework through to fully bilingual brand, digital, and campaign
+            work for public bodies, cultural organisations, and Irish-language
+            media.
+          </p>
+        </div>
+      </div>
+
+      <!-- Clients -->
+      <div class="mt-12 border-t border-n700 pt-2">
+        <p class="text-body-sm text-n200">Cliaint · Clients</p>
+
+        <!-- Auto-scrolling logo marquee -->
+        <div
+          class="client-marquee mt-2 overflow-hidden"
+          role="img"
+          aria-label={`Clients: ${clients.map((c) => c.name).join(", ")}`}
+        >
+          <ul class="client-track flex w-max items-center">
+            {
+              marquee.map((c) => (
+                <li class="flex shrink-0 items-center" aria-hidden="true">
+                  <span class="flex h-8 w-[132px] items-center justify-center">
+                    <img
+                      src={c.src}
+                      alt=""
+                      loading="lazy"
+                      class="max-h-full max-w-full object-contain"
+                    />
+                  </span>
+                  {/* mx-2 (16) on mobile so two logos share a 390 viewport
+                      (132px box + 32px margins + 4px dot = 168/item);
+                      mx-6 (48) from lg. July 2026 design review. */}
+                  <span class="mx-2 block h-[4px] w-[4px] shrink-0 bg-ochre lg:mx-6" />
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <!-- Note + CTA -->
+        <div class="mt-8 flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <p class="max-w-[720px] text-body-sm text-n200">
+            <span class="text-n100">Public bodies:</span> All work produced to the
+            standard required under the Official Languages (Amendment) Act 2021 —
+            and beyond.
+          </p>
+          <a
+            href="/contact"
+            class="inline-flex shrink-0 items-center gap-1 rounded-full border border-n200 px-4 py-2 text-body-md font-medium text-n100 transition-colors hover:border-n100"
+          >
+            Labhair liom
+            <svg width="14" height="8" viewBox="0 0 14 8" fill="none" aria-hidden="true" class="shrink-0">
+              <path d="M0 4h12M9.5 1 13 4l-3.5 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .client-marquee {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  .client-track {
+    animation: client-marquee 45s linear infinite;
+  }
+  .client-marquee:hover .client-track {
+    animation-play-state: paused;
+  }
+  @keyframes client-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .client-track {
+      animation: none;
+    }
+  }
+</style>

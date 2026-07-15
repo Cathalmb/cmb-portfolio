@@ -1,0 +1,66 @@
+---
+/**
+ * 404 — not found page. Astro serves src/pages/404.astro automatically for
+ * any unmatched route (and Vercel's static/adapter output respects the same
+ * convention). Kept deliberately minimal and on-brand: reuses the standard
+ * BaseLayout (header + footer stay consistent with the rest of the site),
+ * the Hero button pattern (primary black "Back to home" + ghost "See the
+ * work" with arrow), and the site's ochre-period heading treatment.
+ *
+ * Vertical centring: min-h-[60vh] keeps the content roughly centred in the
+ * viewport between header and footer without fighting the footer's own
+ * spacing. Standard 96px section rhythm (py-12) otherwise.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/primitives/Container.astro";
+
+const title = "Page not found | Cathal Mac an Bheatha";
+const description = "This page doesn't exist or has moved.";
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="flex min-h-[60vh] items-center py-12">
+    <Container size="large">
+      <div class="flex flex-col items-start">
+        <p class="text-body-md text-n500">404</p>
+        <h1 class="mt-1 max-w-[720px] text-heading-xl text-n900 lg:text-display-lg">
+          Looks like this page went off brief<span class="text-ochre">.</span>
+        </h1>
+        <p class="mt-3 max-w-[520px] text-body-lg text-n500">
+          The page you're looking for doesn't exist, or it's moved. Let's get you back on track.
+        </p>
+
+        <div class="mt-6 flex flex-col gap-1 lg:flex-row">
+          <a
+            href="/"
+            class="inline-flex w-full items-center justify-center rounded-full bg-n900 px-3 py-2 text-body-md font-medium text-n100 transition-colors hover:bg-n800 lg:w-auto"
+          >
+            Back to home
+          </a>
+          <a
+            href="/work"
+            class="inline-flex w-full items-center justify-center gap-1 rounded-full border border-n200 px-4 py-2 text-body-md font-medium text-n900 transition-colors hover:border-n900 lg:w-auto"
+          >
+            See the work
+            <svg
+              width="14"
+              height="8"
+              viewBox="0 0 14 8"
+              fill="none"
+              aria-hidden="true"
+              class="shrink-0"
+            >
+              <path
+                d="M0 4h12M9.5 1 13 4l-3.5 3"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

@@ -1,0 +1,220 @@
+---
+/**
+ * Bia Energy — the brand/design/strategy case-study template. This is the
+ * template Cathal called out as "the one you liked" (see
+ * case-study-structure.md): Challenge → Solution → What I Delivered →
+ * Outcomes, each built from the shared CaseStudy* components. Content
+ * ported from _legacy/src/work/bia-energy.njk verbatim (no rewrite).
+ *
+ * No Figma frame exists for individual case-study pages yet — this is
+ * built directly off the existing design system (same H1 scale as other
+ * page heroes, same rounded-24 card language as the /work grid). Flag to
+ * Cathal: happy to re-tune once/if a frame exists.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Container from "../../components/primitives/Container.astro";
+import CaseStudyHero from "../../components/sections/CaseStudyHero.astro";
+import CaseStudySectionIntro from "../../components/sections/CaseStudySectionIntro.astro";
+import CaseStudyImageGrid from "../../components/sections/CaseStudyImageGrid.astro";
+import CaseStudyPillarGrid from "../../components/sections/CaseStudyPillarGrid.astro";
+import CaseStudyFullImage from "../../components/sections/CaseStudyFullImage.astro";
+import CaseStudyDeliverables from "../../components/sections/CaseStudyDeliverables.astro";
+import CaseStudyNextProject from "../../components/sections/CaseStudyNextProject.astro";
+
+const title = "Bia Energy | Case Study | Cathal Mac an Bheatha";
+const description =
+  "From blank brief to national launch — brand strategy, identity, and digital platform for Ireland's largest anaerobic digestion plant.";
+---
+
+<BaseLayout title={title} description={description}>
+  <CaseStudyHero
+    title="Bia Energy"
+    client="Bia Energy"
+    scope="Brand Strategy, Identity, Digital Platform, Photography"
+    intro="From blank brief to national launch — brand strategy, identity, and digital platform for Ireland's largest anaerobic digestion plant."
+    heroImage="/images/work/bia-energy/hero.webp"
+  />
+
+  <section class="bg-n100">
+    <Container size="large">
+      <!-- The Challenge -->
+      <div class="pt-8 pb-12 lg:pt-12 lg:pb-16">
+        <CaseStudySectionIntro
+          label="The Challenge"
+          heading="A blank sheet. One goal. An industry to disrupt."
+          paragraphs={[
+            "Bia Energy arrived with no brand, no identity, and no public presence. Entering a competitive clean energy market with a powerful commercial story, the challenge was to build a visual and verbal identity from scratch — one that balanced credibility and innovation without tipping into corporate blandness or greenwashing.",
+            "The brand had to work in a hi-vis jacket, on a conference stage, and in a B2B sales conversation — simultaneously.",
+          ]}
+        />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyImageGrid
+            images={[
+              { src: "/images/work/bia-energy/brand-01.webp", alt: "Bia Energy brand" },
+              { src: "/images/work/bia-energy/brand-02.webp", alt: "Bia Energy brand" },
+              { src: "/images/work/bia-energy/brand-03.webp", alt: "Bia Energy" },
+              { src: "/images/work/bia-energy/brand-04.webp", alt: "Bia Energy" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <!-- The Solution -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro
+          label="The Solution"
+          heading="The strategic foundation came first."
+          paragraphs={[
+            "The engagement opened with user persona research and a semi-fictional archetype model to map Bia Energy's B2B audience — demographics, psychographics, and decision-making behaviours. This fed a structured discovery workshop covering voice, values, and market positioning. Identity work began only once that foundation was in place.",
+            "I led the full creative direction from that point — designing every element of the brand: identity system, digital platform, marketing collateral, launch materials, and event production. I also shot all photography and video for the project, including aerial drone footage.",
+          ]}
+        />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyPillarGrid
+            cols={3}
+            items={[
+              { num: "001", title: "Clarity at a glance", body: "A design language that communicates instantly, at any scale and in any context." },
+              { num: "002", title: "Distinctive without noise", body: "A visual identity that stands apart in a crowded sector without relying on trend or volume." },
+              { num: "003", title: "Built to grow", body: "A system designed to flex as Bia Energy expands into new markets, products, and partnerships." },
+            ]}
+          />
+        </div>
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyFullImage src="/images/work/bia-energy/full-width-01.webp" alt="Bia Energy" />
+        </div>
+      </div>
+
+      <!-- What I Delivered -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro
+          label="What I Delivered"
+          heading="End-to-end. From first brief to launch day."
+          proseWidth={664}
+          paragraphs={[
+            "A full-lifecycle engagement — I held creative ownership across every layer of Bia Energy's public presence, from initial strategy through to launch week.",
+          ]}
+        />
+        <div class="mt-6">
+          <CaseStudyDeliverables
+            items={[
+              "Brand Identity & Guidelines",
+              "Content Creation",
+              "Marketing Collateral",
+              "Custom WordPress Build",
+              "Carbon Calculator",
+              "Launch Event",
+              "AV & Photography",
+              "Conference Materials",
+            ]}
+          />
+        </div>
+        <p data-reveal class="mt-6 max-w-[664px] pb-[1em] text-body-md text-n500">
+          The website was built on a bespoke WordPress theme — no templates, no shortcuts. The
+          carbon offset calculator was designed as a functional B2B sales tool, giving prospective
+          clients a way to model their own energy savings directly in the browser.
+        </p>
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyImageGrid
+            images={[
+              { src: "/images/work/bia-energy/deliverable-01.webp", alt: "Bia Energy deliverable" },
+              { src: "/images/work/bia-energy/deliverable-02.webp", alt: "Bia Energy deliverable" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <!-- Outcomes -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro label="Outcomes" heading="A brand built for a national moment." />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyPillarGrid
+            cols={2}
+            items={[
+              {
+                num: "001",
+                title: "Launched at national scale",
+                body: "The official launch was attended by Minister for Agriculture, Food and the Marine Charlie McConalogue T.D. — a signal of the project's significance to Ireland's renewable energy sector.",
+              },
+              {
+                num: "002",
+                title: "A landmark energy partnership",
+                body: "Launch day marked the announcement of a strategic partnership with Gas Networks Ireland, establishing Dublin's first direct Renewable Gas Entry Point — allowing biomethane produced from food waste to be injected directly into the national gas network.",
+              },
+              {
+                num: "003",
+                title: "New commercial service launched",
+                body: "Bia Collect — Bia Energy's sales and collection service — was introduced to market as part of the same launch programme, with brand and collateral delivered in full.",
+              },
+              {
+                num: "004",
+                title: "2,000+ LinkedIn followers in 12 months",
+                body: "The Bia Energy LinkedIn community reached 2,000 followers within the first year of operations — built entirely on the brand platform and content strategy established at launch.",
+              },
+              {
+                num: "005",
+                title: "Best in Class 2026",
+                body: "Bia Energy has since been named Best in Class 2026 for Anaerobic Digestion on the island of Ireland.",
+              },
+              {
+                num: "006",
+                title: "Full creative ownership, one lead",
+                body: "Strategy, identity, UX, build, photography, drone footage, launch event, and AV — conceived and delivered under one creative director.",
+              },
+            ]}
+          />
+        </div>
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyFullImage src="/images/work/bia-energy/closing.webp" alt="Bia Energy" />
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <CaseStudyNextProject
+    title="Panda"
+    href="/work/panda"
+    description="Managing the merging of various brands and services into one succinct and complete platform."
+    previewImage="/images/work/panda/preview.webp"
+  />
+</BaseLayout>
+
+<script>
+  // Scroll reveal: fade + rise each [data-reveal] element as it enters view.
+  // Hidden state is scoped to `.reveal-ready` (added to <html>) so no-JS shows all.
+  const root = document.documentElement;
+  const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (els.length) {
+    root.classList.add("reveal-ready");
+    if (reduce || !("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-revealed"));
+    } else {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-revealed");
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -10% 0px", threshold: 0.1 }
+      );
+      els.forEach((el) => {
+        // Reveal immediately if the element is already on-screen when this
+        // runs (fixes inner-page heroes staying at opacity:0 until the user
+        // scrolls — IO's initial callback wasn't landing reliably before
+        // any scroll event; fixed July 14 2026 across all pages using this
+        // script). Only observe elements that still need to come into view.
+        const rect = el.getBoundingClientRect();
+        const alreadyInView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (alreadyInView) {
+          el.classList.add("is-revealed");
+        } else {
+          io.observe(el);
+        }
+      });
+    }
+  }
+</script>

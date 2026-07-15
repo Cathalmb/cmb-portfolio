@@ -1,0 +1,260 @@
+---
+/**
+ * GOAL — brand/design template. Content ported from
+ * _legacy/src/work/goal.njk verbatim. TWO signature sections ("The
+ * Interactive Map" + "The Longer Relationship") per case-study-structure.md
+ * — a decade of follow-on work is a lot of ground to cover in one section.
+ * Outcomes card 005 uses CaseStudyPillarGrid's `quote` variant for the
+ * direct client testimonial.
+ *
+ * FLAG (fixed, not ported as-is): the legacy frontmatter's
+ * nextProject.description was a copy-paste error — it described GOAL's
+ * OWN story ("a brief that became a ten-year creative partnership"),
+ * not Cotone (the actual next project, a sleepwear e-commerce brand,
+ * unrelated to that description). Replaced with Cotone's real intro line
+ * instead of porting the error forward.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Container from "../../components/primitives/Container.astro";
+import CaseStudyHero from "../../components/sections/CaseStudyHero.astro";
+import CaseStudySectionIntro from "../../components/sections/CaseStudySectionIntro.astro";
+import CaseStudyImageGrid from "../../components/sections/CaseStudyImageGrid.astro";
+import CaseStudyPillarGrid from "../../components/sections/CaseStudyPillarGrid.astro";
+import CaseStudyFullImage from "../../components/sections/CaseStudyFullImage.astro";
+import CaseStudyDeliverables from "../../components/sections/CaseStudyDeliverables.astro";
+import CaseStudyNextProject from "../../components/sections/CaseStudyNextProject.astro";
+
+const title = "GOAL Global | Case Study | Cathal Mac an Bheatha";
+const description =
+  "Redesigning the digital presence of one of Ireland's most recognised humanitarian organisations — and beginning a decade-long creative partnership.";
+---
+
+<BaseLayout title={title} description={description}>
+  <CaseStudyHero
+    title="GOAL Global"
+    client="GOAL Global"
+    scope="UX/UI, Website Design, Donation Flow, Interactive Map, Brand Collateral"
+    intro="Redesigning the digital presence of one of Ireland's most recognised humanitarian organisations — and beginning a decade-long creative partnership."
+    heroImage="/images/work/goal/goal-hero.jpg"
+  />
+
+  <section class="bg-n100">
+    <Container size="large">
+      <!-- The Challenge -->
+      <div class="pt-8 pb-12 lg:pt-12 lg:pb-16">
+        <CaseStudySectionIntro
+          label="The Challenge"
+          heading="A platform that had to earn trust in seconds."
+          paragraphs={[
+            "Founded in 1977, GOAL has responded to almost every major humanitarian crisis in the world over the past five decades — operating across 14 countries with the support of governments, the EU, the UN, and hundreds of thousands of individual donors.",
+            "The existing website was failing on every front. Visually outdated, technically strained, and built on a CMS that the communications and fundraising teams had largely outgrown, it couldn't support the pace at which GOAL needed to publish, campaign, and convert. The donation flow was friction-heavy and the information architecture made it difficult for users to understand the breadth of GOAL's work on the ground.",
+            "The brief was precise: build a platform worthy of GOAL's global reputation — one that made donating simple, made the work visible, and gave internal teams the tools to move fast without depending on developers. One constraint shaped everything: the creative direction was always about the positive. Never the suffering. The work would show what GOAL was achieving on the ground — not the conditions that made it necessary.",
+          ]}
+        />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyImageGrid
+            images={[
+              { src: "/images/work/goal/brand-01.jpg", alt: "GOAL Global" },
+              { src: "/images/work/goal/brand-02.jpg", alt: "GOAL Global" },
+              { src: "/images/work/goal/brand-03.jpg", alt: "GOAL Global" },
+              { src: "/images/work/goal/brand-04.jpg", alt: "GOAL Global" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <!-- The Solution -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro
+          label="The Solution"
+          heading="Discovery first. Design second."
+          paragraphs={[
+            "The project opened with a focus analysis group reviewing GOAL's existing digital presence — surfacing the specific friction points users faced when trying to find information or donate. This was followed by a structured discovery workshop with key GOAL stakeholders: management, marketing, communications, and fundraising teams. Towards the close of the process, outgoing CEO Siobhán Walsh joined the session — a signal of how seriously GOAL were approaching the rebuild.",
+            "The most significant structural decision to emerge from that process was the simplification of the navigation into four key pillars. These weren't just a design choice — they mapped directly to how GOAL managed itself internally, and they gave users a clear, immediate sense of what the organisation did and where to go. Everything else in the information architecture followed from that. I led the full creative and UX direction from discovery through to launch — working with and leading the design team across every deliverable.",
+          ]}
+        />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyPillarGrid
+            cols={3}
+            items={[
+              { num: "001", title: "Show the work, not the need", body: "A visual and editorial direction built around GOAL's impact on the ground, not humanitarian suffering." },
+              { num: "002", title: "Four pillars, total clarity", body: "A navigation architecture that simplified a complex organisation into an immediately legible structure for any visitor." },
+              { num: "003", title: "Built for the team, not just the user", body: "A CMS and campaign page framework that gave GOAL's comms and fundraising teams the autonomy to publish and react without technical dependency." },
+            ]}
+          />
+        </div>
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyFullImage src="/images/work/goal/full-width-01.jpg" alt="GOAL Global" />
+        </div>
+      </div>
+
+      <!-- What I Delivered -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro
+          label="What I Delivered"
+          heading="A full digital platform — and a creative partnership that lasted over a decade."
+          proseWidth={664}
+          paragraphs={[
+            "This was a complete rebuild of GOAL's digital presence. The website was developed on a bespoke WordPress theme built specifically for the organisation — no off-the-shelf templates, no compromise on performance. The donation flow was redesigned from scratch. The legacy GlobalPay integration was replaced with a modern payment gateway, and the new flow was stepped and frictionless — designed to reduce drop-off at every stage, support both one-time and monthly giving, and handle the full range of GOAL's fundraising campaigns.",
+          ]}
+        />
+        <div class="mt-6">
+          <CaseStudyDeliverables
+            items={[
+              "Full UX Research & Discovery",
+              "Focus Analysis Group Facilitation",
+              "Website UX/UI Design",
+              "Bespoke WordPress Theme Development",
+              "Donation Flow Design & Payment Integration",
+              "Interactive Country Map",
+              "Careers API Integration",
+              "COVID-19 Impact Globe",
+              "Advanced Search Function",
+              "Campaign Page Framework for Comms Team",
+            ]}
+          />
+        </div>
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyImageGrid
+            images={[
+              { src: "/images/work/goal/deliverable-01.png", alt: "GOAL Global deliverable" },
+              { src: "/images/work/goal/deliverable-02.png", alt: "GOAL Global deliverable" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <!-- The Interactive Map (signature section 1) -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro
+          label="The Interactive Map"
+          heading="Making GOAL's global presence tangible."
+          paragraphs={[
+            "The interactive map was part of the original brief — a way for visitors to explore where GOAL was operating and surface the stories coming out of each country. Each country entry linked through to a dedicated case study, turning a geographical view into an editorial one.",
+            "During the COVID-19 crisis, this was extended into a live impact tracking globe — a later enhancement I led the UX on, repurposing the existing map architecture to communicate crisis data in real time. The goal throughout was the same: make GOAL's presence on the ground feel immediate, specific, and human — not abstract.",
+          ]}
+        />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyFullImage src="/images/work/goal/interactive-map.png" alt="GOAL Global map" />
+        </div>
+      </div>
+
+      <!-- The Longer Relationship (signature section 2) -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro
+          label="The Longer Relationship"
+          heading="One project became ten years of creative work."
+          paragraphs={[
+            "The website was the beginning of a sustained creative partnership with GOAL that extended well beyond the original brief. Over the following years I continued to support the organisation across a wide range of design and production work.",
+            "The GOAL Next Gen department became a recurring creative relationship — producing St. Patrick's Day campaign materials for social and live events throughout the festival period. In 2024 I designed infographics for GOAL's annual report. In 2025 I designed the full Annual Report — one of the last major projects before CEO Siobhán Walsh's departure.",
+            "One of the most distinct pieces of work from this period was the design of a Multi-MUAC tape — a diagnostic tool used in the field to assess malnutrition in both children and adults. Designing something that would be physically used by aid workers in crisis environments, where clarity and accuracy are not a design preference but a life-critical requirement, was one of the most meaningful briefs I've worked on. Additional work included social campaigns, event materials, and a 2-metre high jigsaw foamboard for the Irish Consortium on Gender Based Violence.",
+          ]}
+        />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyImageGrid
+            images={[
+              { src: "/images/work/goal/goal-jigsaw.jpg", alt: "GOAL projects" },
+              { src: "/images/work/goal/goal-pday-social.png", alt: "GOAL projects" },
+            ]}
+          />
+        </div>
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyFullImage src="/images/work/goal/goal-muac.png" alt="GOAL MUAC" fit="contain" />
+        </div>
+      </div>
+
+      <!-- Outcomes -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro label="Outcomes" heading="A platform that held up — and a relationship that kept growing." />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyPillarGrid
+            cols={2}
+            items={[
+              {
+                num: "001",
+                title: "Ten-year creative partnership",
+                body: "The original website brief led to over a decade of continued creative and digital support for GOAL — across digital, print, event, and field materials. That kind of relationship doesn't happen without consistent delivery.",
+              },
+              {
+                num: "002",
+                title: "A donation platform built for conversion",
+                body: "The stepped donation flow replaced a legacy system and was designed specifically to reduce friction for both one-time and monthly donors — supporting GOAL's full range of fundraising campaigns from a single platform.",
+              },
+              {
+                num: "003",
+                title: "Editorial independence for the comms team",
+                body: "The campaign page framework gave GOAL's communications and fundraising teams the ability to build and publish campaign pages independently — without requiring developer involvement at every turn.",
+              },
+              {
+                num: "004",
+                title: "Infrastructure that scaled with the organisation",
+                body: "Post-launch enhancements — the COVID-19 impact globe, careers API, and advanced search — were all absorbed into the existing platform without a rebuild. The architecture held.",
+              },
+              {
+                quote: true,
+                title: "GOAL Global",
+                body: "Our experience partnering with Big Dog has been extremely positive. For each project, our requirements were delivered in full. Big Dog had all the skill-sets required from excellent designers to a very talented technical team to implement our projects. We look forward to engaging with Big Dog again in the future.",
+              },
+              {
+                num: "006",
+                title: "Field-deployed design",
+                body: "The Multi-MUAC tape was produced for active use in humanitarian field operations — a brief where design precision had direct, real-world consequences.",
+              },
+            ]}
+          />
+        </div>
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyFullImage src="/images/work/goal/closing.jpg" alt="GOAL Global" />
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <CaseStudyNextProject
+    title="Cotone"
+    href="/work/cotone"
+    description="Launching an Irish luxury sleepwear brand from scratch — photography, brand alignment, and a bespoke e-commerce platform built to sell."
+    previewImage="/images/work/cotone/cotone-collection-preview.jpg"
+  />
+</BaseLayout>
+
+<script>
+  // Scroll reveal: fade + rise each [data-reveal] element as it enters view.
+  // Hidden state is scoped to `.reveal-ready` (added to <html>) so no-JS shows all.
+  const root = document.documentElement;
+  const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (els.length) {
+    root.classList.add("reveal-ready");
+    if (reduce || !("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-revealed"));
+    } else {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-revealed");
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -10% 0px", threshold: 0.1 }
+      );
+      els.forEach((el) => {
+        // Reveal immediately if the element is already on-screen when this
+        // runs (fixes inner-page heroes staying at opacity:0 until the user
+        // scrolls — IO's initial callback wasn't landing reliably before
+        // any scroll event; fixed July 14 2026 across all pages using this
+        // script). Only observe elements that still need to come into view.
+        const rect = el.getBoundingClientRect();
+        const alreadyInView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (alreadyInView) {
+          el.classList.add("is-revealed");
+        } else {
+          io.observe(el);
+        }
+      });
+    }
+  }
+</script>

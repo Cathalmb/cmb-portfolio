@@ -1,0 +1,253 @@
+---
+/**
+ * Services — Work slider ("what I build"). Figma node 90:173.
+ * Label "What I build" (body-md 16 n500) → statement "I think before I make.
+ * Everything starts with discovery." (display-sm 61/64, n900, width 664) →
+ * horizontal slider of case-study cards. Each card 437×493 (radius 24), image
+ * with a bottom gradient, title (heading-lg 39, white) + descriptor (body-lg
+ * 20, n150) bottom-left (p-4). Cards scroll/snap; the next card peeks.
+ *
+ * Carousel behaviour (added July 2026 — Services page review):
+ *  - Pointer drag-to-scroll: click/press and drag anywhere on the track to
+ *    move through the cards. A 6px movement threshold distinguishes a drag
+ *    from a click so genuine clicks still open the case study.
+ *  - Native touch scroll preserved on mobile; trackpad/wheel unaffected.
+ *  - Custom styled progress bar (n150 track, ochre fill) replaces the native
+ *    scrollbar and updates live as a passive position indicator.
+ *  - Keyboard access and reduced-motion preserved.
+ *
+ * Spacing: label→statement 8 (mt-1), statement→slider 40 (mt-5), slider→next
+ * section 192 (this section pb).
+ */
+import Container from "../primitives/Container.astro";
+
+// Gael Linn swapped for GOAL (July 14 2026, pre-go-live checklist) — Gael
+// Linn's case study isn't written yet (same reason it's held back from
+// WorkGrid.astro on /work), so it shouldn't appear as a clickable card here
+// either. GOAL's descriptor/image match the ones used on /work.
+const cases = [
+  { name: "Bia Energy", descriptor: "Energy sector", href: "/work/bia-energy", img: "/images/work/bia-energy/hero.webp", bg: null },
+  { name: "Three Ireland", descriptor: "Telecoms", href: "/work/three-ireland", img: "/images/work/three-ireland/hero.webp", bg: null },
+  { name: "Panda", descriptor: "Green Utilities", href: "/work/panda", img: "/images/work/panda/preview.webp", bg: null },
+  { name: "GOAL", descriptor: "International charity", href: "/work/goal", img: "/images/work/goal/goal-hero.jpg", bg: null },
+];
+---
+
+<section class="bg-n100 pb-16 lg:pb-[192px]">
+  <Container size="large">
+    <p data-reveal class="text-body-md text-n500">What I build</p>
+    <h2
+      data-reveal
+      style="--reveal-delay: 80ms"
+      class="mt-1 max-w-[664px] text-heading-lg text-n900 lg:text-display-sm"
+    >
+      I think before I make. Everything starts with discovery.
+    </h2>
+
+    <!-- Slider -->
+    <div class="work-carousel" data-reveal>
+      <ul
+        class="work-slider mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 lg:mt-10"
+      >
+        {
+          cases.map((c) => (
+            <li class="shrink-0 snap-start">
+              <a
+                href={c.href}
+                class="work-card group relative block aspect-[437/493] w-[82vw] max-w-[437px] overflow-hidden rounded-[24px] lg:aspect-auto lg:h-[493px] lg:w-[437px]"
+              >
+                {c.img ? (
+                  <img src={c.img} alt="" loading="lazy" draggable="false" class="cs-media absolute inset-0 h-full w-full object-cover" />
+                ) : (
+                  <div class="cs-media absolute inset-0" style={`background:${c.bg}`} />
+                )}
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent from-50% to-[rgba(17,17,17,0.7)]" />
+                <div class="absolute inset-x-0 bottom-0 p-4">
+                  <h3 class="text-heading-md text-white lg:text-heading-lg">{c.name}</h3>
+                  <p class="pt-1 text-body-lg text-n150">{c.descriptor}</p>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <!-- Progress bar (passive position indicator) -->
+      <div class="work-progress mt-6" aria-hidden="true">
+        <span class="work-progress__fill"></span>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  /* Hide the native scrollbar — position is shown by .work-progress instead. */
+  .work-slider {
+    scrollbar-width: none; /* Firefox */
+  }
+  .work-slider::-webkit-scrollbar {
+    display: none; /* WebKit */
+  }
+
+  /* Grab affordance while dragging. */
+  .work-slider.is-draggable {
+    cursor: grab;
+  }
+  .work-slider.is-dragging {
+    cursor: grabbing;
+    scroll-snap-type: none; /* free scroll while dragging; snap re-applies on release */
+    user-select: none;
+  }
+  .work-slider.is-dragging .work-card {
+    pointer-events: none; /* suppress the click that ends a drag */
+  }
+
+  /* Styled progress track + fill. */
+  .work-progress {
+    position: relative;
+    height: 4px;
+    width: 100%;
+    border-radius: 9999px;
+    background: var(--color-n150);
+    overflow: hidden;
+  }
+  .work-progress__fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0; /* set by JS as a percentage of the visible track */
+    border-radius: 9999px;
+    background: var(--color-ochre);
+    transform-origin: left center;
+  }
+
+  /* The progress bar only earns its place when the track actually overflows. */
+  .work-carousel:not(.has-overflow) .work-progress {
+    display: none;
+  }
+
+  /* Subtle image zoom on hover/focus — desktop only, matching the same
+     effect on the /work case-study grid (WorkGrid.astro). .cs-media is
+     the img (or a colour-fill div, for any future no-image card). Purely
+     visual — doesn't interfere with the drag-to-scroll behaviour above. */
+  .cs-media {
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (min-width: 1024px) {
+    .work-card:hover .cs-media,
+    .work-card:focus-visible .cs-media {
+      transform: scale(1.05);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cs-media {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Services work carousel: pointer drag-to-scroll + passive progress bar.
+  // Progressive enhancement — without JS the track is a normal scroll element.
+  type Carousel = {
+    root: HTMLElement;
+    track: HTMLElement;
+    fill: HTMLElement;
+  };
+
+  function initCarousel({ root, track, fill }: Carousel) {
+    const DRAG_THRESHOLD = 6; // px of movement before a press counts as a drag
+
+    // --- Progress bar: fill width tracks scroll position. -----------------
+    function updateProgress() {
+      const scrollable = track.scrollWidth - track.clientWidth;
+      const hasOverflow = scrollable > 1;
+      root.classList.toggle("has-overflow", hasOverflow);
+      if (!hasOverflow) {
+        fill.style.width = "0%";
+        return;
+      }
+      const ratio = track.scrollLeft / scrollable;
+      // Fill represents the visible portion, sliding from left to right.
+      const visible = track.clientWidth / track.scrollWidth; // 0..1
+      const minFill = 0.12; // keep the thumb visible even with many cards
+      const w = Math.max(visible, minFill);
+      const travel = (1 - w) * ratio;
+      fill.style.width = `${w * 100}%`;
+      fill.style.transform = `translateX(${(travel / w) * 100}%)`;
+    }
+
+    track.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+    updateProgress();
+
+    // --- Pointer drag-to-scroll (mouse / pen; touch uses native scroll). --
+    let dragging = false;
+    let moved = false;
+    let startX = 0;
+    let startScroll = 0;
+    let pointerId = -1;
+
+    track.classList.add("is-draggable");
+
+    track.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "touch") return; // let touch scroll natively
+      if (e.button !== 0) return; // primary button only
+      dragging = true;
+      moved = false;
+      startX = e.clientX;
+      startScroll = track.scrollLeft;
+      pointerId = e.pointerId;
+    });
+
+    track.addEventListener("pointermove", (e) => {
+      if (!dragging || e.pointerId !== pointerId) return;
+      const dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) > DRAG_THRESHOLD) {
+        moved = true;
+        track.classList.add("is-dragging");
+        track.setPointerCapture(pointerId);
+      }
+      if (moved) {
+        track.scrollLeft = startScroll - dx;
+        e.preventDefault();
+      }
+    });
+
+    function endDrag(e: PointerEvent) {
+      if (!dragging || e.pointerId !== pointerId) return;
+      dragging = false;
+      if (moved) {
+        if (track.hasPointerCapture(pointerId)) track.releasePointerCapture(pointerId);
+        // Defer removing the drag class so the click that fires now is swallowed.
+        requestAnimationFrame(() => track.classList.remove("is-dragging"));
+      }
+      pointerId = -1;
+    }
+
+    track.addEventListener("pointerup", endDrag);
+    track.addEventListener("pointercancel", endDrag);
+
+    // Guard: block the click that concludes a real drag from following the link.
+    track.addEventListener(
+      "click",
+      (e) => {
+        if (moved) {
+          e.preventDefault();
+          e.stopPropagation();
+          moved = false;
+        }
+      },
+      true
+    );
+  }
+
+  document.querySelectorAll<HTMLElement>(".work-carousel").forEach((root) => {
+    const track = root.querySelector<HTMLElement>(".work-slider");
+    const fill = root.querySelector<HTMLElement>(".work-progress__fill");
+    if (track && fill) initCarousel({ root, track, fill });
+  });
+</script>

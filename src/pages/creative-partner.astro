@@ -1,0 +1,75 @@
+---
+/**
+ * The Creative Partner Retainer — standalone page. Figma node 106:135
+ * ("desktop-creative-partner"), file tIAAj19zYTbV2mmYGsJRUW.
+ *
+ * Split out from /services July 13 2026 so the retainer's "not a fixed
+ * deliverable list" pitch doesn't sit next to Content Partner's fixed
+ * deliverable list. Deliberately NOT in primary nav (Services/Work/About
+ * /Gaeilge stays at 4-5 items) — reached via the homepage retainer card,
+ * the /services CTA, and this page's own closing CTA.
+ *
+ * Route note: homepage "How it works" button and any /services #retainer
+ * anchors should point here instead — see project-website-build memory.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CreativePartnerHero from "../components/sections/CreativePartnerHero.astro";
+import CreativePartnerTiers from "../components/sections/CreativePartnerTiers.astro";
+import HowAMonthWorks from "../components/sections/HowAMonthWorks.astro";
+import CreativePartnerFaq from "../components/sections/CreativePartnerFaq.astro";
+import RetainerCta from "../components/sections/RetainerCta.astro";
+
+const title =
+  "Creative Partner Retainer | Monthly Creative Capacity | Cathal Mac an Bheatha";
+const description =
+  "A monthly creative relationship, not a project or a hire. Brand, UX/UI, web, and print capacity directed by your priorities, from €1,800/month.";
+---
+
+<BaseLayout title={title} description={description} theme="dark">
+  <CreativePartnerHero />
+  <CreativePartnerTiers />
+  <HowAMonthWorks />
+  <CreativePartnerFaq />
+  <RetainerCta />
+</BaseLayout>
+
+<script>
+  // Scroll reveal: fade + rise each [data-reveal] element as it enters view.
+  // Hidden state is scoped to `.reveal-ready` (added to <html>) so no-JS shows all.
+  const root = document.documentElement;
+  const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (els.length) {
+    root.classList.add("reveal-ready");
+    if (reduce || !("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-revealed"));
+    } else {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-revealed");
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -10% 0px", threshold: 0.1 }
+      );
+      els.forEach((el) => {
+        // Reveal immediately if the element is already on-screen when this
+        // runs (fixes inner-page heroes staying at opacity:0 until the user
+        // scrolls — IO's initial callback wasn't landing reliably before
+        // any scroll event; fixed July 14 2026 across all pages using this
+        // script). Only observe elements that still need to come into view.
+        const rect = el.getBoundingClientRect();
+        const alreadyInView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (alreadyInView) {
+          el.classList.add("is-revealed");
+        } else {
+          io.observe(el);
+        }
+      });
+    }
+  }
+</script>

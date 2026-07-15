@@ -1,0 +1,296 @@
+---
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+
+/**
+ * About — Gallery. Figma nodes 68:323 / 73:90 / 73:91 + the reference recording.
+ *
+ * 3-up carousel: full-bleed dark band of equal-prominence slides (radius 24,
+ * 16px gap), sized so three fill the viewport at once on desktop (1128×846 on
+ * large screens, fluid down to smaller desktops via calc()) with no dominant
+ * slide and no dimmed neighbours. On a fine pointer the native cursor is hidden
+ * and replaced by a circular button that follows the pointer — right half =
+ * next (→), left half = prev (←); a click scrolls the track by one slide.
+ * Touch/no-hover degrades to a native centre-snap swipe strip showing ~1.5
+ * slides per screen. Keyboard/SR users get real Prev/Next buttons (visible on
+ * focus). Reduced motion removes the slide transition.
+ *
+ * Slides are auto-discovered from public/images/slider/ at build time — drop
+ * a new 1128×846 (~4:3) image in that folder and it appears here with no code
+ * change. Sorted numerically by filename (slide-01, slide-02, …, slide-10),
+ * so keep the "slide-NN.ext" naming pattern. Add an entry to `altText` below
+ * (keyed by exact filename) for a real description; anything without one
+ * falls back to a generic alt so new drops never ship broken accessibility —
+ * just remember to come back and write the real one.
+ */
+const altText: Record<string, string> = {
+  "slide-01.jpg":
+    "Cathal in a moody hallway portrait, composited with a live gig shot of a bassist silhouetted against stage lights",
+  "slide-02.jpg": "A trad session in a Dublin pub, singers performing for a packed crowd",
+  "slide-03.jpg":
+    "Street portrait of a woman sitting on steps, composited with a behind-the-scenes shot of the photographer crouching to shoot her",
+  "slide-04.jpg": "Cathal shooting on a mirrorless camera among greenery",
+  "slide-05.jpg":
+    "A group selfie composited with a silhouetted photo of an adult and child walking along the shoreline at sunset",
+};
+
+const sliderDir = fileURLToPath(new URL("../../../public/images/slider", import.meta.url));
+const IMAGE_EXT = /\.(jpe?g|png|webp|avif)$/i;
+const naturalSort = (a: string, b: string) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
+
+const slides = fs
+  .readdirSync(sliderDir)
+  .filter((f) => IMAGE_EXT.test(f))
+  .sort(naturalSort)
+  .map((f) => ({
+    src: `/images/slider/${f}`,
+    alt: altText[f] ?? "Cathal Mac an Bheatha — off the clock",
+  }));
+---
+
+<section class="gal bg-n900" data-reveal aria-roledescription="carousel" aria-label="Gallery">
+  <div class="gal-viewport" id="gal-viewport">
+    <ul class="gal-track" id="gal-track">
+      {
+        slides.map((s, i) => (
+          <li class="gal-slide" data-i={i}>
+            <img src={s.src} alt={s.alt} loading="lazy" draggable="false" />
+          </li>
+        ))
+      }
+    </ul>
+
+    <!-- Pointer-following control (fine-pointer only; decorative). -->
+    <div class="gal-cursor" id="gal-cursor" aria-hidden="true">
+      <svg viewBox="0 0 24 16" fill="none" width="26" height="17">
+        <path d="M0 8h20M15.5 1.5 22 8l-6.5 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+  </div>
+
+  <!-- Real controls for keyboard / screen-reader users (visible on focus). -->
+  <div class="gal-sr-controls">
+    <button type="button" id="gal-prev" class="gal-sr-btn">Previous image</button>
+    <button type="button" id="gal-next" class="gal-sr-btn">Next image</button>
+  </div>
+</section>
+
+<style>
+  .gal {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    overflow: hidden;
+  }
+
+  .gal-viewport {
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+  .gal-viewport.is-interactive {
+    overflow: hidden;
+    cursor: none;
+    scroll-snap-type: none;
+  }
+
+  .gal-track {
+    display: flex;
+    gap: 16px;
+    padding: 0 24px;
+  }
+  .gal-viewport.is-interactive .gal-track {
+    padding: 0;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .gal-slide {
+    position: relative;
+    flex-shrink: 0;
+    /* ~1.5 slides visible per screen on mobile (1 full + a peek of the next). */
+    width: 60vw;
+    max-width: 420px;
+    aspect-ratio: 1128 / 846;
+    border-radius: 24px;
+    overflow: hidden;
+    scroll-snap-align: center;
+  }
+  .gal-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  @media (min-width: 1024px) {
+    /* Three equal slides fill the full-bleed viewport (2 gaps, no side padding
+       in interactive mode) capped at 1128x846 (native asset size) on very
+       large screens. */
+    .gal-slide {
+      width: calc((100vw - 32px) / 3);
+      max-width: 1128px;
+    }
+  }
+
+  /* Circular pointer-following button. */
+  .gal-cursor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    display: flex;
+    height: 72px;
+    width: 72px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: var(--color-n100);
+    color: var(--color-n900);
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-100px, -100px);
+    transition: opacity 0.2s ease;
+  }
+  .gal-cursor.is-visible {
+    opacity: 1;
+  }
+  .gal-cursor.is-prev svg {
+    transform: scaleX(-1);
+  }
+  .gal-cursor.is-disabled {
+    opacity: 0.35;
+  }
+
+  /* Keyboard/SR controls: off-screen until focused. */
+  .gal-sr-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+  .gal-sr-btn {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .gal-sr-btn:focus-visible {
+    position: static;
+    width: auto;
+    height: auto;
+    margin-top: 24px;
+    clip: auto;
+    padding: 12px 24px;
+    border-radius: 9999px;
+    background: var(--color-n100);
+    color: var(--color-n900);
+    font-weight: 500;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gal-viewport {
+      scroll-behavior: auto;
+    }
+    .gal-viewport.is-interactive .gal-track {
+      transition: none;
+    }
+    .gal-cursor {
+      transition: opacity 0.2s ease;
+    }
+  }
+</style>
+
+<script>
+  const viewport = document.getElementById("gal-viewport");
+  const track = document.getElementById("gal-track");
+  const cursor = document.getElementById("gal-cursor");
+  const prevBtn = document.getElementById("gal-prev");
+  const nextBtn = document.getElementById("gal-next");
+
+  if (viewport && track) {
+    const slides = Array.from(track.querySelectorAll<HTMLElement>(".gal-slide"));
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
+
+    // All slides read as equally prominent, so state is just how far the
+    // track has scrolled — no single "active" slide to centre.
+    let offset = 0;
+
+    const pitch = () => {
+      if (slides.length < 2) return slides[0]?.offsetWidth ?? 0;
+      return slides[1].offsetLeft - slides[0].offsetLeft; // width + gap
+    };
+    const maxOffset = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+
+    const applyOffset = () => {
+      track.style.transform = `translateX(${Math.round(-offset)}px)`;
+      if (cursor) {
+        const prev = cursor.classList.contains("is-prev");
+        cursor.classList.toggle("is-disabled", prev ? offset <= 0 : offset >= maxOffset());
+      }
+    };
+    const scrollBy = (dir: 1 | -1) => {
+      offset = clamp(offset + dir * pitch(), 0, maxOffset());
+      if (viewport.classList.contains("is-interactive")) applyOffset();
+      else {
+        const nextIndex = clamp(Math.round(offset / pitch()), 0, slides.length - 1);
+        slides[nextIndex]?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      }
+    };
+    const reclamp = () => {
+      offset = clamp(offset, 0, maxOffset());
+      if (viewport.classList.contains("is-interactive")) applyOffset();
+    };
+
+    // Pointer-following cursor button.
+    if (cursor) {
+      viewport.addEventListener("pointermove", (e) => {
+        if (!viewport.classList.contains("is-interactive") || e.pointerType !== "mouse") return;
+        const r = viewport.getBoundingClientRect();
+        const px = e.clientX - r.left;
+        const py = e.clientY - r.top;
+        cursor.style.transform = `translate(${px - 36}px, ${py - 36}px)`;
+        cursor.classList.add("is-visible");
+        cursor.classList.toggle("is-prev", px < r.width / 2);
+        cursor.classList.toggle("is-disabled", px < r.width / 2 ? offset <= 0 : offset >= maxOffset());
+      });
+      viewport.addEventListener("pointerleave", () => cursor.classList.remove("is-visible"));
+    }
+
+    viewport.addEventListener("click", (e) => {
+      if (!viewport.classList.contains("is-interactive")) return;
+      const r = viewport.getBoundingClientRect();
+      const px = (e as PointerEvent).clientX - r.left;
+      scrollBy(px < r.width / 2 ? -1 : 1);
+    });
+
+    prevBtn?.addEventListener("click", () => scrollBy(-1));
+    nextBtn?.addEventListener("click", () => scrollBy(1));
+
+    const setMode = () => {
+      if (fine.matches) {
+        viewport.classList.add("is-interactive");
+        reclamp();
+      } else {
+        viewport.classList.remove("is-interactive");
+        track.style.transform = "";
+      }
+    };
+    setMode();
+    fine.addEventListener("change", setMode);
+    window.addEventListener("resize", () => {
+      if (viewport.classList.contains("is-interactive")) reclamp();
+    });
+    // Re-clamp once images have laid out (widths settle).
+    window.addEventListener("load", () => {
+      if (viewport.classList.contains("is-interactive")) reclamp();
+    });
+  }
+</script>

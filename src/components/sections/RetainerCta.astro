@@ -1,0 +1,45 @@
+---
+/**
+ * Creative Partner Retainer — closing page CTA. Figma node 120:689
+ * ("retainer-cta"), added July 13 2026, matches the "Page CTA" section
+ * documented in website-copy.md §6. Sits on the light page bg (bg-n100,
+ * shared with the FAQ section above it); the card itself uses the
+ * ochre-tint wash. Global Footer (already dark, already matches this
+ * page's footer content) follows via BaseLayout.
+ */
+import Container from "../primitives/Container.astro";
+---
+
+<section class="bg-n100">
+  <Container size="large">
+    <div class="pb-16 lg:pb-24">
+      <div
+        data-reveal
+        class="rounded-[24px] border border-n200 bg-ochre-tint px-4 py-12 text-center lg:py-16"
+      >
+        <h2 class="mx-auto max-w-[880px] text-heading-lg text-n900 lg:text-heading-xl">
+          Not sure which shape fits?
+        </h2>
+        <p class="mx-auto mt-3 max-w-[880px] text-heading-sm text-n900">
+          The first conversation is always a call. No brief required, no
+          commitment.
+        </p>
+        <a
+          href="/contact"
+          class="mt-6 inline-flex h-[52px] items-center gap-2 rounded-full bg-n900 px-4 text-body-sm font-medium text-n100 transition-colors hover:bg-n800"
+        >
+          Let's talk
+          <svg width="13" height="8" viewBox="0 0 13 8" fill="none" aria-hidden="true">
+            <path
+              d="M0 4h11M8.5 1 12 4l-3.5 3"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </Container>
+</section>

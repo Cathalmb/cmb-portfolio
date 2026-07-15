@@ -1,0 +1,154 @@
+---
+/**
+ * Work — case study index grid. Figma node 109:305 placeholder duplicated
+ * Bia Energy/Three Ireland to fill a lead + two 2-up rows — per Cathal
+ * (July 13 2026), the real set is the lead card (Bia Energy, the anchor
+ * case study) plus the case studies to date. That's 4 cards below the lead
+ * (Panda, Three Ireland, GOAL, Cotone) — an even number, so they sit in a
+ * clean 2×2 with no card needing to span the full row. Gael Linn is
+ * deliberately NOT in this list yet (July 13 2026, second pass) — Cathal
+ * hasn't written that case study, so it's held back until it exists rather
+ * than shipped as a dead link. The odd/even-spanning logic below is kept
+ * generic (not hardcoded to 4) so it keeps working automatically once
+ * Gael Linn (or any future case study) is added back in.
+ *
+ * Card visual language is the existing case-study card pattern (rounded-24,
+ * bottom gradient, white heading-lg name + n150 body-lg descriptor,
+ * bottom-left p-4) reused verbatim from Work.astro / ServicesWork.astro.
+ *
+ * Sizing — verified against exact node dimensions (get_metadata on the
+ * individual card frames, not just the rounded code output):
+ *   - Lead/full-width card: Figma draws it 1344×749 = 1.794:1, which is 7px
+ *     off true 16:9 (1344×756) at that width — a drag imprecision, not an
+ *     intentional ratio. Per Cathal, full-width cards use a clean
+ *     **aspect-[16/9]**, not the raw Figma decimal.
+ *   - 2-up (half) card: Figma draws it 664×749 = 0.887:1 ("just off
+ *     square", confirmed correct by Cathal) — kept as the exact Figma
+ *     ratio, aspect-[664/749].
+ * Reproduced as aspect-ratios rather than fixed heights so the grid stays
+ * fluid. Mobile stacks single-column at the same aspect-[342/499] used by
+ * the homepage bento, for visual consistency across all case-study cards
+ * (node 109:305 is desktop-only, no mobile frame to match against).
+ *
+ * Gap: 16px between every card, both axes (Cathal's note).
+ * Section→footer gap: 192 (pb-[192px]), matching the pre-footer rhythm
+ * used elsewhere (retainer→footer, services work→footer).
+ *
+ * FLAG for Cathal: GOAL ("International charity") and Cotone
+ * ("Fashion & lifestyle") descriptors are drafted to match the sector-style
+ * one-liners already used for Bia Energy/Panda/Three Ireland — please
+ * confirm or correct the wording.
+ */
+import Container from "../primitives/Container.astro";
+
+type Card = { name: string; descriptor: string; href: string; img: string | null; bg?: string };
+
+const lead: Card = {
+  name: "Bia Energy",
+  descriptor: "Energy sector",
+  href: "/work/bia-energy",
+  img: "/images/work/bia-energy/hero.webp",
+};
+
+// Panda, Three Ireland (homepage order), then GOAL and Cotone. Gael Linn
+// removed for now (July 13 2026) — add it back in, in its rightful spot,
+// once that case study is actually written.
+const cases: Card[] = [
+  { name: "Panda", descriptor: "Green Utilities", href: "/work/panda", img: "/images/work/panda/preview.webp" },
+  { name: "Three Ireland", descriptor: "Telecoms", href: "/work/three-ireland", img: "/images/work/three-ireland/hero.webp" },
+  { name: "GOAL", descriptor: "International charity", href: "/work/goal", img: "/images/work/goal/goal-hero.jpg" },
+  { name: "Cotone", descriptor: "Fashion & lifestyle", href: "/work/cotone", img: "/images/work/cotone/hero.jpg" },
+];
+
+const lastIsOdd = cases.length % 2 === 1;
+---
+
+<section class="bg-n100 pb-16 lg:pb-[192px]">
+  <Container size="large">
+    <div class="work-index-grid" data-reveal>
+      <!-- Lead card (full width) -->
+      <a
+        href={lead.href}
+        data-span="full"
+        class="cs-card group relative block aspect-[342/499] overflow-hidden rounded-[24px] lg:aspect-[16/9]"
+      >
+        {lead.img && <img src={lead.img} alt="" loading="lazy" class="cs-media absolute inset-0 h-full w-full object-cover" />}
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent from-50% to-[rgba(17,17,17,0.7)]" />
+        <div class="absolute inset-x-0 bottom-0 p-3 lg:p-4">
+          <h2 class="text-heading-md text-white lg:text-heading-lg">{lead.name}</h2>
+          <p class="pt-1 text-body-md text-n150 lg:text-body-lg">{lead.descriptor}</p>
+        </div>
+      </a>
+
+      <!-- Remaining case studies -->
+      {
+        cases.map((c, i) => {
+          const isLastOdd = lastIsOdd && i === cases.length - 1;
+          return (
+            <a
+              href={c.href}
+              data-span={isLastOdd ? "full" : undefined}
+              class={`cs-card group relative block aspect-[342/499] overflow-hidden rounded-[24px] ${
+                isLastOdd ? "lg:aspect-[16/9]" : "lg:aspect-[664/749]"
+              }`}
+            >
+              {c.img ? (
+                <img src={c.img} alt="" loading="lazy" class="cs-media absolute inset-0 h-full w-full object-cover" />
+              ) : (
+                <div class="cs-media absolute inset-0" style={`background:${c.bg}`} />
+              )}
+              <div class="absolute inset-0 bg-gradient-to-b from-transparent from-50% to-[rgba(17,17,17,0.7)]" />
+              <div class="absolute inset-x-0 bottom-0 p-3 lg:p-4">
+                <h3 class="text-heading-md text-white lg:text-heading-lg">{c.name}</h3>
+                <p class="pt-1 text-body-md text-n150 lg:text-body-lg">{c.descriptor}</p>
+              </div>
+            </a>
+          );
+        })
+      }
+    </div>
+  </Container>
+</section>
+
+<style>
+  /* Mobile: single-column stack, uniform aspect ratio (matches the
+     homepage bento). Desktop: lead full width, rest in a 2-col grid,
+     with any card marked data-span="full" spanning both columns. */
+  .work-index-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  @media (min-width: 1024px) {
+    .work-index-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .work-index-grid > [data-span="full"] {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* Subtle image zoom on hover/focus — desktop only (matches the
+     lg-gated hover behaviour used elsewhere, e.g. Work.astro's
+     descriptor reveal). .cs-media is the img (or colour-fill div for
+     Gael Linn's no-image card) so the effect is consistent either way. */
+  .cs-media {
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (min-width: 1024px) {
+    .cs-card:hover .cs-media,
+    .cs-card:focus-visible .cs-media {
+      transform: scale(1.05);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cs-media {
+      transition: none;
+    }
+  }
+</style>

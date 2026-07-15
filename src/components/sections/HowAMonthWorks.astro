@@ -1,0 +1,57 @@
+---
+/**
+ * Creative Partner Retainer — "How a month works". Figma node
+ * 117:603/117:652. Bordered card on the dark page bg, four numbered
+ * pillars (ochre number, heading-sm title, muted body-md description).
+ * Copy verbatim from website-copy.md §4.
+ */
+import Container from "../primitives/Container.astro";
+
+const steps = [
+  {
+    number: "01",
+    title: "Priorities call",
+    desc: "Thirty minutes at the start of the month. You tell me what matters right now.",
+  },
+  {
+    number: "02",
+    title: "The work",
+    desc: "I get on with it. Regular check-ins, no chasing, nothing drifts.",
+  },
+  {
+    number: "03",
+    title: "Delivery",
+    desc: "Finished work lands ready to use, with everything handed over properly.",
+  },
+  {
+    number: "04",
+    title: "Recap",
+    desc: "What shipped, what's next, and where next month's capacity does the most good.",
+  },
+];
+---
+
+<section class="bg-n900">
+  <Container size="large">
+    <div class="pb-16 lg:pb-24">
+      <div
+        data-reveal
+        class="rounded-[24px] border border-n200 px-4 py-6 lg:px-8 lg:py-8"
+      >
+        <h2 class="text-heading-lg text-n100">How a month works</h2>
+
+        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          {
+            steps.map((step) => (
+              <div>
+                <p class="text-body-sm text-ochre">{step.number}</p>
+                <p class="mt-1 text-heading-sm text-n100">{step.title}</p>
+                <p class="mt-2 text-body-md text-n300">{step.desc}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

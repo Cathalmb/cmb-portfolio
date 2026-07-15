@@ -1,0 +1,63 @@
+---
+/**
+ * Case study — masonry gallery. For the photography/video template's
+ * signature section (Three Ireland's "On The Ground": festival shots at
+ * mixed heights).
+ *
+ * REBUILT (July 13 2026) — the first version used the CSS
+ * `columns-2/lg:columns-4` + `break-inside-avoid` multi-column trick with
+ * `column-fill: auto`. Cathal reported it broken. Root cause: `column-fill:
+ * auto` only behaves predictably when the multicol container has a
+ * DEFINITE height — with auto/indefinite height (our case, since the
+ * gallery's height is content-driven), the spec falls back to balancing
+ * columns by height regardless of what's set, which scrambles the
+ * intended per-column grouping, and CSS multicol + break-inside-avoid has
+ * known cross-browser inconsistencies (Safari especially) with variable-
+ * height children. Turns out the legacy site avoided this exact trap —
+ * its `cs-gallery` was already explicit column DIVS (`cs-gallery-col`),
+ * not CSS multi-column.
+ *
+ * Rebuilt the same way: `columns` is an explicit array of column arrays
+ * (author controls exactly which images sit in which column, top to
+ * bottom) rendered as plain flexbox — `flex-col` nested in `flex-col
+ * lg:flex-row`, so nesting alone stacks everything into one sensible
+ * single column on mobile with ZERO extra markup or duplicated images,
+ * and lays out as side-by-side columns on desktop. No CSS multicol, no
+ * break-inside-avoid, no column-fill ambiguity — fully explicit and
+ * predictable in every browser.
+ *
+ * Still DELIBERATELY DIFFERENT from the About page's Gallery.astro
+ * (Cathal, July 13 2026: "the gallery should be different to the about
+ * page carousel") — this is a static grid, no JS, no carousel mechanics,
+ * no cursor takeover, for a large unordered documentary set. Gallery.astro
+ * stays the horizontal snap-carousel for a small curated sequence.
+ *
+ * No hover-zoom (removed July 13 2026 — see CaseStudyImageGrid for why).
+ */
+interface Item {
+  src: string;
+  alt?: string;
+  size?: "sm" | "lg";
+}
+
+interface Props {
+  /** Array of columns, each an array of items top-to-bottom (author-ordered, not auto-flowed). */
+  columns: Item[][];
+}
+
+const { columns } = Astro.props;
+---
+
+<div data-reveal class="flex flex-col gap-2 lg:flex-row">
+  {
+    columns.map((col) => (
+      <div class="flex flex-1 flex-col gap-2">
+        {col.map((item) => (
+          <div class={`relative overflow-hidden rounded-[24px] ${item.size === "lg" ? "aspect-[3/4]" : "aspect-square"}`}>
+            <img src={item.src} alt={item.alt ?? ""} loading="lazy" class="h-full w-full object-cover" />
+          </div>
+        ))}
+      </div>
+    ))
+  }
+</div>

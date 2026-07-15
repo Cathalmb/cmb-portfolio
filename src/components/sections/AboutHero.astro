@@ -1,0 +1,24 @@
+---
+/**
+ * About — Hero. Figma node 68:321 (desktop 1440). Dark page. Type-only hero.
+ * EXACT Figma values: headline display-xl (119/120, -0.02em), colour n100,
+ * left margin 48 (container gutter), desktop line break after "director".
+ * Headline top ~176 from frame top (96 below the 80px nav region).
+ */
+import Container from "../primitives/Container.astro";
+---
+
+<section class="bg-n900">
+  <Container size="large">
+    <div class="pt-12 pb-16 lg:pb-[128px]">
+      <h1
+        data-reveal
+        class="max-w-[1344px] text-heading-xl text-n100 lg:text-display-xl"
+      >
+        Creative director<br class="hidden lg:block" /> and brand strategist<span
+          class="text-ochre">.</span
+        >
+      </h1>
+    </div>
+  </Container>
+</section>

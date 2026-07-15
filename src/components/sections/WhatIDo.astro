@@ -1,0 +1,265 @@
+---
+/**
+ * What I do (Services). Mobile (33:102): stacked dark section with dividers +
+ * retainer card. Desktop (33:103): full-bleed SPLIT — left = numbered service
+ * list, right = dark image panel that cross-fades a project photo in on hover
+ * (300ms, no slide). Hovered row stays bright (ochre-base number, n100 title,
+ * n300 desc); the others drop back (ochre-pressed, n600). Wider centred
+ * retainer card below.
+ *
+ * SPACING (8px scale): section py-12 (96). Mobile as before. Desktop: heading→
+ * pillars mt-11 (88), pillar internals mt-1/mt-2, between pillars mt-5 (40),
+ * split→retainer mt-12 (96), retainer card px-6 py-6 (48v), heading→body mt-2,
+ * body→button mt-4.
+ */
+import Container from "../primitives/Container.astro";
+
+const pillars = [
+  { n: "01", title: "Brand Strategy & Identity", desc: "Understanding the market before defining the brand. From discovery and positioning through to visual identity, guidelines, and launch, with commercial outcomes in mind from day one.", img: "/images/services-brand-identity.jpg", bg: null, logo: null },
+  { n: "02", title: "UX & Interface Design", desc: "Interface design, UX, and design systems. I design for how things actually get built, understanding the development side means the handoff works, and what gets designed is what gets made.", img: "/images/services-ux-interface.jpg", bg: null, logo: null },
+  { n: "03", title: "Photography & Content", desc: "Brand photography, events, editorial, and video. Shot and directed by the same person who built the brand, so the images always match the identity they represent.", img: "/images/work/trad-fest-2023/TradFest_Blath-na-hOige_04.jpg", bg: null, logo: null },
+  { n: "04", title: "Irish Language Consulting", desc: "Language strategy, bilingual creative production, and translation. I'm a native Irish speaker, one of the few senior creatives in Ireland who can lead a bilingual project end-to-end without outsourcing the language or the thinking.", img: "/images/services-gaeilge-gaeloideachas-comhdhail.jpg", bg: null, logo: null },
+];
+
+// Neutral image shown in the desktop panel when no service row is hovered.
+// Deliberately NOT one of the four pillar images (so no row reads as
+// pre-selected). Swap the path here to change the idle image.
+const defaultPanelImg = "/images/services-three-stages-olympia.jpg";
+
+const retainerHeading = "The Creative Partner Retainer";
+const retainerBody =
+  "This is not a project. This is not a hire. It is a monthly creative relationship, directed by your priorities.";
+---
+
+<section id="what-i-do" class="relative bg-n900">
+  <!-- ============================== MOBILE ============================== -->
+  <div class="lg:hidden">
+    <Container>
+      <div class="pt-12 pb-24">
+        <p class="text-caption text-n100">Services</p>
+        <h2 class="text-heading-lg text-n100">What I do<span class="text-ochre">.</span></h2>
+
+        <div class="mt-5">
+          {
+            pillars.map((p, i) => (
+              <div class={i > 0 ? "mt-5 border-t border-n700 pt-3" : ""}>
+                <p class="text-body-sm text-ochre">{p.n}</p>
+                <h3 class="mt-1 text-heading-sm text-n100">{p.title}</h3>
+                <p class="mt-2 text-body-md text-n300">{p.desc}</p>
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="mt-24 rounded-[24px] border border-n200 bg-n100 px-3 py-6">
+          <h3 class="text-heading-sm text-n900">{retainerHeading}<span class="text-ochre">.</span></h3>
+          <p class="mt-2 text-body-md text-n500">{retainerBody}</p>
+          <a
+            href="/creative-partner"
+            class="mt-4 flex h-[52px] w-full items-center justify-center gap-1 rounded-full bg-n900 text-body-md font-medium text-n100 transition-colors hover:bg-n800"
+          >
+            How it works
+            <svg width="14" height="8" viewBox="0 0 14 8" fill="none" aria-hidden="true" class="shrink-0">
+              <path d="M0 4h12M9.5 1 13 4l-3.5 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </Container>
+  </div>
+
+  <!-- ============================== DESKTOP ============================= -->
+  <div class="hidden pt-12 pb-24 lg:block">
+    <div class="svc mx-auto max-w-large">
+      <div class="grid grid-cols-2">
+        <!-- Left: heading + service list -->
+        <div class="svc-list pl-[48px] pr-8">
+          <p class="text-body-md text-n200">Services</p>
+          <h2 class="mt-1 text-display-sm text-n100">
+            What I do<span class="text-ochre">.</span>
+          </h2>
+
+          <div class="mt-8">
+            {
+              pillars.map((p, i) => (
+                <div class:list={["svc-row", i > 0 && "mt-5"]} data-i={i}>
+                  <p class="svc-num text-body-sm">{p.n}</p>
+                  <h3 class="svc-title mt-1 text-heading-sm">{p.title}</h3>
+                  <p class="svc-desc mt-2 max-w-[532px] text-body-md">{p.desc}</p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- Right: image panel (bleeds to the container's right edge).
+             No own background — it inherits the section/page background so it
+             transitions with the scroll reveal instead of showing as a hard
+             black frame. Idle = neutral default image; hover cross-fades per row. -->
+        <div class="svc-panel relative overflow-hidden">
+          <img
+            data-i="default"
+            src={defaultPanelImg}
+            alt=""
+            loading="lazy"
+            class="svc-img absolute inset-0 h-full w-full object-cover object-top"
+          />
+          {
+            pillars.map((p, i) =>
+              p.img ? (
+                <img data-i={i} src={p.img} alt="" loading="lazy" class="svc-img absolute inset-0 h-full w-full object-cover" />
+              ) : (
+                <div data-i={i} class="svc-img absolute inset-0 flex items-center justify-center" style={`background:${p.bg}`}>
+                  {p.logo && <img src={p.logo} alt="" loading="lazy" class="w-[280px] max-w-[55%]" />}
+                </div>
+              )
+            )
+          }
+        </div>
+      </div>
+
+      <!-- Retainer CTA (wide, centred) -->
+      <div class="mt-24 px-6">
+        <div class="mx-auto max-w-[1112px] rounded-[24px] border border-n200 bg-n100 px-6 py-6 text-center">
+          <div class="mx-auto max-w-[648px]">
+            <h3 class="text-heading-xl text-n900">{retainerHeading}<span class="text-ochre">.</span></h3>
+            <p class="mx-auto mt-2 max-w-[512px] text-body-lg text-n500">{retainerBody}</p>
+            <a
+              href="/creative-partner"
+              class="mx-auto mt-4 flex h-[52px] w-[294px] max-w-full items-center justify-center gap-1 rounded-full bg-n900 text-body-md font-medium text-n100 transition-colors hover:bg-n800"
+            >
+              How it works
+              <svg width="14" height="8" viewBox="0 0 14 8" fill="none" aria-hidden="true" class="shrink-0">
+                <path d="M0 4h12M9.5 1 13 4l-3.5 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Desktop split interactions. */
+  @media (min-width: 1024px) {
+    /* Rows: base = bright. On list hover all dim; the hovered row re-brightens. */
+    .svc-num { color: var(--color-ochre); transition: color 0.3s ease; }
+    .svc-title { color: var(--color-n100); transition: color 0.3s ease; }
+    .svc-desc { color: var(--color-n300); transition: color 0.3s ease; }
+
+    .svc-list:hover .svc-num { color: var(--color-ochre-pressed); }
+    .svc-list:hover .svc-title { color: var(--color-n600); }
+    .svc-list:hover .svc-desc { color: var(--color-n600); }
+
+    .svc-list:hover .svc-row:hover .svc-num { color: var(--color-ochre); }
+    .svc-list:hover .svc-row:hover .svc-title { color: var(--color-n100); }
+    .svc-list:hover .svc-row:hover .svc-desc { color: var(--color-n300); }
+
+    /* Right panel: image cross-fades in for the hovered row. Idle = a NEUTRAL
+       default image (belongs to no row, so no service reads as pre-selected —
+       July 2026 design review). */
+    .svc-img { opacity: 0; transition: opacity 0.3s ease; }
+    .svc:not(:has(.svc-row:hover)) .svc-img[data-i="default"] { opacity: 1; }
+    .svc:has(.svc-row[data-i="0"]:hover) .svc-img[data-i="0"],
+    .svc:has(.svc-row[data-i="1"]:hover) .svc-img[data-i="1"],
+    .svc:has(.svc-row[data-i="2"]:hover) .svc-img[data-i="2"],
+    .svc:has(.svc-row[data-i="3"]:hover) .svc-img[data-i="3"] {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .svc-num,
+    .svc-title,
+    .svc-desc,
+    .svc-img {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Global scroll-linked page-background controller (lives here as the "reveal"
+  // owner). The page background crossfades #f9f9f9 → #0a0a0a as the user scrolls
+  // past the Panda card into the dark region (What I do → Gaeilge), then back to
+  // #f9f9f9 as the Process section enters. Dark sections that should show the
+  // page colour (What I do, Process) are set transparent while active; they keep
+  // their own bg-* class as the reduced-motion / no-JS fallback.
+  const whatido = document.getElementById("what-i-do");
+  const panda = document.getElementById("work-panda");
+  const gaeilge = document.getElementById("gaeilge");
+  const process = document.getElementById("process");
+  const mqMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  if (whatido && panda) {
+    let ticking = false;
+    const clamp = (n: number) => Math.min(1, Math.max(0, n));
+
+    const update = () => {
+      ticking = false;
+      const active = !mqMotion.matches;
+      if (!active) {
+        whatido.style.backgroundColor = "";
+        whatido.style.opacity = "";
+        if (gaeilge) {
+          gaeilge.style.backgroundColor = "";
+          gaeilge.style.opacity = "";
+        }
+        if (process) {
+          process.style.backgroundColor = "";
+          process.style.opacity = "";
+        }
+        document.body.style.backgroundColor = "";
+        return;
+      }
+      whatido.style.backgroundColor = "transparent";
+      if (gaeilge) gaeilge.style.backgroundColor = "transparent";
+      if (process) process.style.backgroundColor = "transparent";
+
+      // Fade IN to dark: Panda card → What I do (quicker: 0.4 of the distance).
+      const pTop = panda.getBoundingClientRect().top;
+      const wTop = whatido.getBoundingClientRect().top;
+      const spanIn = (wTop - pTop) * 0.4;
+      const pIn =
+        spanIn > 0 ? clamp(-pTop / spanIn) : pTop <= 0 ? 1 : 0;
+
+      // Fade OUT back to light: as the Process section enters the viewport.
+      let pOut = 0;
+      if (process) {
+        const prTop = process.getBoundingClientRect().top;
+        const vh = window.innerHeight;
+        // Start the fade-back later so the Gaeilge text stays readable: begin
+        // when Process has entered ~40% of the viewport, finish near the top.
+        pOut = clamp((vh * 0.6 - prTop) / (vh * 0.5));
+      }
+
+      const darkness = clamp(pIn - pOut); // 1 = black, 0 = page colour
+      const v = Math.round(249 + (10 - 249) * darkness);
+      document.body.style.backgroundColor = `rgb(${v}, ${v}, ${v})`;
+
+      // Contrast guard (July 2026 design review): a user can park mid-fade,
+      // leaving light text on mid-grey (or dark text on mid-grey for Process).
+      // Tie each section's opacity to the fade so its content only reveals
+      // once the background is close to the colour it was designed for.
+      // Thresholded: hidden until the bg is 30% of the way there, fully
+      // visible at 100% — so the reveal reads as intentional, not dimmed.
+      const reveal = (p: number) => clamp((p - 0.3) / 0.7);
+      whatido.style.opacity = String(reveal(darkness)); // light text → needs dark bg
+      if (gaeilge) gaeilge.style.opacity = String(reveal(darkness));
+      if (process) process.style.opacity = String(reveal(1 - darkness)); // dark text → light bg
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", update);
+    mqMotion.addEventListener("change", update);
+  }
+</script>

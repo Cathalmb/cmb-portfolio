@@ -1,0 +1,45 @@
+---
+/**
+ * About — "Who is Cathal" career facts. Figma nodes 73:101 (label) + 73:107
+ * (divider) + 73:103..119 (stats). EXACT values: top hairline (n700). Label
+ * body-md (16/24) n500 at left gutter, 24px below the divider. Stats start at
+ * grid column 6. Each: title heading-md (31/40, -0.01em) n100 + sub body-lg
+ * (20/28) n100 8px below; blocks pitched ~108 apart (title 40 + 8 + sub 28 + 32).
+ * Copy verbatim ("2 languages / English agus Gaeilge").
+ */
+import Container from "../primitives/Container.astro";
+
+const stats = [
+  { title: "11+ years", sub: "Agency-level creative, brand-led and website-first" },
+  { title: "4 disciplines", sub: "Strategy, design, photography, language. One lead" },
+  { title: "2 languages", sub: "English agus Gaeilge" },
+  { title: "Dublin", sub: "Working with brands across Ireland" },
+];
+---
+
+<section class="bg-n900">
+  <Container size="large">
+    <div class="border-t border-n700 pt-2 pb-24 lg:pb-[192px]">
+      <div class="grid gap-6 lg:grid-cols-12 lg:gap-x-6">
+        <!-- Label -->
+        <p data-reveal class="pb-[1em] text-body-md text-n500 lg:col-span-5">Who is Cathal</p>
+
+        <!-- Stat blocks: grid column 6 onward -->
+        <div class="lg:col-span-7 lg:col-start-6">
+          {
+            stats.map((s, i) => (
+              <div
+                data-reveal
+                style={`--reveal-delay: ${i * 80}ms`}
+                class={i > 0 ? "mt-1" : ""}
+              >
+                <h3 class="text-heading-md text-n100">{s.title}</h3>
+                <p class="mt-1 max-w-[532px] pb-[1em] text-body-lg text-n100">{s.sub}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

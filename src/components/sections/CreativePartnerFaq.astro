@@ -1,0 +1,107 @@
+---
+/**
+ * Creative Partner Retainer — FAQ. Figma node 117:654 onward, light page bg
+ * (bg-n100). Built with native <details>/<summary> so the whole row is the
+ * hit target for free (Cathal's Figma dev-annotation: "Full row should be
+ * the hit target") and keyboard/screen-reader behaviour comes from the
+ * platform rather than custom JS. Chevron rotation is pure CSS off the
+ * `open` attribute, no script needed.
+ *
+ * Answers are verbatim from website-copy.md §5 — Figma only shows the first
+ * item's answer as a worked example ("This is the open state for each FAQ.
+ * Full content available in website-copy.md doc."), so the other five are
+ * pulled from that doc, not re-derived.
+ *
+ * All items start closed on load (Cathal's call, July 13 2026) — Figma's
+ * first-item-open state was just there to document what the expanded
+ * state looks like, not the intended default.
+ */
+import Container from "../primitives/Container.astro";
+
+const faqs = [
+  {
+    q: "What's the minimum commitment?",
+    a: "Three months, then rolling monthly with 30 days notice. Three months is the shortest window in which retained creative shows its value.",
+  },
+  {
+    q: "What if I don't use my days?",
+    a: "Capacity doesn't roll over. The monthly call exists precisely so that never happens. In practice the problem runs the other way.",
+  },
+  {
+    q: "What if none of the three tiers fit?",
+    a: "That's normal, and exactly what the discovery call is for. The tiers are a starting shape, not a fixed menu. Scope and price get confirmed together before anything is agreed.",
+  },
+  {
+    q: "Do you take one-off projects?",
+    a: "Yes. Brand, web, and photography projects run alongside the retainers. Retainer clients get first call on the calendar, project work books into what remains.",
+  },
+  {
+    q: "Can the work be done in Irish?",
+    a: "Yes, natively. I'm one of the few senior creatives in Ireland who can lead a project fully in Irish, from strategy through to delivery, without outsourcing the language.",
+  },
+  {
+    q: "Who actually does the work?",
+    a: "I do. No account manager, no juniors, no handoffs. The person on the call is the person doing the work.",
+  },
+];
+---
+
+<section class="bg-n100">
+  <Container size="large">
+    <div class="py-16 lg:py-24">
+      <h2 class="text-display-md text-n900 lg:text-display-lg">FAQs</h2>
+
+      <div class="mt-8 divide-y divide-n200 border-t border-n200">
+        {
+          faqs.map((item) => (
+            <details class="faq-item group py-6">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+                <span class="text-heading-md text-n900">{item.q}</span>
+                <svg
+                  width="24"
+                  height="13"
+                  viewBox="0 0 24 13"
+                  fill="none"
+                  aria-hidden="true"
+                  class="faq-chevron shrink-0 text-n900"
+                >
+                  <path
+                    d="M1 1l11 11 11-11"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </summary>
+              <p class="mt-4 max-w-[996px] text-heading-sm text-n500">{item.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  /* Remove the native disclosure marker across browsers. */
+  .faq-item summary {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-chevron {
+    transition: transform 0.25s ease;
+  }
+  .faq-item[open] .faq-chevron {
+    transform: rotate(180deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-chevron {
+      transition: none;
+    }
+  }
+</style>

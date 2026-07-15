@@ -1,16 +1,21 @@
 {
   "name": "cmb-portfolio",
-  "version": "1.0.0",
-  "description": "Cathal Mac an Bheatha — Product Designer & Creative Director",
+  "version": "2.0.0",
+  "description": "Cathal Mac an Bheatha — Digital Creator & Brand Strategist. Astro + Tailwind v4 rebuild.",
+  "type": "module",
   "scripts": {
-    "build:css": "tailwindcss -i ./src/css/main.css -o ./src/css/output.css --minify",
-    "dev:css": "tailwindcss -i ./src/css/main.css -o ./src/css/output.css --watch",
-    "build:11ty": "eleventy",
-    "build": "npm run build:css && npm run build:11ty",
-    "dev": "npm run dev:css & eleventy --serve --watch"
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.6.0",
+    "@astrojs/sitemap": "^3.2.1"
   },
   "devDependencies": {
-    "@11ty/eleventy": "^2.0.1",
-    "tailwindcss": "^3.4.0"
+    "@tailwindcss/vite": "^4.1.0",
+    "tailwindcss": "^4.1.0"
   }
 }

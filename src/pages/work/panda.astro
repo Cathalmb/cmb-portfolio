@@ -1,0 +1,232 @@
+---
+/**
+ * Panda — brand/design template. Content ported from
+ * _legacy/src/work/panda.njk verbatim. Has one signature section ("The
+ * Portal") between "What I Delivered" and "Outcomes", per
+ * case-study-structure.md. Deliverable/portal/closing images use
+ * fit="contain" (UI screenshots/mockups) matching the legacy's inline
+ * object-fit:contain — the Challenge brand-shot grid stays "cover".
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Container from "../../components/primitives/Container.astro";
+import CaseStudyHero from "../../components/sections/CaseStudyHero.astro";
+import CaseStudySectionIntro from "../../components/sections/CaseStudySectionIntro.astro";
+import CaseStudyImageGrid from "../../components/sections/CaseStudyImageGrid.astro";
+import CaseStudyPillarGrid from "../../components/sections/CaseStudyPillarGrid.astro";
+import CaseStudyFullImage from "../../components/sections/CaseStudyFullImage.astro";
+import CaseStudyDeliverables from "../../components/sections/CaseStudyDeliverables.astro";
+import CaseStudyNextProject from "../../components/sections/CaseStudyNextProject.astro";
+
+const title = "Panda | Case Study | Cathal Mac an Bheatha";
+const description =
+  "Merging a growing utility business into one coherent brand — and building the digital platform to match.";
+---
+
+<BaseLayout title={title} description={description}>
+  <CaseStudyHero
+    title="Panda"
+    client="Panda"
+    scope="Brand Strategy, Identity Refresh, UX/UI, Customer Portal"
+    intro="Merging a growing utility business into one coherent brand — and building the digital platform to match."
+    heroImage="/images/work/panda/panda-footprint-mark.png"
+  />
+
+  <section class="bg-n100">
+    <Container size="large">
+      <!-- The Challenge -->
+      <div class="pt-8 pb-12 lg:pt-12 lg:pb-16">
+        <CaseStudySectionIntro
+          label="The Challenge"
+          heading="One brand. Four services. 360,000 customers."
+          paragraphs={[
+            "Panda is Ireland's leading green utility provider — trusted by over 360,000 homes and businesses. What started in 1990 with two trucks had grown into a multi-service business spanning waste collection, gas, electricity, and skip hire.",
+            "The challenge was consolidation. Panda Power — the gas and electricity arm — was being absorbed into a single unified Panda brand. That meant a refreshed identity that could carry the full weight of the business across every service, every touchpoint, and every customer interaction — without losing the trust and recognition the brand had spent years building.",
+            "At the same time, a new customer portal needed to be designed from scratch — one platform where any customer could sign up, manage their services, and navigate a genuinely complex set of location-dependent offerings.",
+          ]}
+        />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyImageGrid
+            images={[
+              { src: "/images/work/panda/brand-01.jpg", alt: "Panda brand" },
+              { src: "/images/work/panda/brand-02.jpg", alt: "Panda brand" },
+              { src: "/images/work/panda/brand-03.jpg", alt: "Panda" },
+              { src: "/images/work/panda/brand-04.jpg", alt: "Panda" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <!-- The Solution -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro
+          label="The Solution"
+          heading="Research first. Then design."
+          paragraphs={[
+            "The engagement began with a full client discovery process — mapping the business structure, service architecture, and customer base before any design decisions were made. I led the UX research and facilitated focus groups with existing Panda customers to test how the brand consolidation was landing and ensure the equity built under the existing identity wasn't lost in the transition.",
+            "Brand refresh work ran in parallel — evolving the Panda identity to accommodate the expanded service portfolio while retaining its recognisability. This extended well beyond a logo update: full brand guidelines, environmental applications including wheelie bin branding and collection tags, vehicle livery, and a complete set of brand assets were produced for use across the entire company.",
+          ]}
+        />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyPillarGrid
+            cols={3}
+            items={[
+              { num: "001", title: "Consolidation without disruption", body: "A unified identity that absorbed multiple services without alienating an established customer base." },
+              { num: "002", title: "Complexity made navigable", body: "A portal architecture designed around real customer behaviour, not internal business logic." },
+              { num: "003", title: "Built for scale", body: "A brand system and digital platform capable of absorbing further growth without starting over." },
+            ]}
+          />
+        </div>
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyFullImage src="/images/work/panda/full-width-01.png" alt="Panda" fit="contain" />
+        </div>
+      </div>
+
+      <!-- What I Delivered -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro
+          label="What I Delivered"
+          heading="End-to-end creative and product ownership."
+          proseWidth={664}
+          paragraphs={[
+            "I held creative and UX leadership across every workstream — from initial discovery and research through to brand delivery, portal design, and build review. On the product side, I worked directly with the Panda team and development partners across every phase of the portal: planning, UX architecture, UI design, and performance reviews at each stage of the build.",
+          ]}
+        />
+        <div class="mt-6">
+          <CaseStudyDeliverables
+            items={[
+              "Brand Strategy & Identity Refresh",
+              "Full Brand Guidelines",
+              "Environmental & Vehicle Branding",
+              "Wheelie Bin Branding & Collection Tags",
+              "Website Design",
+              "Customer Portal UX/UI",
+              "Eircode-Based Service Architecture",
+              "API & Payment Integration Design",
+              "Focus Group Facilitation",
+              "Cross-functional Build Reviews",
+            ]}
+          />
+        </div>
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyImageGrid
+            fit="contain"
+            images={[
+              { src: "/images/work/panda/deliverable-01.png", alt: "Panda deliverable" },
+              { src: "/images/work/panda/deliverable-02.png", alt: "Panda deliverable" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <!-- The Portal (signature section) -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro
+          label="The Portal"
+          heading="A complex user journey, made to feel simple."
+          paragraphs={[
+            "The customer portal was the most technically and strategically demanding part of the project. Panda's services — waste collection, gas, electricity, and skip hire — aren't uniformly available across Ireland. Availability is determined by location, which meant every user journey had to be anchored to the customer's Eircode.",
+            "The portal needed to support 3–4 distinct user journeys: onboarding new customers, migrating existing customers, service management for active accounts, and cross-selling additional services based on what was available in the customer's area. Each journey had to feel straightforward — despite the operational complexity sitting underneath it.",
+            "I led iterative UX workshops with the Panda team to map these journeys, identify friction points, and pressure-test the logic before anything went near development. The Eircode selector became the architectural anchor — the single point that determined what a customer saw, what they could add, and how their account was structured.",
+          ]}
+        />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyImageGrid
+            fit="contain"
+            images={[
+              { src: "/images/work/panda/portal-01.png", alt: "Panda portal" },
+              { src: "/images/work/panda/portal-02.png", alt: "Panda portal" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <!-- Outcomes -->
+      <div class="border-t border-n200 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <CaseStudySectionIntro label="Outcomes" heading="A platform the business — and its customers — actually adopted." />
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyPillarGrid
+            cols={2}
+            items={[
+              {
+                num: "001",
+                title: "Successful consolidation of a major Irish brand",
+                body: "Panda Power was absorbed into the unified Panda brand without disruption to the existing customer base — a rebrand at scale, executed across digital, environmental, and physical touchpoints simultaneously.",
+              },
+              {
+                num: "002",
+                title: "Portal adoption exceeded expectations",
+                body: "The rollout included a structured migration campaign with customer guides to ease the switchover from legacy systems. Adoption was strong, and the feedback from the Panda team on both the rollout process and the final product was excellent.",
+              },
+              {
+                num: "003",
+                title: "Reduced pressure on the customer service team",
+                body: "A primary goal of the portal was to shift routine account management and service queries away from the call centre. The self-service model was designed specifically to reduce the volume and complexity of inbound support contacts.",
+              },
+              {
+                num: "004",
+                title: "360,000+ customers served from one platform",
+                body: "A single sign-on experience across waste, gas, electricity, and skip hire — built to handle the full scope of Panda's domestic customer base.",
+              },
+              {
+                num: "005",
+                title: "Full creative and product ownership, one lead",
+                body: "Brand strategy, identity, UX research, portal architecture, UI design, and build oversight — led end-to-end under one creative director.",
+              },
+            ]}
+          />
+        </div>
+        <div class="mt-8 lg:mt-10">
+          <CaseStudyFullImage src="/images/work/panda/closing.png" alt="Panda" fit="contain" />
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <CaseStudyNextProject
+    title="GOAL"
+    href="/work/goal"
+    description="Redesigning the donations checkout for a high-stakes transactional flow."
+    previewImage="/images/work/goal/goal-hero.jpg"
+  />
+</BaseLayout>
+
+<script>
+  // Scroll reveal: fade + rise each [data-reveal] element as it enters view.
+  // Hidden state is scoped to `.reveal-ready` (added to <html>) so no-JS shows all.
+  const root = document.documentElement;
+  const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (els.length) {
+    root.classList.add("reveal-ready");
+    if (reduce || !("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-revealed"));
+    } else {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-revealed");
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -10% 0px", threshold: 0.1 }
+      );
+      els.forEach((el) => {
+        // Reveal immediately if the element is already on-screen when this
+        // runs (fixes inner-page heroes staying at opacity:0 until the user
+        // scrolls — IO's initial callback wasn't landing reliably before
+        // any scroll event; fixed July 14 2026 across all pages using this
+        // script). Only observe elements that still need to come into view.
+        const rect = el.getBoundingClientRect();
+        const alreadyInView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (alreadyInView) {
+          el.classList.add("is-revealed");
+        } else {
+          io.observe(el);
+        }
+      });
+    }
+  }
+</script>

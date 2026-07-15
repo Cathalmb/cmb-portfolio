@@ -1,0 +1,75 @@
+---
+import "../styles/global.css";
+import Header from "../components/sections/Header.astro";
+import Footer from "../components/sections/Footer.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  headerSize?: "site" | "large";
+  /**
+   * "light" (default) keeps the light page background used across the site.
+   * "dark" sets a dark page background and switches the header to its dark
+   * variant. Used by /about (full dark-page design, Figma 68:109).
+   */
+  theme?: "light" | "dark";
+  /**
+   * Optional schema.org JSON-LD object (e.g. Person, CreativeWork) for this
+   * page. Rendered as a single <script type="application/ld+json"> tag.
+   * Added July 14 2026 as part of the SEO pass — used on / and /about.
+   */
+  jsonLd?: Record<string, unknown>;
+}
+
+const {
+  title = "Cathal Mac an Bheatha — Digital Creator & Brand Strategist",
+  description = "I help Irish brands stand out and scale. Brand strategy, UX/UI and product design, photography and videography for business clients.",
+  headerSize = "large",
+  theme = "light",
+  jsonLd,
+} = Astro.props;
+
+const dark = theme === "dark";
+
+// Canonical URL for this exact page — also used for og:url, which was
+// previously hardcoded to Astro.site (i.e. the same URL on every page).
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+
+    <!-- Preload the primary typeface once the file is added to /public/fonts -->
+    <link
+      rel="preload"
+      href="/fonts/PPNeueMontreal-Medium.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    {jsonLd && (
+      <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    )}
+  </head>
+  <body class:list={[dark && "bg-n900"]}>
+    <Header size={headerSize} theme={theme} />
+    <slot />
+    <Footer />
+  </body>
+</html>
