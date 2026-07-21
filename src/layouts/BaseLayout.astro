@@ -19,6 +19,18 @@ interface Props {
    * Added July 14 2026 as part of the SEO pass — used on / and /about.
    */
   jsonLd?: Record<string, unknown>;
+  /**
+   * Social share image (og:image / twitter:image) for this page — a
+   * root-relative path (e.g. "/images/cmb-portrait-colour.jpg"), resolved
+   * against Astro.site the same way canonicalURL is. Added July 21 2026
+   * (pre-launch SEO pass): BaseLayout previously had no og:image at all,
+   * so every shared link (Instagram, LinkedIn, iMessage, etc.) rendered
+   * with no preview image. Defaults to Cathal's own portrait so every
+   * page has SOME image even without an override; pages with a more
+   * relevant shot (e.g. the photography pages, using their own cover
+   * photos) should pass one in.
+   */
+  image?: string;
 }
 
 const {
@@ -27,6 +39,7 @@ const {
   headerSize = "large",
   theme = "light",
   jsonLd,
+  image = "/images/cmb-portrait-colour.jpg",
 } = Astro.props;
 
 const dark = theme === "dark";
@@ -34,6 +47,7 @@ const dark = theme === "dark";
 // Canonical URL for this exact page — also used for og:url, which was
 // previously hardcoded to Astro.site (i.e. the same URL on every page).
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const imageURL = new URL(image, Astro.site);
 
 // Google Analytics 4 — ported from the legacy 11ty site (_legacy/src/_includes
 // /layouts/base.njk + case-study.njk), which had this on every page but it
@@ -72,6 +86,13 @@ const GA_MEASUREMENT_ID = "G-JXNZD09HPE";
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={imageURL} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageURL} />
 
     <!-- Preload the primary typeface once the file is added to /public/fonts -->
     <link
