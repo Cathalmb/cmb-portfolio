@@ -7,7 +7,10 @@
  *   pad-top 96 · wordmark · 48 · "Let's talk!" · 24 · paragraph · 48 · buttons
  *   nav column offset +88 (desktop) so "Company" aligns to the paragraph
  *   meta: +96/+64 to divider, 16 above the meta text, pad-bottom 16
- *   nav column sits in grid cols 10–12 (desktop), width 300.
+ *   nav columns sit in grid cols 9–10 (Company) and 11–12 (Services), both
+ *   narrowed to 2 cols and pushed flush to the right edge (col 12 is the
+ *   last column) — cols 7–8 left empty as a gap so the CTA copy (cols 1–6)
+ *   doesn't crowd the nav. Two columns added July 2026 — see servicesNav.
  *
  * footer-nav hover: ochre 4px dot fades in 12px left of the label + label
  * slides right 12px. Active page holds it. Slide is disabled under
@@ -20,6 +23,13 @@ import Container from "../primitives/Container.astro";
 
 const email = "hello@cathalmb.com";
 
+// Same Google Calendar appointment link used on /services
+// (ServicesStartProject.astro's `bookingUrl`) and /creative-partner
+// (CreativePartnerTiers.astro). "Start a Project" opens it directly, in a
+// new tab, matching the live behavior of that CTA elsewhere on the site.
+const bookingUrl =
+  "https://calendar.google.com/calendar/u/0/appointments/AcZssZ0qnZQBLdulg1JZDw9v5e_5ROxTX4fzUi4SbAs=";
+
 const footerNav = [
   { label: "Home", href: "/" },
   { label: "Services", href: "/services" },
@@ -27,6 +37,12 @@ const footerNav = [
   { label: "About", href: "/about" },
   // Gaeilge temporarily removed from nav — page not live yet.
   { label: "Contact", href: "/contact" },
+];
+
+const servicesNav = [
+  { label: "Start a Project", href: bookingUrl, external: true },
+  { label: "The Creative Partner", href: "/creative-partner" },
+  { label: "Photography", href: "/work/photography" },
 ];
 
 const socials = [
@@ -40,9 +56,12 @@ const isActive = (href: string) =>
   (pathname === href || (href !== "/" && pathname.startsWith(href + "/")));
 
 // Footer nav link: dot (12px left) fades in + label slides right 12px.
-// Row height 40 (mobile) / 28 (desktop) matches the frames.
+// Row height 40 (mobile) / 28 (desktop) matches the frames — set as
+// min-height (not height) so a wrapped two-line label (e.g. "The Creative
+// Partner" on narrower tablet widths, before the lg 2-col grid kicks in)
+// grows the row instead of overlapping the item below it.
 const navLink =
-  "group relative inline-flex w-fit items-center h-[40px] lg:h-[28px] text-body-lg text-n100 " +
+  "group relative inline-flex w-fit items-center min-h-[40px] lg:min-h-[28px] text-body-lg text-n100 " +
   "transition-transform duration-200 ease-out will-change-transform " +
   "hover:translate-x-[12px] focus-visible:translate-x-[12px] " +
   "before:absolute before:left-[-12px] before:top-1/2 before:h-[4px] before:w-[4px] " +
@@ -98,31 +117,66 @@ const navLink =
           </div>
         </div>
 
-        <!-- Nav column: cols 10–12, offset down 88 to align "Company" to the paragraph -->
-        <nav
-          aria-label="Footer"
-          class="col-span-12 mt-8 lg:col-span-3 lg:col-start-10 lg:mt-11"
-        >
-          <p class="text-body-sm text-n400">Company</p>
-          <ul data-footer-nav class="mt-3 flex flex-col">
-            {
-              footerNav.map((item) => (
-                <li>
-                  <a
-                    href={item.href}
-                    aria-current={isActive(item.href) ? "page" : undefined}
-                    class:list={[
-                      navLink,
-                      isActive(item.href) && "translate-x-[12px] before:opacity-100",
-                    ]}
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-        </nav>
+        <!-- Nav columns: cols 7–9 (Company) and 10–12 (Services), offset down 88
+             to align "Company" to the paragraph. Wrapper is `display:contents`
+             at lg so both <nav>s become direct children of the 12-col grid;
+             on mobile it's just a flex row of two columns side by side. -->
+        <div class="col-span-12 mt-8 flex flex-row gap-6 lg:contents">
+          <nav aria-label="Footer" class="flex-1 lg:col-span-2 lg:col-start-9 lg:mt-11">
+            <p class="text-body-sm text-n400">Company</p>
+            <ul data-footer-nav class="mt-3 flex flex-col">
+              {
+                footerNav.map((item) => (
+                  <li>
+                    <a
+                      href={item.href}
+                      aria-current={isActive(item.href) ? "page" : undefined}
+                      class:list={[
+                        navLink,
+                        isActive(item.href) && "translate-x-[12px] before:opacity-100",
+                      ]}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </nav>
+
+          <nav aria-label="Footer services" class="flex-1 lg:col-span-2 lg:col-start-11 lg:mt-11">
+            <p class="text-body-sm text-n400">Services</p>
+            <ul data-footer-nav class="mt-3 flex flex-col">
+              {
+                servicesNav.map((item) => (
+                  <li>
+                    {item.external ? (
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class={navLink}
+                      >
+                        {item.label}
+                      </a>
+                    ) : (
+                      <a
+                        href={item.href}
+                        aria-current={isActive(item.href) ? "page" : undefined}
+                        class:list={[
+                          navLink,
+                          isActive(item.href) && "translate-x-[12px] before:opacity-100",
+                        ]}
+                      >
+                        {item.label}
+                      </a>
+                    )}
+                  </li>
+                ))
+              }
+            </ul>
+          </nav>
+        </div>
       </div>
 
       <!-- Meta row -->
