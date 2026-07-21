@@ -1,0 +1,27 @@
+---
+/**
+ * Photography — Intro. Same hairline → label → statement rhythm as
+ * WorkIntro.astro / ServicesIntro.astro (hairline→label 16, label→
+ * statement 64). No dedicated Figma frame for this page yet — built
+ * directly off the established rhythm, same approach used for the
+ * case-study page templates. Re-tune if/when Cathal designs a frame.
+ */
+import Container from "../primitives/Container.astro";
+---
+
+<section class="bg-n100">
+  <Container size="large">
+    <div class="border-t border-n200 pt-2 pb-12 lg:pb-12">
+      <p data-reveal class="text-body-md text-n500">Photography</p>
+      <h1
+        data-reveal
+        style="--reveal-delay: 80ms"
+        class="mt-6 max-w-[1344px] text-heading-lg text-n900 lg:mt-8 lg:text-display-sm"
+      >
+        Personal, lifestyle and live-session photography, alongside the brand
+        work. Portraits that bring your visual story to life, and concerts
+        shot from the pit.
+      </h1>
+    </div>
+  </Container>
+</section>

@@ -1,0 +1,111 @@
+---
+/**
+ * PhotographyOverviewGrid — the /work/photography hub's curated
+ * "overview flavour" layout (built July 16 2026, fifth pass, replacing
+ * the second version of this section which reused PhotoMasonry).
+ *
+ * Cathal, reacting to a portfolio.cathalmb.com screenshot: "Arrange
+ * images so they sit tall, wide, tall, wide, tall, wide." That's a
+ * FIXED alternating aspect ratio per slot (tall = 3:4, wide = 3:2),
+ * cropped with object-fit: cover — deliberately NOT the natural-ratio
+ * masonry PhotoMasonry.astro uses for the two full collection pages.
+ * On a 3-column grid, alternating tall/wide by linear reading-order
+ * position (1=tall,2=wide,3=tall,4=wide,5=tall,6=wide…) automatically
+ * reproduces the exact interlocking brick pattern in the reference
+ * screenshot: col1 = tall,wide; col2 = wide,tall; col3 = tall,wide —
+ * no manual per-column authoring or real masonry needed, it falls out
+ * of a plain CSS grid plus one alternating rule.
+ *
+ * MARGINS: 96px left/right at desktop (Cathal's exact spec), stepped
+ * down at smaller breakpoints (24px mobile, 48px tablet) since 96px
+ * fixed on both sides would crush the grid to ~200px on a 390px phone
+ * — Cathal didn't specify a responsive scale, this follows the site's
+ * existing 24/48/96 rhythm (see Container.astro's own 24/48 gutter)
+ * rather than inventing a fourth. Flag if a true fixed-96px-everywhere
+ * was intended instead.
+ *
+ * Reuses PhotoLightbox.astro for "view fullsize" (same as PhotoMasonry).
+ */
+import PhotoLightbox from "./PhotoLightbox.astro";
+
+interface Item {
+  src: string;
+  alt?: string;
+}
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+
+const resolveAlt = (item: Item, i: number) => item.alt ?? `Photography by Cathal Mac an Bheatha, image ${i + 1} of ${items.length}`;
+const dataForClient = items.map((item, i) => ({ src: item.src, alt: resolveAlt(item, i) }));
+---
+
+<div class="overview-grid" data-reveal>
+  {
+    items.map((item, i) => (
+      <button
+        type="button"
+        class={`overview-grid-item ${i % 2 === 0 ? "is-tall" : "is-wide"}`}
+        data-lightbox-trigger
+        data-index={i}
+        aria-label={`View fullsize: ${resolveAlt(item, i)}`}
+      >
+        <img src={item.src} alt={resolveAlt(item, i)} loading="lazy" />
+      </button>
+    ))
+  }
+</div>
+
+<PhotoLightbox items={dataForClient} />
+
+<style>
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 0 24px;
+  }
+
+  .overview-grid-item {
+    display: block;
+    width: 100%;
+    border: none;
+    padding: 0;
+    background: none;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: zoom-in;
+  }
+
+  .overview-grid-item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .overview-grid-item.is-tall {
+    aspect-ratio: 3 / 4;
+  }
+
+  .overview-grid-item.is-wide {
+    aspect-ratio: 3 / 2;
+  }
+
+  @media (min-width: 768px) {
+    .overview-grid {
+      grid-template-columns: repeat(2, 1fr);
+      padding: 0 48px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .overview-grid {
+      grid-template-columns: repeat(3, 1fr);
+      padding: 0 96px;
+    }
+  }
+</style>

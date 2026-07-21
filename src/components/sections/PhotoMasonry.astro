@@ -1,0 +1,389 @@
+---
+/**
+ * PhotoMasonry — shared archive grid for /work/photography/portraits and
+ * /work/photography/concerts. Cathal's spec: full-width, 5 across, 8px
+ * gaps both directions, page margins either side — matching the grid at
+ * portfolio.cathalmb.com/concerts.
+ *
+ * REBUILT (Cathal, July 21 2026 — "the randoms are all filled with gaps
+ * and layout issues"): this used to be CSS `columns` + `break-inside:
+ * avoid`. That is the EXACT trap this codebase already hit and rejected
+ * once before, in CaseStudyMasonry.astro: "column-fill: auto only
+ * behaves predictably when the multicol container has a DEFINITE
+ * height — with auto/indefinite height ... the spec falls back to
+ * balancing columns by height regardless of what's set ... CSS multicol
+ * + break-inside-avoid has known cross-browser inconsistencies with
+ * variable-height children." CaseStudyMasonry was rebuilt around that
+ * lesson months ago; this component repeated the original mistake
+ * because it's a different file. Concretely: the browser estimates an
+ * "ideal" column height by averaging total content over the column
+ * count, then — since break-inside:avoid forbids splitting an item that
+ * doesn't fit the remainder of that estimate — jumps the WHOLE item to
+ * the next column, leaving the gap behind. A curated, evenly-paired
+ * hand-picked set can dodge this by luck; an unpredictable mix of
+ * portrait/landscape photos (exactly what "random"/auto-appended means)
+ * reliably breaks it, which is why the gaps only showed up in the
+ * uncurated portion of /portraits.
+ *
+ * Now built the same way CaseStudyMasonry already proved out — genuinely
+ * separate flex columns, no shared row grid, no CSS multicol, no
+ * balance heuristic — except the column ASSIGNMENT is computed
+ * automatically instead of hand-authored, via distributeColumns() in
+ * src/lib/photography.ts. A column's rendered height is simply the sum
+ * of what's actually in it — there is nothing for a future random/auto-
+ * appended photo to break.
+ *
+ * COLUMN ASSIGNMENT: THIRD PASS (Cathal, July 21 2026, same day, three
+ * rounds of live feedback on /portraits and /concerts). Short history:
+ * greedy height-balanced bin-pack (v1) → looked lopsided in item COUNT
+ * for small curated groups ("image gap issues") → replaced with equal-
+ * count contiguous chunking (v2), which fixed Cathal's curated pairing
+ * but left the auto-appended/uncurated remainder visibly uneven in
+ * HEIGHT ("wherever you've auto placed the remainder is still showing
+ * gaps") → Cathal confirmed he no longer needs his full curated order
+ * preserved item-for-item, only his top favourites pinned first, so v1's
+ * original objection no longer applies. Back to greedy height-balanced
+ * bin-packing (distributeColumns() in photography.ts), now weighted by
+ * each photo's real aspect ratio via getAspectRatio() — genuine masonry
+ * behaviour, matching portfolio.cathalmb.com. Per-column item COUNT can
+ * differ; that's normal for real masonry as long as HEIGHT is balanced.
+ *
+ * RESPONSIVE COLUMN COUNTS: since the column ASSIGNMENT (not just a CSS
+ * column-count) differs at each breakpoint (2 mobile / 3 tablet / 4 lg /
+ * 5 xl, clamped by `maxColumns`), all four layouts are precomputed and
+ * ALWAYS rendered, each in its own fixed-class wrapper
+ * (.pm-bp-mobile/.pm-bp-md/.pm-bp-lg/.pm-bp-xl); CSS shows exactly one
+ * at a time per breakpoint. Trade-off: each photo's <img> exists in the
+ * DOM up to 4 times instead of once. This is deliberately NOT a problem
+ * for network cost — `loading="lazy"` never fires for an image inside a
+ * `display:none` ancestor, so only the active breakpoint's images are
+ * ever actually requested; the cost is purely extra (inert) DOM nodes,
+ * which is a good trade for a layout that's mathematically gap-proof
+ * rather than one more heuristic that happens to work today.
+ *
+ * Column counts use raw px media queries at this project's actual
+ * breakpoints (390/768/1024/1440, not Tailwind's stock sm/md/lg/xl —
+ * see the site-wide "sm redefined to 390" lesson).
+ *
+ * FULL PAGE WIDTH (Cathal, July 16 2026 second pass): "exactly as
+ * described from squarespace example, full page width, 8px between and
+ * left and right." Deliberately NOT wrapped in the site's Container
+ * primitive by its callers — fills its parent <section>. Two named
+ * padding variants (`padding` prop, not a raw number — avoids fragile
+ * per-breakpoint arithmetic for two very different use cases):
+ *   - "tight" (default): flat 8px every breakpoint, matching the inter-
+ *     image gap exactly — used by /portraits and /concerts.
+ *   - "wide": 24/48px responsive (mobile/tablet+) — used by the hub's
+ *     curated overview block. Matches Container's own 24/48px scale
+ *     exactly — see [[PhotographyChooser]] for the same fix.
+ * Don't wrap either variant in <Container> — that reintroduces the
+ * 24/48px site gutter on top of this component's own padding.
+ *
+ * Gap: 8px both directions — real flexbox `gap` now (not a fake
+ * column-gap + margin-bottom substitute).
+ *
+ * LIGHTBOX: delegated to PhotoLightbox.astro. Duplicate `[data-lightbox-
+ * trigger]` elements (one photo now has up to 4, one per breakpoint
+ * wrapper) are safe — PhotoLightbox wires a click listener to every
+ * matching element via forEach, and only the currently-visible one can
+ * ever receive a click, so this needed no changes.
+ *
+ * GROUPING (Cathal, July 21 2026): `groupSize` "closes" the flow after N
+ * images — the item list is chunked into independent blocks, each
+ * balancing its OWN columns only (at each breakpoint). Appending more
+ * items only ever affects the newest (possibly partial) trailing group;
+ * every earlier group is permanently locked once it hits `groupSize`.
+ * Global `data-index` (for the shared lightbox's prev/next order) is
+ * preserved across group boundaries — it's the position in the full
+ * flat `items` array, not reset per group. Left undefined (default,
+ * single group) for /portraits and /concerts, which want one continuous
+ * flow across the whole archive.
+ */
+import PhotoLightbox from "./PhotoLightbox.astro";
+import { distributeColumns, getAspectRatio } from "../../lib/photography";
+
+interface Item {
+  src: string;
+  alt?: string;
+}
+
+interface Props {
+  items: Item[];
+  /** Fallback alt text for images that don't have a specific one. */
+  altFallback?: string;
+  /**
+   * Caps the column count below the default 2/3/4/5 responsive scale —
+   * used by the /work/photography hub's overview block (capped at 3,
+   * July 16 2026: Cathal wants the flavour grid narrower than the full
+   * collection pages, which stay at 5).
+   */
+  maxColumns?: number;
+  /** "tight" = flat 8px (archive pages). "wide" = 24/48px responsive (curated overview). */
+  padding?: "tight" | "wide";
+  /**
+   * Splits `items` into sealed masonry blocks of this many images each,
+   * stacked vertically, instead of one continuous flow across the whole
+   * array. See the file-level GROUPING note above. Omit for the default
+   * single-flow behaviour.
+   */
+  groupSize?: number;
+  /**
+   * Use `maxColumns` at EVERY breakpoint instead of the default
+   * responsive 2/3/5 scale-down on smaller screens (see MOBILE COLUMN
+   * OVERRIDE below for why this exists).
+   */
+  fixedColumns?: boolean;
+}
+
+const {
+  items,
+  altFallback = "Photograph by Cathal Mac an Bheatha",
+  maxColumns = 5,
+  padding = "tight",
+  groupSize,
+  fixedColumns = false,
+} = Astro.props;
+
+// Every image without its own caption would otherwise get the exact same
+// alt text repeated (170+ times on /portraits) — useless for screen
+// reader users trying to tell images apart, and duplicate-alt spam for
+// image search. Appending a position ("image 14 of 172") only to
+// FALLBACK alts (never to a real caption someone wrote) gives at least
+// some differentiation without asking Cathal to hand-caption the whole
+// archive. Revisit if/when real per-image captions exist.
+const resolveAlt = (item: Item, i: number) => item.alt ?? `${altFallback}, image ${i + 1} of ${items.length}`;
+const dataForClient = items.map((item, i) => ({ src: item.src, alt: resolveAlt(item, i) }));
+
+// Chunk into fixed-size, independently-balanced groups when `groupSize`
+// is set; otherwise a single group holding everything (identical to the
+// old single-flow behaviour). `index` stays the GLOBAL position in
+// `items` so the lightbox's data-index ordering is unaffected by grouping.
+interface IndexedItem {
+  item: Item;
+  index: number;
+}
+const indexed: IndexedItem[] = items.map((item, i) => ({ item, index: i }));
+const groups: IndexedItem[][] = [];
+if (groupSize && groupSize > 0) {
+  for (let i = 0; i < indexed.length; i += groupSize) {
+    groups.push(indexed.slice(i, i + groupSize));
+  }
+} else {
+  groups.push(indexed);
+}
+
+// Column counts actually used at each breakpoint, clamped by maxColumns.
+//
+// lg RAISED FROM 4 TO 5 (Cathal, July 21 2026): checked the portfolio.
+// cathalmb.com reference site directly at 1280px — it renders 5 columns
+// there, not 4. This project's old "lg" tier (1024–1439px) was one step
+// narrower than the reference at that width. Merging lg into the same
+// 5-column count as xl (rather than restructuring the breakpoint tiers
+// themselves) is the minimal fix — the four DOM tiers/media queries are
+// unchanged, lg and xl just compute an identical layout now. Only
+// checked 1280px specifically; if the reference site actually has a
+// distinct 4-column step somewhere between 1024–1279px, this will need
+// revisiting.
+// MOBILE COLUMN OVERRIDE (Cathal, July 21 2026, Overview strip rebuild):
+// dropping to 2 columns on mobile is right for the large archive pages
+// (portraits/concerts), but is a real problem for the Overview strip's
+// small groupSize={6} blocks specifically. Proved this with the ACTUAL
+// aspect ratios of Overview's first group (measured off disk, all
+// photos genuinely 2:3 or 3:2 per Cathal): that group is 3 portrait +
+// 3 landscape photos, and squeezing exactly that mix into 2 columns has
+// NO balanced solution — the best achievable 2-column split (2 photos
+// in one column, 4 in the other) is already mathematically optimal,
+// yet still ~500–600px uneven. This isn't something distributeColumns()
+// can fix by trying harder; it's the geometry of 2 columns being too
+// few for that content. The SAME exact 6 ratios split across 3 columns
+// balance to within ~0.002 (effectively perfect) — confirmed by direct
+// calculation, not just observation. `fixedColumns` keeps Overview at
+// its already-narrower 3-column cap on every breakpoint instead of
+// dropping further on mobile, which is what actually fixes it.
+const BP_COLUMNS = {
+  mobile: Math.min(fixedColumns ? maxColumns : 2, maxColumns),
+  md: Math.min(3, maxColumns),
+  lg: Math.min(5, maxColumns),
+  xl: Math.min(5, maxColumns),
+} as const;
+type Breakpoint = keyof typeof BP_COLUMNS;
+const BREAKPOINTS: Breakpoint[] = ["mobile", "md", "lg", "xl"];
+
+// For each group, precompute the column assignment at every breakpoint.
+// Weighted by each photo's real aspect ratio (getAspectRatio, read from
+// disk at build time) so distributeColumns balances actual HEIGHT, not
+// just item count — see that function's own comment for the full
+// reasoning. `index` payloads (not the aspect ratio) are what render;
+// the ratio is only used as the bin-packing weight.
+//
+// sortForBalance DROPPED AGAIN (Cathal, July 21 2026, same day — "I'd
+// like a mix of portrait and landscape images across, rather than 3
+// portrait, 3 landscape, repeat"): sorting by descending weight before
+// assignment was added to fix the Overview strip's old 2-column
+// imbalance, and it did balance the height — but it does that by
+// clustering all portraits first, then all landscapes, in the sorted
+// traversal, which then lands as "portrait on top in every column, then
+// all landscapes underneath" — structurally identical for every column,
+// every group. Directly computed the alternative: WITHOUT sorting (using
+// Cathal's own curated OVERVIEW_ORDER sequence as-is) at the now-fixed
+// 3 columns, every group balances just as well (~0.001 difference, same
+// as sorted) AND produces a genuine mix — e.g. one group's three columns
+// came out portrait-over-landscape, landscape-over-portrait, landscape-
+// over-portrait, not one repeating pattern. So the real fix for the
+// original 2-column problem was the column count (fixedColumns above),
+// not the sort — order-preserving greedy was fine all along once there
+// were enough columns for the content. distributeColumns() no longer
+// gets a sortForBalance argument from here.
+type ColumnPayload = { item: Item; index: number };
+const groupLayouts = groups.map((group) => {
+  const payloads: ColumnPayload[] = group.map(({ item, index }) => ({ item, index }));
+  const layout = {} as Record<Breakpoint, ColumnPayload[][]>;
+  for (const bp of BREAKPOINTS) {
+    layout[bp] = distributeColumns(payloads, BP_COLUMNS[bp], (p) => getAspectRatio(p.item.src));
+  }
+  return layout;
+});
+---
+
+<div class="photo-masonry-wrap" data-reveal>
+  {
+    groups.map((group, gi) => (
+      <div class={`photo-masonry photo-masonry--${padding}`}>
+        {
+          BREAKPOINTS.map((bp) => (
+            <div class={`pm-tier pm-bp-${bp}`}>
+              {
+                groupLayouts[gi][bp].map((col) => (
+                  <div class="pm-col">
+                    {
+                      col.map(({ item, index }) => (
+                        <button
+                          type="button"
+                          class="photo-masonry-item"
+                          data-lightbox-trigger
+                          data-index={index}
+                          aria-label={`View fullsize: ${resolveAlt(item, index)}`}
+                        >
+                          <img src={item.src} alt={resolveAlt(item, index)} loading="lazy" />
+                        </button>
+                      ))
+                    }
+                  </div>
+                ))
+              }
+            </div>
+          ))
+        }
+      </div>
+    ))
+  }
+</div>
+
+<PhotoLightbox items={dataForClient} />
+
+<style>
+  .photo-masonry-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* Gap BETWEEN groups (Cathal, July 21 2026 — "spacing issues between
+       the blocks"): groups are independent masonry blocks with naturally
+       ragged bottom edges (different columns end at different heights —
+       expected). Without an explicit gap here they were stacking with
+       zero space, so a ragged bottom edge would jam straight into the
+       next group's top row. 8px matches the same rhythm used everywhere
+       else in this component (column gap, inter-image gap). */
+    gap: 8px;
+  }
+
+  .photo-masonry {
+    width: 100%;
+  }
+
+  .photo-masonry--tight {
+    padding: 0 8px;
+  }
+
+  .photo-masonry--wide {
+    padding: 0 24px;
+  }
+
+  @media (min-width: 768px) {
+    .photo-masonry--wide {
+      padding: 0 48px;
+    }
+  }
+
+  /* Exactly one breakpoint tier is ever visible. Each is a fixed,
+     always-rendered wrapper (never dynamically classed) so these rules
+     never fight each other — see the file-level RESPONSIVE COLUMN
+     COUNTS note above. */
+  .pm-tier {
+    display: none;
+    gap: 8px;
+    /* Without this, flex's default `align-items: stretch` force-stretches
+       every column to match the tallest column in the row, leaving
+       visible blank space below whatever a shorter column's own photos
+       actually fill (Cathal, July 21 2026 — "gap issues every block").
+       flex-start lets each column be exactly as tall as its own content
+       and nothing more. */
+    align-items: flex-start;
+  }
+
+  .pm-bp-mobile {
+    display: flex;
+  }
+
+  @media (min-width: 768px) {
+    .pm-bp-mobile {
+      display: none;
+    }
+    .pm-bp-md {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .pm-bp-md {
+      display: none;
+    }
+    .pm-bp-lg {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .pm-bp-lg {
+      display: none;
+    }
+    .pm-bp-xl {
+      display: flex;
+    }
+  }
+
+  .pm-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .photo-masonry-item {
+    display: block;
+    width: 100%;
+    margin: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: zoom-in;
+  }
+
+  .photo-masonry-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>

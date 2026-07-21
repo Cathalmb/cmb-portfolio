@@ -40,6 +40,7 @@
  * confirm or correct the wording.
  */
 import Container from "../primitives/Container.astro";
+import { getPhotoCollection } from "../../lib/photography";
 
 type Card = { name: string; descriptor: string; href: string; img: string | null; bg?: string };
 
@@ -50,12 +51,31 @@ const lead: Card = {
   img: "/images/work/bia-energy/hero.webp",
 };
 
-// Panda, Three Ireland (homepage order), then GOAL and Cotone. Gael Linn
-// removed for now (July 13 2026) — add it back in, in its rightful spot,
-// once that case study is actually written.
+// Photography card cover — first image found in either collection (see
+// src/lib/photography.ts), falling back to a neutral placeholder fill
+// (same pattern Gael Linn used to use here) until Cathal drops the
+// archive into public/images/photography/{portraits,concerts}/.
+const photoCover = getPhotoCollection("concerts")[0] ?? getPhotoCollection("portraits")[0] ?? null;
+
+// Panda, Three Ireland (homepage order), then Photography (added July 16
+// 2026 — sits third, roughly midway through the grid, per Cathal), then
+// GOAL and Cotone. Gael Linn removed for now (July 13 2026) — add it
+// back in, in its rightful spot, once that case study is actually
+// written. The odd/even-spanning logic below is generic (not hardcoded
+// to a count), so this insertion needed no changes to that logic: with
+// 5 cards the last one (Cotone) auto-spans full width, and Photography
+// lands at the start of row two, exactly the "midway through the case
+// studies" placement Cathal asked for.
 const cases: Card[] = [
   { name: "Panda", descriptor: "Green Utilities", href: "/work/panda", img: "/images/work/panda/preview.webp" },
   { name: "Three Ireland", descriptor: "Telecoms", href: "/work/three-ireland", img: "/images/work/three-ireland/hero.webp" },
+  {
+    name: "Photography",
+    descriptor: "Portraits, lifestyle & live music",
+    href: "/work/photography",
+    img: photoCover?.src ?? null,
+    bg: photoCover ? undefined : "#383838",
+  },
   { name: "GOAL", descriptor: "International charity", href: "/work/goal", img: "/images/work/goal/goal-hero.jpg" },
   { name: "Cotone", descriptor: "Fashion & lifestyle", href: "/work/cotone", img: "/images/work/cotone/hero.jpg" },
 ];

@@ -1,0 +1,131 @@
+---
+/**
+ * Photography — Overview flavour. The curated block that sits below
+ * PhotographyChooser on /work/photography.
+ *
+ * REBUILT AGAIN (July 16 2026, sixth pass) — the fifth-pass version
+ * (PhotographyOverviewGrid.astro) forced every image into a fixed
+ * tall(3:4)/wide(3:2) slot with object-fit: cover. Cathal: "if images
+ * are portrait, leave them portrait, if they're landscape leave them
+ * landscape. Don't crop," and separately flagged "massive gaps" versus
+ * the reference site. Both complaints trace to the same root cause:
+ * CSS Grid rows stretch every cell to the row's tallest sibling, but an
+ * aspect-ratio-locked item doesn't fill that stretched space, so
+ * shorter items left visible gaps below them — and the fixed ratios
+ * were cropping content that should've stayed at its native shape.
+ * Switched to PhotoMasonry.astro (the same CSS multi-column component
+ * /portraits and /concerts already use) with `maxColumns={3}` and
+ * `padding="wide"` — multicol has no equivalent failure mode, since
+ * each column's height is just the sum of its own items' natural
+ * heights, and nothing gets cropped. PhotographyOverviewGrid.astro is
+ * left in the repo, unused, in case a genuinely cropped/fixed-ratio
+ * layout is wanted for something else later — not deleted, not wired
+ * up anywhere.
+ *
+ * "order them in the same listing as https://portfolio.cathalmb.com/"
+ * (Cathal, fifth pass) still applies — OVERVIEW_ORDER below is that
+ * exact sequence, filename-by-filename,
+ * transcribed from a live fetch of portfolio.cathalmb.com/ earlier in
+ * this session and cross-checked against the real files Cathal dropped
+ * into public/images/work/photography/{portraits,concerts}/ — every
+ * filename in this list was confirmed present in one of those two
+ * folders before being added here. If Cathal renames or removes a file
+ * later, that entry is silently skipped (not a broken image) rather
+ * than crashing the build — see resolveManifest() below.
+ *
+ * This is the one deliberately curated, hand-ordered view in the whole
+ * photography section — /portraits and /concerts stay auto-discovered
+ * and filename-sorted (drop a file in, it appears), this one doesn't
+ * pick up new files automatically. If Cathal adds new work he wants in
+ * the Overview specifically, it needs a line added to this list.
+ *
+ * GROUPED IN SIXES (Cathal, July 21 2026): passes groupSize={6} to
+ * PhotoMasonry so OVERVIEW_ORDER is laid out as sealed 6-photo blocks
+ * (each independently column-balanced) rather than one continuous flow.
+ * Cathal had hand-arranged the first six into a pairing he liked and
+ * found that appending a 7th reshuffled it — grouping locks each
+ * completed six in place; only the newest (possibly partial) trailing
+ * group is ever affected by further additions. See the GROUPING note in
+ * PhotoMasonry.astro for the full mechanism.
+ *
+ * fixedColumns (Cathal, July 21 2026, same day — "smaller screen sizes
+ * are showing gaps"): every one of the 5 groups above is exactly 3
+ * portrait + 3 landscape photos (checked by reading each file's real
+ * dimensions off disk). Squeezed into 2 columns (PhotoMasonry's normal
+ * mobile column count), that mix has NO balanced arrangement — the best
+ * possible 2-column split is already a lopsided 2/4 item count with a
+ * real ~500–600px height gap, proven by directly computing every
+ * possible partition, not just observed. The same 6 ratios split across
+ * 3 columns balance to within a thousandth. `fixedColumns` keeps this
+ * component at its existing maxColumns={3} cap on every breakpoint
+ * instead of dropping to 2 on mobile — the fix is in the column COUNT,
+ * not the balancing algorithm (which was already finding the true
+ * optimal answer for 2 columns; the optimal answer just wasn't good).
+ */
+import PhotoMasonry from "./PhotoMasonry.astro";
+import { getPhotoCollection } from "../../lib/photography";
+
+type Collection = "portraits" | "concerts";
+
+const OVERVIEW_ORDER: { file: string; collection: Collection }[] = [
+  { file: "09-11-2024_Cotone-Collection_Winter-24_146.jpg", collection: "portraits" },
+  { file: "15-11-2022_CotoneCollection_WEB_17.jpg", collection: "portraits" },
+  { file: "15-11-2022_CotoneCollection_WEB_14.jpg", collection: "portraits" },
+  { file: "09-11-2024_Cotone-Collection_Winter-24_087.jpg", collection: "portraits" },
+  { file: "09-11-2024_Cotone-Collection_Winter-24_053.jpg", collection: "portraits" },
+  { file: "09-11-2024_Cotone-Collection_Winter-24_134.jpg", collection: "portraits" },
+
+  { file: "EP2023_The-Last-Dinner-Party_001-Social.jpg", collection: "concerts" },
+  { file: "25-04-2023_Gig-Do-Ronan_Whelans_052.jpg", collection: "concerts" },
+  { file: "Cathal-Mac-an-Bheatha_saint-sister_01.jpg", collection: "concerts" },
+  { file: "10-06-22_FeileNaGealai_La-2_400.jpg", collection: "concerts" },
+  { file: "27-07-2024_Huartan_Feile-na-Gealai_105.jpg", collection: "concerts" },
+  { file: "Anna-From-the-North-social.jpg", collection: "concerts" },
+
+  { file: "ACGE-X-JLH_Jennifer_Headshots_13-12-2025_093.jpg", collection: "portraits" },
+  { file: "Cathal-Mac-an-Bheatha_BAE_01.jpg", collection: "portraits" },
+  { file: "Cathalmb-Portfolio_2026_15.jpg", collection: "portraits" },
+  { file: "03-04-21_jill&gill_casual-everyday_41.jpg", collection: "portraits" },
+  { file: "ACGE-X-JLH_13-12-2025_001.jpg", collection: "portraits" },
+  { file: "Cathal-Mac-an-Bheatha_sile-denvir_02.jpg", collection: "portraits" },
+
+  { file: "Three-City-Stages-Artists_36.jpg", collection: "portraits" },
+  { file: "Three-City-Stages-Artists_16.jpg", collection: "portraits" },
+  { file: "Three-City-Stages-Artists_20.jpg", collection: "portraits" },
+  { file: "Three-City-Stages-Artists_30.jpg", collection: "portraits" },
+  { file: "Three-City-Stages-Artists_25.jpg", collection: "portraits" },
+  { file: "Three-City-Stages-Artists_14.jpg", collection: "portraits" },
+
+  { file: "Cathal-Mac-an-Bheatha_Roxanna-Nic-Liam_Headshots-03.jpg", collection: "portraits" },
+  { file: "Cathal-Mac-an-Bheatha_Sinead-Ni-hUallachain-Peig_03.jpg", collection: "portraits" },
+  { file: "Cathal-Mac-an-Bheatha_Barry-Kerr_02.jpg", collection: "portraits" },
+  { file: "Jennifer-Rock-The-Skin-Nerd-Photoshoot+9.jpg", collection: "portraits" },
+  { file: "Dundalk-Theatre-Workshop_Pack-of-Lies_Cast_016.jpg", collection: "portraits" },
+  { file: "19-09-2020_Barry-Sile_15.jpg", collection: "portraits" },
+
+];
+
+function resolveManifest() {
+  const portraits = getPhotoCollection("portraits");
+  const concerts = getPhotoCollection("concerts");
+  const bySrc = (collection: Collection, file: string) => {
+    const list = collection === "portraits" ? portraits : concerts;
+    const suffix = `/images/work/photography/${collection}/${file}`;
+    return list.find((item) => item.src === suffix)?.src;
+  };
+
+  return OVERVIEW_ORDER.map(({ file, collection }) => {
+    const src = bySrc(collection, file);
+    if (!src) return null;
+    const alt =
+      collection === "portraits"
+        ? "Portrait and lifestyle photography by Cathal Mac an Bheatha"
+        : "Concert and festival photography by Cathal Mac an Bheatha";
+    return { src, alt };
+  }).filter((item): item is { src: string; alt: string } => item !== null);
+}
+
+const items = resolveManifest();
+---
+
+{items.length > 0 && <PhotoMasonry items={items} maxColumns={3} padding="wide" groupSize={6} fixedColumns />}

@@ -1,0 +1,201 @@
+---
+/**
+ * /work/photography/portraits — one of the two collection pages fed by
+ * PhotoMasonry.astro. Images auto-discovered from
+ * public/images/work/photography/portraits/ (see src/lib/photography.ts)
+ * — no code changes needed to add more, just drop files in.
+ *
+ * PINNED FRONT + AUTO-BALANCED REST (Cathal, July 21 2026, revised same
+ * day): PORTRAITS_ORDER used to be treated as a strict pairing/position
+ * list, rendered via a groupSize={10}-chunked, position-locked layout.
+ * Dropped both, per Cathal directly: he no longer needs the full list's
+ * exact order/pairing preserved — only his strongest images need to stay
+ * pinned at the top of the page. PORTRAITS_ORDER is now just that: a
+ * priority list. applyOrder() still puts every listed filename first, in
+ * the order given, but PhotoMasonry no longer tries to force any of them
+ * (or the auto-appended rest) into specific columns — the whole
+ * collection now flows through ONE continuous height-balanced masonry
+ * (distributeColumns() in photography.ts, no groupSize), so it looks
+ * like genuine masonry — including for photos never explicitly ordered
+ * — instead of fighting the algorithm to preserve a hand-picked layout.
+ * A small chunked group (see groupSize's own note) simply doesn't have
+ * enough photos for height-balancing to work well; the full ~177-photo
+ * archive does. New drop-in files still just work — no code changes
+ * needed, they auto-append after the curated portion via applyOrder().
+ */
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Container from "../../../components/primitives/Container.astro";
+import PhotoMasonry from "../../../components/sections/PhotoMasonry.astro";
+import PhotographyCta from "../../../components/sections/PhotographyCta.astro";
+import { getPhotoCollection, applyOrder } from "../../../lib/photography";
+
+const PORTRAITS_ORDER = [
+  // Group 1 (Cathal, July 21 2026 — hand-confirmed exact order)
+  "ACGE-X-JLH_Jennifer_Headshots_13-12-2025_093.jpg",
+  "An-Chead-Ghluin-Eile_Rath-Chairn_Photoshoot_87.jpg",
+  "15-11-2022_CotoneCollection_WEB_14.jpg",
+  "Three-City-Stages-Artists_27.jpg",
+  "09-11-2024_Cotone-Collection_Winter-24_146.jpg",
+  "15-11-2022_CotoneCollection_WEB_17.jpg",
+  "Cathalmb-Portfolio_2026_15.jpg",
+  "The-Beartlas_2025-Album-Shoot_021.jpg",
+  "15-11-2022_CotoneCollection_WEB_20.jpg",
+  "09-11-2024_Cotone-Collection_Winter-24_134.jpg",
+  // Group 2 (Cathal, July 21 2026 — hand-confirmed exact order)
+  "Some-Ones-Sons_Dublin-Photoshoot_015.jpg",
+  "An-Chead-Ghluin-Eile_Rath-Chairn_Photoshoot_93.jpg",
+  "15-11-2022_CotoneCollection_WEB_28.jpg",
+  "15-11-2022_CotoneCollection_WEB_22.jpg",
+  "ACGE-X-JLH_13-12-2025_001.jpg",
+  "Cathal-Mac-an-Bheatha_Barry-Kerr_02.jpg",
+  "The-Story-of-a-City_Video-Thumbnail.jpg",
+  "09-11-2024_Cotone-Collection_Winter-24_153.jpg",
+  "BAE_Zanzibar-Locke_Socials_05.jpg",
+  "19-09-2020_Barry-Sile_15.jpg",
+  // Group 3 (Cathal, July 21 2026 — hand-confirmed exact order)
+  "ACGE-X-JLH_13-12-2025_012.jpg",
+  "12-10-2022_Creidim_Ionat_12.jpg",
+  "An-Chead-Ghluin-Eile_Rath-Chairn_Photoshoot_116.jpg",
+  "Cathal-Mac-an-Bheatha_Sinead-Ni-hUallachain-Peig_03.jpg",
+  "_DSF3928.jpg",
+  "15-11-2022_CotoneCollection_WEB_18.jpg",
+  "Three-City-Stages-Artists_17.jpg",
+  "12-10-2022_Creidim_Ionat_14.jpg",
+  "12-10-2022_Creidim_Ionat_06.jpg",
+  "Dundalk-Theatre-Workshop_Pack-of-Lies_Cast_016.jpg",
+  // Group 4 (Cathal, July 21 2026 — hand-confirmed exact order)
+  "09-11-2024_Cotone-Collection_Winter-24_041.jpg",
+  "12-10-2022_Creidim_Ionat_03.jpg",
+  "15-11-2022_CotoneCollection_WEB_08.jpg",
+  "FFH_04-10-2023_Headshots_38.jpeg",
+  "15-11-2022_CotoneCollection_WEB_25.jpg",
+  "31-05-2022_Jill&amp;GillxMams_04.jpg",
+  "Jennifer-Rock-The-Skin-Nerd-Photoshoot+5.jpg",
+  "12-10-2022_Creidim_Ionat_02.jpg",
+  "15-11-2022_CotoneCollection_WEB_27.jpg",
+  "Jennifer-Rock-The-Skin-Nerd-Photoshoot+7.jpg",
+  // Group 5 (Cathal, July 21 2026 — hand-confirmed exact order. Two new
+  // filenames not in the original portfolio.cathalmb.com scrape —
+  // glor-ar-linne-Ceardlann-Hannah_030.jpg and -NL_052.jpg — confirmed
+  // present in public/images/work/photography/portraits/.)
+  "Cathal-Mac-an-Bheatha_Roxanna-Nic-Liam_Headshots-08.jpg",
+  "15-11-2022_CotoneCollection_WEB_26.jpg",
+  "Cathalmb-Portfolio_2026_16.jpg",
+  "15-11-2022_CotoneCollection_WEB_12.jpg",
+  "glor-ar-linne-Ceardlann-Hannah_030.jpg",
+  "Cathal-Mac-an-Bheatha_BAE_01.jpg",
+  "31-05-2022_Jill&amp;GillxMams_14.jpg",
+  "An-Chead-Ghluin-Eile_Rath-Chairn_Photoshoot_83.jpg",
+  "Cathal-Mac-an-Bheatha_Sinead-Ni-hUallachain-Peig_02.jpg",
+  "glor-ar-linne-Ceardlann-NL_052.jpg",
+  // Group 6+ (still scraped from portfolio.cathalmb.com — awaiting confirmation)
+  "09-11-2024_Cotone-Collection_Winter-24_083.jpg",
+  "ACGE-X-JLH_Maire_Headshots_13-12-2025_117.jpg",
+  "Cathal-Mac-an-Bheatha_Roxanna-Nic-Liam_Headshots-03.jpg",
+  "BigDogDigital-Team-Headshot-Tim.jpg",
+  "Jennifer-Rock-The-Skin-Nerd-Photoshoot+6.jpg",
+  "Three-City-Stages-Artists_24.jpg",
+  "Cathal-Mac-an-Bheatha_Sinead-Ni-hUallachain-Peig_07.jpg",
+  "An-Chead-Ghluin-Eile_Rath-Chairn_Photoshoot_120.jpg",
+  "Three-City-Stages-Artists_36.jpg",
+  "Three-City-Stages-Artists_28.jpg",
+  "Three-City-Stages-Artists_38.jpg",
+  "Three-City-Stages-Artists_26.jpg",
+  "Three-City-Stages-Artists_34.jpg",
+  "Three-City-Stages-Artists_25.jpg",
+  "Three-City-Stages-Artists_22.jpg",
+  "Three-City-Stages-Artists_30.jpg",
+  "Three-City-Stages-Artists_16.jpg",
+  "Three-City-Stages-Artists_20.jpg",
+  "Three-City-Stages-Artists_32.jpg",
+  "Three-City-Stages-Artists_14.jpg",
+  "Three-City-Stages-Artists_18.jpg",
+  "Cathal-Mac-an-Bheatha_sile-denvir_01.jpg",
+  "Cathal-Mac-an-Bheatha_sile-denvir_02.jpg",
+  "ACGE-X-JLH_Maire_Headshots_13-12-2025_095.jpg",
+  "ACGE-X-JLH_Jennifer_Headshots_13-12-2025_079.jpg",
+  "Cathal-Mac-an-Bheatha_Barry-Kerr_04.jpg",
+  "Cathal-Mac-an-Bheatha_Barry-Kerr_03.jpg",
+  "Some-Ones-Sons_Dublin-Photoshoot_005.jpg",
+  "31-05-2022_Jill&amp;GillxMams_07.jpg",
+];
+
+const items = applyOrder(getPhotoCollection("portraits"), PORTRAITS_ORDER);
+
+const title = "Portraits & Lifestyle | Photography | Cathal Mac an Bheatha";
+// Description lengthened toward the 150–160 char range with a soft CTA
+// (pre-launch SEO pass, July 21 2026) — was ~125 chars, under the usual
+// SERP snippet allowance.
+const description =
+  "Personal brand and lifestyle photography — portraits, headshots and content sessions shot by Cathal Mac an Bheatha in Dublin. Get in touch to book a session.";
+// Same pinned cover file PhotographyChooser.astro uses for this collection.
+const image = "/images/work/photography/portraits/15-11-2022_CotoneCollection_WEB_28.jpg";
+---
+
+<BaseLayout title={title} description={description} image={image}>
+  <section class="bg-n100">
+    <Container size="large">
+      <div class="border-t border-n200 pt-2 pb-8 lg:pb-12">
+        <a href="/work/photography" class="text-body-md text-n500 transition-colors hover:text-n900">← Photography</a>
+        <h1 data-reveal class="mt-6 max-w-[1004px] text-heading-xl text-n900 lg:mt-8 lg:text-display-lg">
+          Portraits &amp; lifestyle<span class="text-ochre">.</span>
+        </h1>
+      </div>
+    </Container>
+  </section>
+
+  <section class="bg-n100 pb-16 lg:pb-[192px]">
+    {
+      items.length > 0 ? (
+        <PhotoMasonry
+          items={items}
+          altFallback="Portrait and lifestyle photography by Cathal Mac an Bheatha"
+        />
+      ) : (
+        <Container size="large">
+          <p class="text-body-md text-n500">Gallery coming soon.</p>
+        </Container>
+      )
+    }
+  </section>
+
+  <PhotographyCta
+    heading="Do you feel it's about time that you stood out?"
+    body="Reach out and book a personal lifestyle or portrait session that brings your brand's visual story to life."
+    tagline="Bold, Authentic, and unmistakably you."
+  />
+</BaseLayout>
+
+<script>
+  const root = document.documentElement;
+  const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (els.length) {
+    root.classList.add("reveal-ready");
+    if (reduce || !("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-revealed"));
+    } else {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-revealed");
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -10% 0px", threshold: 0.1 }
+      );
+      els.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const alreadyInView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (alreadyInView) {
+          el.classList.add("is-revealed");
+        } else {
+          io.observe(el);
+        }
+      });
+    }
+  }
+</script>

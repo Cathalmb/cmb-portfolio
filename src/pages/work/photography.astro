@@ -1,0 +1,96 @@
+---
+/**
+ * /work/photography — hub page. Concept 3 from the mockup round
+ * (Cathal, July 16 2026): two featured cards choosing between Portraits
+ * & lifestyle / Concerts & live, with a mixed "overview flavour" block
+ * underneath standing in for the old Squarespace Overview page's job.
+ *
+ * Deliberately nested under /work rather than added as a 6th primary
+ * nav item — the nav is locked at 4-5 items (Services/Work/About/
+ * Gaeilge/Contact, see project memory). Reached via the Photography
+ * card in WorkGrid.astro, plus (not yet wired) the Photography &
+ * Content services pillar and the footer.
+ *
+ * Chooser and the overview block now share the SAME width (Cathal, July
+ * 16 2026 seventh pass: "show me a preview of what both the portraits
+ * and concerts CTAs would look like at the same width as the overview
+ * set of images below... make sure they stay as 2 columns"). Neither
+ * is wrapped in the site's Container primitive — PhotographyChooser
+ * owns its own 24/48px responsive side padding (the same "wide" scale
+ * PhotoMasonry's padding="wide" variant uses, and numerically identical
+ * to Container's own gutter — corrected from an initial 96px step,
+ * July 21 2026 ninth pass, once that made this page's nav/hero sit
+ * narrower-margined than the cards and grid below it), so the two-card
+ * chooser and the masonry grid below it line up edge-to-edge with each
+ * other AND with the header/hero above them. The 2-column
+ * grid-template-columns in PhotographyChooser is unchanged — only the
+ * outer margin moved, not the card layout itself.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PhotographyIntro from "../../components/sections/PhotographyIntro.astro";
+import PhotographyChooser from "../../components/sections/PhotographyChooser.astro";
+import PhotographyOverviewStrip from "../../components/sections/PhotographyOverviewStrip.astro";
+import PhotographyCta from "../../components/sections/PhotographyCta.astro";
+
+// Title tightened (pre-launch SEO pass, July 21 2026): the old
+// "Photography | Cathal Mac an Bheatha" was only 32 characters and
+// carried no service keywords. Naming both collections directly is a
+// stronger search signal than the generic "Photography".
+const title = "Portrait & Concert Photography | Cathal Mac an Bheatha";
+const description =
+  "Portraits, lifestyle and concert photography by Cathal Mac an Bheatha — personal brand sessions and live music work shot in Dublin and beyond.";
+// Reuses the same pinned cover shot PhotographyChooser.astro leads with
+// for its Portraits card — see that file for why this exact filename.
+const image = "/images/work/photography/portraits/15-11-2022_CotoneCollection_WEB_28.jpg";
+---
+
+<BaseLayout title={title} description={description} image={image}>
+  <PhotographyIntro />
+  <section class="bg-n100 pb-8 lg:pb-12">
+    <PhotographyChooser />
+  </section>
+  <section class="bg-n100 pb-16 lg:pb-[192px]">
+    <PhotographyOverviewStrip />
+  </section>
+
+  <PhotographyCta
+    heading="Ready to level up your visual story?"
+    body="From portraits to live events, I create content that helps brands stand out online and drive sales."
+  />
+</BaseLayout>
+
+<script>
+  // Scroll reveal: fade + rise each [data-reveal] element as it enters view.
+  // Hidden state is scoped to `.reveal-ready` (added to <html>) so no-JS shows all.
+  const root = document.documentElement;
+  const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (els.length) {
+    root.classList.add("reveal-ready");
+    if (reduce || !("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-revealed"));
+    } else {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-revealed");
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -10% 0px", threshold: 0.1 }
+      );
+      els.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const alreadyInView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (alreadyInView) {
+          el.classList.add("is-revealed");
+        } else {
+          io.observe(el);
+        }
+      });
+    }
+  }
+</script>

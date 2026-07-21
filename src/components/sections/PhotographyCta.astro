@@ -1,0 +1,91 @@
+---
+/**
+ * Photography section CTA — end-of-page card for /work/photography,
+ * /work/photography/portraits, /work/photography/concerts (Cathal, July
+ * 21 2026: "Let's add a CTA to the end of each page"). Same visual
+ * language as ServicesCta.astro (rounded-24 card, warm gradient
+ * placeholder background, black pill button to /contact) but built as a
+ * props-driven component rather than hardcoded copy, since each of the
+ * three pages needs different text and ServicesCta's copy is fixed.
+ *
+ * Deliberately NOT a fixed height (ServicesCta is h-[320px]/lg:h-[392px]
+ * — fine for its one short line, but Cathal's portraits copy is a
+ * heading + a full sentence + a short tagline, which would overflow a
+ * fixed-height card). This auto-sizes to whatever copy is passed in,
+ * with generous vertical padding instead.
+ *
+ * `tagline` is optional — portraits uses it ("Bold, Authentic, and
+ * unmistakably you."), concerts and the overview page don't need a
+ * third line.
+ *
+ * BOOKS DIRECTLY, NOT /contact (Cathal, July 21 2026: "Link cta to
+ * google calendar link"): defaults to the same shared Google Calendar
+ * appointment link already used by ServicesStartProject.astro's "Start
+ * a project" CTA and CreativePartnerTiers.astro's tier CTAs, rather than
+ * routing through /contact. Opens in a new tab with rel="noopener
+ * noreferrer" — same external-link convention those two components use.
+ * Still overridable via the `href` prop if a page ever needs the plain
+ * /contact link instead.
+ */
+import Container from "../primitives/Container.astro";
+
+interface Props {
+  heading: string;
+  body?: string;
+  tagline?: string;
+  ctaLabel?: string;
+  href?: string;
+}
+
+// Shared Google Calendar appointment schedule — same link used on
+// /services (ServicesStartProject.astro) and /creative-partner
+// (CreativePartnerTiers.astro). Kept as one shared link across the site
+// per Cathal's July 13 2026 call, rather than a separate schedule per page.
+const bookingUrl = "https://calendar.google.com/calendar/u/0/appointments/AcZssZ0qnZQBLdulg1JZDw9v5e_5ROxTX4fzUi4SbAs=";
+
+const { heading, body, tagline, ctaLabel = "Let's talk", href = bookingUrl } = Astro.props;
+---
+
+<section class="bg-n100">
+  <Container size="large">
+    <div class="pb-16 lg:pb-[192px]">
+      <div
+        data-reveal
+        class="cta-card relative flex flex-col items-center justify-center gap-4 overflow-hidden rounded-[24px] border border-n200 px-6 py-16 text-center lg:py-24"
+      >
+        <h2 class="max-w-[760px] text-heading-md text-n900 lg:text-heading-xl">
+          {heading}
+        </h2>
+        {body && <p class="max-w-[640px] text-body-md text-n700 lg:text-body-lg">{body}</p>}
+        {tagline && <p class="text-body-sm font-medium text-n900 lg:text-body-md">{tagline}</p>}
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-2 inline-flex h-[52px] items-center justify-center gap-1 rounded-full bg-n900 px-4 text-body-sm font-medium text-n100 transition-colors hover:bg-n800"
+        >
+          {ctaLabel}
+          <svg width="14" height="8" viewBox="0 0 14 8" fill="none" aria-hidden="true" class="shrink-0">
+            <path
+              d="M0 4h12M9.5 1 13 4l-3.5 3"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  /* Same placeholder texture as ServicesCta.astro — swap both together
+     if/when the real Figma texture asset is exported. */
+  .cta-card {
+    background:
+      radial-gradient(130% 130% at 28% 18%, #f6eadc 0%, rgba(246, 234, 220, 0) 55%),
+      linear-gradient(135deg, #efece7 0%, #e6e6e6 60%, #ddd9d4 100%);
+  }
+</style>

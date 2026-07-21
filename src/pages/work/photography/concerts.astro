@@ -1,0 +1,153 @@
+---
+/**
+ * /work/photography/concerts — the second collection page, mirrors
+ * portraits.astro exactly (same layout/scaffold, different collection
+ * key). Images auto-discovered from
+ * public/images/work/photography/concerts/ (see src/lib/photography.ts).
+ *
+ * PINNED FRONT + AUTO-BALANCED REST (Cathal, July 21 2026): same
+ * mechanism as portraits.astro — see that file's longer note. No
+ * groupSize; the whole collection flows through one continuous height-
+ * balanced masonry. CONCERTS_ORDER below is transcribed from a live
+ * fetch of portfolio.cathalmb.com/concerts (40 filenames, everything
+ * that page rendered) and now acts as a priority list, not a strict
+ * pairing/position list — applyOrder() still puts these first, in this
+ * order, but PhotoMasonry no longer forces any specific column pairing.
+ * Anything in the local folder not in this list — currently ~50 files —
+ * is appended afterward via applyOrder(), in normal natural-filename-
+ * sort order.
+ *
+ * One entry, "25-04-2023_Gig-Do-Ronan_Whelans_161.jpg", didn't match any
+ * file in this folder when checked against the real archive — it's kept
+ * in the list (applyOrder silently skips unmatched filenames, same as
+ * OVERVIEW_ORDER) rather than guessed at. The closest local filename is
+ * "..._Whelans_162.jpg" — worth a quick check from Cathal in case it's
+ * the same shot renamed, but not assumed here.
+ */
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Container from "../../../components/primitives/Container.astro";
+import PhotoMasonry from "../../../components/sections/PhotoMasonry.astro";
+import PhotographyCta from "../../../components/sections/PhotographyCta.astro";
+import { getPhotoCollection, applyOrder } from "../../../lib/photography";
+
+const CONCERTS_ORDER = [
+  "10-06-22_FeileNaGealai_La-2_400.jpg",
+  "Cathal-Mac-an-Bheatha_saint-sister_01.jpg",
+  "EP2023_The-Last-Dinner-Party_001-Social.jpg",
+  "_DSF0532.jpg",
+  "10-06-22_FeileNaGealai_La-2_295.jpg",
+  "10-06-22_FeileNaGealai_La-2_366.jpg",
+  "27-07-2024_Huartan_Feile-na-Gealai_105.jpg",
+  "_DSF0435.jpg",
+  "Feile-na-Gealai_2024_102.jpg",
+  "10-06-22_FeileNaGealai_La-1_20.jpg",
+  "Barrestown25-28092019-48.jpg",
+  "EP23_Hannah-Grae-001.jpg",
+  "CMB-LEH-Comp-01.jpg",
+  "27-07-2024_Huartan_Feile-na-Gealai_107.jpg",
+  "EP2023_The-Last-Dinner-Party_002-Social.jpg",
+  "Murder-Capital-Electric-Picnice_2023-Social.jpg",
+  "27-01-2023_TradFest_Blath-na-hOige_04.jpg",
+  "10-06-22_FeileNaGealai_La-2_310.jpg",
+  "Anna-From-the-North-social.jpg",
+  "25-04-2023_Gig-Do-Ronan_Whelans_052.jpg",
+  "_DSF3833.jpg",
+  "Murder-Capital-Electric-Picnice_2023-Social_002.jpg",
+  "27-01-2023_TradFest_Blath-na-hOige_09.jpg",
+  "Cathal-Mac-an-Bheatha_Grad-Nos_03.jpg",
+  "EP2023_The-Last-Dinner-Party_003-Social.jpg",
+  "14062019-Feile_na_Gealai_2019-Sathairn.jpg",
+  "_DSF1944.jpg",
+  "Cathal-Mac-an-Bheatha_FNG_02.jpg",
+  "10-06-22_FeileNaGealai_La-2_403.jpg",
+  "15-10-21_LEH_The-Sound-House_139.jpg",
+  "Cathal-Mac-an-Bheatha_DQF_01.jpg",
+  "25-04-2023_Gig-Do-Ronan_Whelans_161.jpg",
+  "Cathal-Mac-an-Bheatha_FNG_05.jpg",
+  "Driven-Snow_Album-Launch_Whelans_04.jpg",
+  "Cathal-Mac-an-Bheatha_NCR_01.jpg",
+  "Hannah-GRae-Electric-Picnic-2023-social.jpg",
+  "10-06-22_FeileNaGealai_La-1_125.jpg",
+  "10-06-22_FeileNaGealai_La-1_126.jpg",
+  "25-04-2023_Gig-Do-Ronan_Whelans_153.jpg",
+  "10-06-22_FeileNaGealai_La-1_118.jpg",
+];
+
+const items = applyOrder(getPhotoCollection("concerts"), CONCERTS_ORDER);
+
+const title = "Concerts & Live | Photography | Cathal Mac an Bheatha";
+// Description lengthened toward the 150–160 char range with a soft CTA
+// (pre-launch SEO pass, July 21 2026) — was ~126 chars, under the usual
+// SERP snippet allowance.
+const description =
+  "Concert and festival photography by Cathal Mac an Bheatha — Electric Picnic, Féile na Gealaí and live music shot from the pit. Get in touch to book a shoot.";
+// Same pinned cover file PhotographyChooser.astro uses for this collection.
+const image = "/images/work/photography/concerts/10-06-22_FeileNaGealai_La-2_403.jpg";
+---
+
+<BaseLayout title={title} description={description} image={image}>
+  <section class="bg-n100">
+    <Container size="large">
+      <div class="border-t border-n200 pt-2 pb-8 lg:pb-12">
+        <a href="/work/photography" class="text-body-md text-n500 transition-colors hover:text-n900">← Photography</a>
+        <h1 data-reveal class="mt-6 max-w-[1004px] text-heading-xl text-n900 lg:mt-8 lg:text-display-lg">
+          Concerts &amp; live<span class="text-ochre">.</span>
+        </h1>
+      </div>
+    </Container>
+  </section>
+
+  <section class="bg-n100 pb-16 lg:pb-[192px]">
+    {
+      items.length > 0 ? (
+        <PhotoMasonry
+          items={items}
+          altFallback="Concert and festival photography by Cathal Mac an Bheatha"
+        />
+      ) : (
+        <Container size="large">
+          <p class="text-body-md text-n500">Gallery coming soon.</p>
+        </Container>
+      )
+    }
+  </section>
+
+  <PhotographyCta
+    heading="Reach out, and let's shoot"
+    body="Whether it's for an event or a concert or just to say hello, I'd love to hear from you!"
+  />
+</BaseLayout>
+
+<script>
+  const root = document.documentElement;
+  const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (els.length) {
+    root.classList.add("reveal-ready");
+    if (reduce || !("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-revealed"));
+    } else {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-revealed");
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -10% 0px", threshold: 0.1 }
+      );
+      els.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const alreadyInView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (alreadyInView) {
+          el.classList.add("is-revealed");
+        } else {
+          io.observe(el);
+        }
+      });
+    }
+  }
+</script>

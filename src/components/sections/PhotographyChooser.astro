@@ -1,0 +1,163 @@
+---
+/**
+ * Photography — Chooser. Concept 3 from the mockup round (confirmed by
+ * Cathal, July 16 2026): two equally-featured cards into Portraits &
+ * lifestyle / Concerts & live. Deliberately reuses WorkGrid.astro's
+ * exact card visual language (rounded-24, bottom gradient, white
+ * heading-lg name + n150 body-lg descriptor, hover-zoom) at the same
+ * "half card" 664x749 proportions, just two of them side by side
+ * instead of one lead + a 2x2 grid — lowest-build-risk option of the
+ * six mockups, near-zero new visual language.
+ *
+ * Cover images are both pinned to specific shots rather than whatever
+ * sorts first alphabetically (see src/lib/photography.ts for the
+ * underlying auto-discovery): Concerts → Murder-Capital-Electric-
+ * Picnice_2023-Social.jpg (Cathal, July 21 2026). Portraits → 15-11-2022_
+ * CotoneCollection_WEB_25.jpg (Cathal, July 21 2026, same pass). Each
+ * falls back to the first auto-discovered file in its collection if the
+ * pinned filename is ever renamed or removed, and to a neutral
+ * placeholder fill if the collection is empty (before Cathal drops
+ * images into public/images/work/photography/{portraits,concerts}/).
+ *
+ * WIDTH (Cathal, July 16 2026 seventh pass): owns its own responsive
+ * side padding — the same "wide" scale as PhotoMasonry's padding="wide"
+ * variant — instead of being wrapped in the site's Container primitive,
+ * so the two cards line up edge-to-edge with the overview masonry grid
+ * below. Stays a 2-column grid at lg — only the margin changed, not the
+ * layout.
+ *
+ * MARGIN CORRECTED to 24/48px (Cathal, July 21 2026, ninth pass — "not
+ * sitting flush with the rest of the site"): this was originally
+ * 24/48/96px, matching PhotoMasonry's original "wide" spec. But Header
+ * and PhotographyIntro both use the site's standard <Container
+ * size="large"> gutter, which is 24/48px and never grows past 48 — so
+ * from 1024px up the 96px step here made the Chooser cards (and the
+ * overview grid below) sit visibly narrower-margined than the nav bar
+ * and hero heading above them. Dropped the 96px step so this page's
+ * margin matches the rest of the site at every breakpoint. See the
+ * identical fix + longer rationale in PhotoMasonry.astro.
+ *
+ * OVERFLOW FIX (Cathal, July 16 2026 eighth pass, "not sitting flush
+ * with the rest of the site"): `.pc-card` is a flex item inside
+ * `.photo-chooser`'s column flex at mobile — flex items default to
+ * `min-width: auto`, which can stop them shrinking to the parent's
+ * actual available width (same failure mode already documented
+ * elsewhere in this codebase, re: ClientWall's mobile overflow bug).
+ * Added explicit `width: 100%; min-width: 0;` to `.pc-card` to force it
+ * to respect the flex container's padded width instead of any
+ * content-derived minimum.
+ *
+ * ASPECT RATIO (same pass): switched from portrait (342/499 mobile,
+ * 664/749 desktop) to LANDSCAPE (4/3 mobile, 16/9 desktop) per Cathal's
+ * request. 16/9 at desktop matches the same clean landscape ratio
+ * WorkGrid.astro already uses for its full-width lead card.
+ *
+ * ALT TEXT (pre-launch SEO pass, July 21 2026): these two cover images
+ * previously had alt="" — defensible for accessibility since the
+ * overlaid heading/descriptor repeats the same info for screen readers,
+ * but it meant neither image could ever surface in image search. These
+ * are the most-seen images in the whole photography section (every
+ * visitor to the hub sees both), so they're the highest-value place to
+ * add real alt text.
+ */
+import { getPhotoCollection } from "../../lib/photography";
+
+const portraitsCollection = getPhotoCollection("portraits");
+const PORTRAITS_COVER_FILE = "15-11-2022_CotoneCollection_WEB_28.jpg";
+const portraitsCover =
+  portraitsCollection.find((item) => item.src.endsWith(`/${PORTRAITS_COVER_FILE}`)) ??
+  portraitsCollection[0] ??
+  null;
+
+const concertsCollection = getPhotoCollection("concerts");
+const CONCERTS_COVER_FILE = "10-06-22_FeileNaGealai_La-2_403.jpg";
+const concertsCover =
+  concertsCollection.find((item) => item.src.endsWith(`/${CONCERTS_COVER_FILE}`)) ??
+  concertsCollection[0] ??
+  null;
+
+const cards = [
+  {
+    name: "Portraits & lifestyle",
+    descriptor: "Personal brand and lifestyle sessions",
+    href: "/work/photography/portraits",
+    img: portraitsCover?.src ?? null,
+    alt: "Portrait and lifestyle photography by Cathal Mac an Bheatha",
+  },
+  {
+    name: "Concerts & live",
+    descriptor: "Festivals, gigs and on-stage work",
+    href: "/work/photography/concerts",
+    img: concertsCover?.src ?? null,
+    alt: "Concert and festival photography by Cathal Mac an Bheatha",
+  },
+];
+---
+
+<div class="photo-chooser">
+  {
+    cards.map((c) => (
+      <a
+        href={c.href}
+        class="pc-card group relative block aspect-[4/3] overflow-hidden rounded-[24px] lg:aspect-[16/9]"
+      >
+        {c.img ? (
+          <img src={c.img} alt={c.alt} loading="lazy" class="pc-media absolute inset-0 h-full w-full object-cover" />
+        ) : (
+          <div class="pc-media absolute inset-0" style="background:#383838" />
+        )}
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent from-50% to-[rgba(17,17,17,0.7)]" />
+        <div class="absolute inset-x-0 bottom-0 p-3 lg:p-4">
+          <h3 class="text-heading-md text-white lg:text-heading-lg">{c.name}</h3>
+          <p class="pt-1 text-body-md text-n150 lg:text-body-lg">{c.descriptor}</p>
+        </div>
+      </a>
+    ))
+  }
+</div>
+
+<style>
+  .photo-chooser {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 24px;
+  }
+
+  @media (min-width: 768px) {
+    .photo-chooser {
+      padding: 0 48px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .photo-chooser {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+  }
+
+  .pc-card {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .pc-media {
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (min-width: 1024px) {
+    .pc-card:hover .pc-media,
+    .pc-card:focus-visible .pc-media {
+      transform: scale(1.05);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pc-media {
+      transition: none;
+    }
+  }
+</style>

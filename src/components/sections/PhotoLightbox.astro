@@ -1,0 +1,228 @@
+---
+/**
+ * PhotoLightbox — shared "view fullsize" dialog, extracted from
+ * PhotoMasonry.astro (July 16 2026, fifth pass) so the new
+ * PhotographyOverviewGrid could reuse it instead of duplicating ~60
+ * lines of dialog markup + behaviour script a second time (the same
+ * kind of copy-paste this codebase already flagged as a lesson worth
+ * fixing, re: the reveal script being pasted across 10 pages).
+ *
+ * Any trigger button anywhere on the page with `data-lightbox-trigger`
+ * and a numeric `data-index` wires up automatically — the grid
+ * component owns its own layout/styling, this owns the dialog. Expects
+ * `items` to already have final (resolved) alt text; this component
+ * doesn't know about fallback/positional-differentiation logic, that
+ * stays with whichever grid is calling it.
+ *
+ * Native <dialog>.showModal() chosen over a hand-rolled overlay for the
+ * free focus trap + Escape-to-close. Prev/Next wrap around; clicking
+ * the dialog's own backdrop area closes it (checks e.target === dialog,
+ * since <dialog> doesn't do this automatically); adjacent images
+ * preload for snappier nav.
+ *
+ * Only one instance of this should exist per page — /portraits,
+ * /concerts and the hub's overview grid each render exactly one grid
+ * component, so this is safe as written. If a future page ever needed
+ * two separate grids + lightboxes on the same page, the trigger query
+ * would need scoping (e.g. a shared data-lightbox-group id) — not
+ * needed yet, so not built.
+ */
+interface Item {
+  src: string;
+  alt: string;
+}
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+---
+
+<dialog class="photo-lightbox" aria-label="Photo viewer">
+  <button type="button" class="pl-close" data-lightbox-close aria-label="Close">
+    <svg viewBox="0 0 20 20" width="20" height="20" fill="none" aria-hidden="true">
+      <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+    </svg>
+  </button>
+  <button type="button" class="pl-nav pl-prev" data-lightbox-prev aria-label="Previous image">
+    <svg viewBox="0 0 24 16" width="24" height="16" fill="none" aria-hidden="true">
+      <path d="M24 8H4M8.5 1.5 2 8l6.5 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+  <button type="button" class="pl-nav pl-next" data-lightbox-next aria-label="Next image">
+    <svg viewBox="0 0 24 16" width="24" height="16" fill="none" aria-hidden="true">
+      <path d="M0 8h20M15.5 1.5 22 8l-6.5 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+  <img class="pl-image" src="" alt="" />
+  <p class="pl-counter" aria-hidden="true"></p>
+</dialog>
+
+<script type="application/json" id="photo-lightbox-data" set:html={JSON.stringify(items)} />
+
+<script>
+  interface LightboxItem {
+    src: string;
+    alt: string;
+  }
+
+  const dataEl = document.getElementById("photo-lightbox-data");
+  const items: LightboxItem[] = dataEl ? JSON.parse(dataEl.textContent || "[]") : [];
+
+  const dialog = document.querySelector<HTMLDialogElement>(".photo-lightbox");
+  const image = dialog?.querySelector<HTMLImageElement>(".pl-image");
+  const counter = dialog?.querySelector<HTMLElement>(".pl-counter");
+  const triggers = document.querySelectorAll<HTMLButtonElement>("[data-lightbox-trigger]");
+
+  let index = 0;
+
+  function preload(i: number) {
+    if (i < 0 || i >= items.length) return;
+    const img = new Image();
+    img.src = items[i].src;
+  }
+
+  function render() {
+    if (!image || !counter || !items[index]) return;
+    image.src = items[index].src;
+    image.alt = items[index].alt;
+    counter.textContent = `${index + 1} / ${items.length}`;
+    preload(index + 1);
+    preload(index - 1);
+  }
+
+  function open(i: number) {
+    if (!dialog) return;
+    index = i;
+    render();
+    dialog.showModal();
+  }
+
+  function step(delta: number) {
+    if (!items.length) return;
+    index = (index + delta + items.length) % items.length;
+    render();
+  }
+
+  triggers.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const i = Number(btn.dataset.index);
+      if (!Number.isNaN(i)) open(i);
+    });
+  });
+
+  dialog?.querySelector("[data-lightbox-close]")?.addEventListener("click", () => dialog.close());
+  dialog?.querySelector("[data-lightbox-prev]")?.addEventListener("click", () => step(-1));
+  dialog?.querySelector("[data-lightbox-next]")?.addEventListener("click", () => step(1));
+
+  dialog?.addEventListener("click", (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+
+  dialog?.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") step(-1);
+    if (e.key === "ArrowRight") step(1);
+  });
+</script>
+
+<style>
+  .photo-lightbox {
+    position: fixed;
+    inset: 0;
+    max-width: 100vw;
+    max-height: 100vh;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .photo-lightbox[open] {
+    display: flex;
+  }
+
+  .photo-lightbox::backdrop {
+    background: rgba(10, 10, 10, 0.92);
+  }
+
+  .pl-image {
+    max-width: min(1200px, 92vw);
+    max-height: 88vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+
+  .pl-close,
+  .pl-nav {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: rgba(249, 249, 249, 0.12);
+    color: #f9f9f9;
+    cursor: pointer;
+  }
+
+  .pl-close:hover,
+  .pl-nav:hover {
+    background: rgba(249, 249, 249, 0.22);
+  }
+
+  .pl-close {
+    top: 24px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .pl-nav {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 56px;
+  }
+
+  .pl-prev {
+    left: 24px;
+  }
+
+  .pl-next {
+    right: 24px;
+  }
+
+  .pl-counter {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #a0a0a0;
+    font-size: 13px;
+  }
+
+  @media (max-width: 767px) {
+    .pl-nav {
+      width: 44px;
+      height: 44px;
+    }
+    .pl-prev {
+      left: 8px;
+    }
+    .pl-next {
+      right: 8px;
+    }
+    .pl-close {
+      top: 12px;
+      right: 12px;
+    }
+  }
+</style>
