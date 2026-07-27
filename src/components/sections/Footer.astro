@@ -21,12 +21,11 @@
  */
 import Container from "../primitives/Container.astro";
 
-const email = "hello@cathalmb.com";
-
 // Same Google Calendar appointment link used on /services
 // (ServicesStartProject.astro's `bookingUrl`) and /creative-partner
-// (CreativePartnerTiers.astro). "Start a Project" opens it directly, in a
-// new tab, matching the live behavior of that CTA elsewhere on the site.
+// (CreativePartnerTiers.astro). "Start a Project" (nav) and the "Let's Talk"
+// CTA button both open it directly, in a new tab — replaced the old mailto
+// link 2026-07-27.
 const bookingUrl =
   "https://calendar.google.com/calendar/u/0/appointments/AcZssZ0qnZQBLdulg1JZDw9v5e_5ROxTX4fzUi4SbAs=";
 
@@ -97,10 +96,12 @@ const navLink =
 
           <div class="mt-6 flex flex-col gap-1 lg:flex-row lg:flex-wrap">
             <a
-              href={`mailto:${email}`}
+              href={bookingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               class="inline-flex w-full items-center justify-center rounded-full bg-ochre px-3 py-2 text-body-md font-medium text-n900 transition-colors hover:bg-ochre-hover lg:w-auto"
             >
-              {email}
+              Let's Talk
             </a>
             {
               socials.map((s) => (

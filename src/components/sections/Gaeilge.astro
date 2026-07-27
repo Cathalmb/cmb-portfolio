@@ -4,8 +4,17 @@
  * below the retainer CTA (which provides the 192px gap above via WhatIDo pb).
  * Bilingual heading, two-column Irish/English body, auto-scroll client logo
  * marquee, then a bottom row: legal note (left) + "Labhair liom" CTA (right).
+ *
+ * "Labhair liom" CTA (2026-07-27): opens the same Google Calendar appointment
+ * link used elsewhere on the site (see Footer.astro / CreativePartnerTiers.astro
+ * `bookingUrl`), in a new tab, instead of routing to /contact.
  */
 import Container from "../primitives/Container.astro";
+
+// Shared Google Calendar appointment schedule — same link used elsewhere on
+// the site (see Footer.astro / CreativePartnerTiers.astro).
+const bookingUrl =
+  "https://calendar.google.com/calendar/u/0/appointments/AcZssZ0qnZQBLdulg1JZDw9v5e_5ROxTX4fzUi4SbAs=";
 
 // White logos in /public/images/clients (copied from work/client-logos).
 // Each sits in a fixed box so sizes read consistently across the strip.
@@ -101,7 +110,9 @@ const marquee = [...clients, ...clients];
             and beyond.
           </p>
           <a
-            href="/contact"
+            href={bookingUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             class="inline-flex shrink-0 items-center gap-1 rounded-full border border-n200 px-4 py-2 text-body-md font-medium text-n100 transition-colors hover:border-n100"
           >
             Labhair liom
