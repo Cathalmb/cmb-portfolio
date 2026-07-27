@@ -9,8 +9,18 @@
  * export the real texture from Figma to /public/images and swap `background`.
  *
  * Spacing: intro→card 96 (intro pb), card→statement 160 (this section pb-20).
+ *
+ * "Book a discovery call" CTA (2026-07-27): now opens the same Google Calendar
+ * appointment link used on /creative-partner and /services' "Start a project"
+ * cards (CreativePartnerTiers.astro / ServicesStartProject.astro `bookingUrl`)
+ * in a new tab, instead of routing to /contact.
  */
 import Container from "../primitives/Container.astro";
+
+// Shared Google Calendar appointment schedule — same link used elsewhere on
+// the site (see CreativePartnerTiers.astro / ServicesStartProject.astro).
+const bookingUrl =
+  "https://calendar.google.com/calendar/u/0/appointments/AcZssZ0qnZQBLdulg1JZDw9v5e_5ROxTX4fzUi4SbAs=";
 ---
 
 <section class="bg-n100">
@@ -24,7 +34,9 @@ import Container from "../primitives/Container.astro";
           Book a discovery call. Let&rsquo;s talk!
         </h2>
         <a
-          href="/contact"
+          href={bookingUrl}
+          target="_blank"
+          rel="noopener noreferrer"
           class="mt-4 inline-flex h-[52px] items-center justify-center gap-1 rounded-full bg-n900 px-4 text-body-sm font-medium text-n100 transition-colors hover:bg-n800"
         >
           Let&rsquo;s talk
