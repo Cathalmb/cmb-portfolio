@@ -5,8 +5,8 @@ import path from "node:path";
 /**
  * About — Gallery. Figma nodes 68:323 / 73:90 / 73:91 + the reference recording.
  *
- * 3-up carousel: full-bleed dark band of equal-prominence slides (radius 24,
- * 16px gap), sized so three fill the viewport at once on desktop (1128×846 on
+ * 3-up carousel: full-bleed dark band of equal-prominence slides (square
+ * corners, no radius, 16px gap), sized so three fill the viewport at once on desktop (1128×846 on
  * large screens, fluid down to smaller desktops via calc()) with no dominant
  * slide and no dimmed neighbours. On a fine pointer the native cursor is hidden
  * and replaced by a circular button that follows the pointer — right half =
@@ -122,7 +122,7 @@ const slides = fs
     width: 60vw;
     max-width: 420px;
     aspect-ratio: 1128 / 846;
-    border-radius: 24px;
+    border-radius: 0;
     overflow: hidden;
     scroll-snap-align: center;
   }
